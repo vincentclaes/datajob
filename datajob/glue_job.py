@@ -4,10 +4,10 @@ from aws_cdk import aws_glue as glue, core, aws_s3_deployment
 
 from datajob import logger
 from datajob.glue_job_context import GlueJobContext
-from datajob import stepfunctions_workflow
+from datajob import stepfunctionsworkflow
 
 
-@stepfunctions_workflow.task
+@stepfunctionsworkflow.task
 class GlueJob(core.Construct):
     """
     Configure a glue job to run some business logic.

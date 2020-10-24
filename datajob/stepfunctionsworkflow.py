@@ -44,9 +44,7 @@ class StepfunctionsWorkflow(object):
             task_unique_name = one_other_task.unique_glue_job_name
             logger.debug(f"adding parallel task with name {task_unique_name}")
             deploy_pipelines.add_branch(
-                StepfunctionsWorkflow._create_glue_start_job_run_step(
-                    job_name=task_unique_name
-                )
+                StepfunctionsWorkflow._create_glue_start_job_run_step(job_name=task_unique_name)
             )
         self.chain_of_tasks.append(deploy_pipelines)
 
