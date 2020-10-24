@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "datajob"
+version = "0.1.0"
+description = ""
+authors = ["vincent <vclaes1986@gmail.com>"]
+license = "apache-2.0"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+"aws-cdk.core" = "^1.70.0"
+"aws-cdk.aws-glue" = "^1.70.0"
+"aws-cdk.aws-s3-deployment" = "^1.70.0"
+stepfunctions = "^1.1.2"
+contextvars = "^2.4"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
