@@ -3,8 +3,8 @@ from moto import mock_stepfunctions
 from stepfunctions.steps.states import Parallel
 from stepfunctions.steps.compute import GlueStartJobRunStep
 
-from datajob.stepfunctionsworkflow import StepfunctionsWorkflow
-from datajob.stepfunctionsworkflow import task
+from datajob.stepfunctions_workflow import StepfunctionsWorkflow
+from datajob.stepfunctions_workflow import task
 
 
 @task

@@ -3,11 +3,11 @@ from pathlib import Path
 from aws_cdk import aws_glue as glue, core, aws_s3_deployment
 
 from datajob import logger
-from datajob.glue_job_context import GlueJobContext
-from datajob import stepfunctionsworkflow
+from datajob.data_job_context import DataJobContext
+from datajob import stepfunctions_workflow
 
 
-@stepfunctionsworkflow.task
+@stepfunctions_workflow.task
 class GlueJob(core.Construct):
     """
     Configure a glue job to run some business logic.
@@ -17,7 +17,7 @@ class GlueJob(core.Construct):
         self,
         scope: core.Construct,
         glue_job_name: str,
-        glue_job_context: GlueJobContext,
+        glue_job_context: DataJobContext,
         stage: str,
         path_to_glue_job: str,
         job_type: str,
@@ -44,15 +44,15 @@ class GlueJob(core.Construct):
         """
         logger.info(f"creating glue job {glue_job_name}")
         super().__init__(scope, glue_job_name, **kwargs)
-        self.unique_glue_job_name = f"{glue_job_name}-{stage}"
+        self.unique_name = f"{glue_job_name}-{stage}"
         s3_url_glue_job = self._deploy_glue_job_code(
             glue_job_context=glue_job_context,
-            glue_job_name=self.unique_glue_job_name,
+            glue_job_name=self.unique_name,
             path_to_glue_job=path_to_glue_job,
         )
         self._create_glue_job(
             glue_job_context=glue_job_context,
-            glue_job_name=self.unique_glue_job_name,
+            glue_job_name=self.unique_name,
             s3_url_glue_job=s3_url_glue_job,
             arguments=arguments,
             job_type=job_type,
@@ -66,7 +66,7 @@ class GlueJob(core.Construct):
 
     @staticmethod
     def _create_s3_url_for_job(
-        glue_job_context: GlueJobContext, glue_job_id: str, glue_job_file_name: str
+        glue_job_context: DataJobContext, glue_job_id: str, glue_job_file_name: str
     ):
         """path to the script on s3 for this job."""
         s3_url_glue_job = f"s3://{glue_job_context.glue_deployment_bucket_name}/{glue_job_id}/{glue_job_file_name}"
@@ -85,7 +85,7 @@ class GlueJob(core.Construct):
 
     def _deploy_glue_job_code(
         self,
-        glue_job_context: GlueJobContext,
+        glue_job_context: DataJobContext,
         glue_job_name: str,
         path_to_glue_job: str,
     ):
@@ -116,7 +116,7 @@ class GlueJob(core.Construct):
 
     def _create_glue_job(
         self,
-        glue_job_context: GlueJobContext,
+        glue_job_context: DataJobContext,
         glue_job_name: str,
         s3_url_glue_job: str,
         arguments: dict,

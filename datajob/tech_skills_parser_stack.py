@@ -3,8 +3,8 @@ from pathlib import Path
 from aws_cdk import core
 
 from datajob import ROOT_DIR
-from datajob.glue_job import GlueJob
-from datajob.glue_job_context import GlueJobContext
+from datajob.glue.glue_job import GlueJob
+from datajob.data_job_context import DataJobContext
 
 
 class TechSkillsParserStack(core.Stack):
@@ -36,7 +36,7 @@ class TechSkillsParserStack(core.Stack):
         self.project_root = project_root
         self.stage = stage
         self.unique_stack_name = unique_stack_name
-        self.glue_job_context = GlueJobContext(
+        self.glue_job_context = DataJobContext(
             self,
             unique_stack_name=self.unique_stack_name,
             project_root=self.project_root,

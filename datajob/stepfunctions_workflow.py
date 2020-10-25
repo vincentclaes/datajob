@@ -32,7 +32,7 @@ class StepfunctionsWorkflow(object):
 
     def add_task(self, task_other):
         """add a task to the workflow we would like to orchestrate."""
-        job_name = task_other.unique_glue_job_name
+        job_name = task_other.unique_name
         logger.debug(f"adding task with name {job_name}")
         task = StepfunctionsWorkflow._create_glue_start_job_run_step(job_name=job_name)
         self.chain_of_tasks.append(task)
@@ -41,7 +41,7 @@ class StepfunctionsWorkflow(object):
         """add tasks in parallel (wrapped in a list) to the workflow we would like to orchestrate."""
         deploy_pipelines = Parallel(state_id=uuid.uuid4().hex)
         for one_other_task in task_others:
-            task_unique_name = one_other_task.unique_glue_job_name
+            task_unique_name = one_other_task.unique_name
             logger.debug(f"adding parallel task with name {task_unique_name}")
             deploy_pipelines.add_branch(
                 StepfunctionsWorkflow._create_glue_start_job_run_step(job_name=task_unique_name)

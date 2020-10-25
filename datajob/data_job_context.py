@@ -6,7 +6,7 @@ from aws_cdk import aws_iam as iam, core, aws_s3_deployment, aws_s3
 from datajob import logger
 
 
-class GlueJobContext(core.Construct):
+class DataJobContext(core.Construct):
     """
     GlueJobContext is a class that creates all the services necessary for a glue job to run.
     You have to instantiate once and pass the instance to the different GlueJobs.
@@ -89,8 +89,11 @@ class GlueJobContext(core.Construct):
         relying on a subprocess feels dangerous.
         """
         logger.debug("creating wheel for glue job")
-        subprocess.call(["python", str(Path(project_root, "setup.py")), "bdist_wheel"])
-
+        # p = subprocess.Popen(["python", str(Path(project_root, "setup.py")), "bdist_wheel"], stdout=subprocess.PIPE,
+        #                      stderr=subprocess.PIPE, shell=True)
+        # out, err = p.communicate()
+        cmd = f'cd {project_root}; python setup.py bdist_wheel'
+        subprocess.call(cmd, shell=True)
     def _deploy_local_folder(self, include_folder):
         """deploy a local folder from our project to the deployment bucket."""
         logger.debug(f"deploying local folder {include_folder}")
