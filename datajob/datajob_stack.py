@@ -1,6 +1,7 @@
 from aws_cdk import core
 from datajob.data_job_context import DataJobContext
 
+
 class DataJobStack(core.Stack):
     def __init__(
         self,
@@ -21,6 +22,7 @@ class DataJobStack(core.Stack):
         :param kwargs: any extra kwargs for the core.Construct
         """
         super().__init__(scope=scope, id=unique_stack_name, **kwargs)
+        self.scope = scope
         self.project_root = project_root
         self.stage = stage
         self.unique_stack_name = unique_stack_name
@@ -39,7 +41,8 @@ class DataJobStack(core.Stack):
 
     def __exit__(self, exc_type, exc_value, traceback):
         """steps we have to do when exiting the context manager."""
-        pass
+        self.scope.synth()
 
     def add(self, task):
         setattr(self, task.unique_name, task)
+        task.deploy()

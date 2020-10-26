@@ -5,6 +5,8 @@ from aws_cdk import aws_iam as iam, core, aws_s3_deployment, aws_s3
 
 from datajob import logger
 
+class DataJobContextError(Exception):
+    """any exception occuring when constructing data job context."""
 
 class DataJobContext(core.Construct):
     """
@@ -68,7 +70,6 @@ class DataJobContext(core.Construct):
         self._create_wheel_for_glue_job(project_root)
         wheel_deployment_name = f"{unique_stack_name}-WheelDeployment"
         # todo - we should get this name dynamically
-        wheel_file_name = "tech_skills_parser-latest-py3-none-any.whl"
         logger.debug(f"deploying wheel {wheel_deployment_name}")
         aws_s3_deployment.BucketDeployment(
             self,
@@ -77,9 +78,16 @@ class DataJobContext(core.Construct):
             destination_bucket=glue_deployment_bucket,
             destination_key_prefix=wheel_deployment_name,
         )
-        s3_url_wheel = f"s3://{glue_deployment_bucket_name}/{wheel_deployment_name}/{wheel_file_name}"
+        s3_url_wheel = self._get_wheel_name(glue_deployment_bucket_name, wheel_deployment_name, project_root)
         logger.debug(f"wheel will be located at {s3_url_wheel}")
         return s3_url_wheel
+
+    def _get_wheel_name(self, glue_deployment_bucket_name, wheel_deployment_name, project_root, dist_folder="dist"):
+        dist_file_names = list(Path(project_root, dist_folder).glob('*.whl'))
+        if len(dist_file_names) != 1:
+            raise DataJobContextError(f"we expected 1 wheel: {dist_file_names}")
+        # todo - improve creation of s3 urls
+        return f"s3://{glue_deployment_bucket_name}/{wheel_deployment_name}/{dist_file_names[0]}"
 
     @staticmethod
     def _create_wheel_for_glue_job(project_root):

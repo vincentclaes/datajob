@@ -2,9 +2,8 @@ import pathlib
 
 from aws_cdk import core
 
-from tech_skills_parser import logger
-from tech_skills_parser.deployment.tech_skills_parser_stack import TechSkillsParserStack
-from tech_skills_parser.deployment.stepfunctions_workflow import StepfunctionsWorkflow
+from datajob.tech_skills_parser_stack import TechSkillsParserStack
+from datajob import logger
 
 project_root = str(pathlib.Path(__file__).parent.absolute())
 
@@ -33,19 +32,3 @@ stack = TechSkillsParserStack(
 
 app.synth()
 
-# todo - generate role dynamically
-with StepfunctionsWorkflow(
-    "techskills-parser",
-    "arn:aws:iam::303915887687:role/tech-skills-parser-orchestration",
-) as tech_skills_parser_orchestration:
-
-    [
-        stack.glue_job_keywords_cleaning,
-        stack.glue_job_vacancy_cleaning,
-    ] >> stack.glue_job_create_tf_matrix
-
-print("**************************************")
-print(
-    f"url for step functions workflow: https://{stack.region}.console.aws.amazon.com/states/home?region={stack.region}#/statemachines/view/{tech_skills_parser_orchestration.workflow.state_machine_arn}"
-)
-print("**************************************")

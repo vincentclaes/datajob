@@ -11,8 +11,6 @@ from mock import patch
 class DataJobStackTest(unittest.TestCase):
 
     @mock_s3
-    # @patch.object(DataJobContext, "_create_wheel_for_glue_job")
-    # def test_datajob_stack_runs_without_errors_successfully(self, m_create_whl):
     def test_datajob_stack_runs_without_errors_successfully(self):
         with DataJobStack(scope=core.App(),
                      unique_stack_name="a-unique-name",
@@ -20,7 +18,21 @@ class DataJobStackTest(unittest.TestCase):
                      project_root="/Users/vincent/Workspace/datajob/datajob_tests/sampleproject",
                      env={"region": "eu-west-1", "account": "3098726354"}
                      ) as djs:
-            GlueJob()
+
+            GlueJob(
+                djs,
+                "test",
+                glue_job_context=djs.glue_job_context,
+                stage=djs.stage,
+                path_to_glue_job="sampleproject/src/sample/simple.py",
+                job_type="pythonshell",
+                glue_version="1.0",
+                max_capacity=1,
+                python_version="3",
+                arguments={
+                    "--some-args": f"some-value",
+                }
+            )
 
 
 
