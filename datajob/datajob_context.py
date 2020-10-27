@@ -5,8 +5,10 @@ from aws_cdk import aws_iam as iam, core, aws_s3_deployment, aws_s3
 
 from datajob import logger
 
+
 class DatajobContextError(Exception):
     """any exception occuring when constructing data job context."""
+
 
 class DatajobContext(core.Construct):
     """
@@ -78,12 +80,20 @@ class DatajobContext(core.Construct):
             destination_bucket=glue_deployment_bucket,
             destination_key_prefix=wheel_deployment_name,
         )
-        s3_url_wheel = self._get_wheel_name(glue_deployment_bucket_name, wheel_deployment_name, project_root)
+        s3_url_wheel = self._get_wheel_name(
+            glue_deployment_bucket_name, wheel_deployment_name, project_root
+        )
         logger.debug(f"wheel will be located at {s3_url_wheel}")
         return s3_url_wheel
 
-    def _get_wheel_name(self, glue_deployment_bucket_name, wheel_deployment_name, project_root, dist_folder="dist"):
-        dist_file_names = list(Path(project_root, dist_folder).glob('*.whl'))
+    def _get_wheel_name(
+        self,
+        glue_deployment_bucket_name,
+        wheel_deployment_name,
+        project_root,
+        dist_folder="dist",
+    ):
+        dist_file_names = list(Path(project_root, dist_folder).glob("*.whl"))
         if len(dist_file_names) != 1:
             raise DatajobContextError(f"we expected 1 wheel: {dist_file_names}")
         # todo - improve creation of s3 urls
@@ -100,8 +110,9 @@ class DatajobContext(core.Construct):
         # p = subprocess.Popen(["python", str(Path(project_root, "setup.py")), "bdist_wheel"], stdout=subprocess.PIPE,
         #                      stderr=subprocess.PIPE, shell=True)
         # out, err = p.communicate()
-        cmd = f'cd {project_root}; python setup.py bdist_wheel'
+        cmd = f"cd {project_root}; python setup.py bdist_wheel"
         subprocess.call(cmd, shell=True)
+
     def _deploy_local_folder(self, include_folder):
         """deploy a local folder from our project to the deployment bucket."""
         logger.debug(f"deploying local folder {include_folder}")

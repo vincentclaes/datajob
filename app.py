@@ -2,8 +2,8 @@ import pathlib
 
 from aws_cdk import core
 
-from datajob.tech_skills_parser_stack import TechSkillsParserStack
 from datajob import logger
+from datajob.tech_skills_parser_stack import TechSkillsParserStack
 
 project_root = str(pathlib.Path(__file__).parent.absolute())
 
@@ -31,4 +31,3 @@ stack = TechSkillsParserStack(
 )
 
 app.synth()
-

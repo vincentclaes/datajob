@@ -1,7 +1,8 @@
 import unittest
+
 from moto import mock_stepfunctions
-from stepfunctions.steps.states import Parallel
 from stepfunctions.steps.compute import GlueStartJobRunStep
+from stepfunctions.steps.states import Parallel
 
 from datajob.stepfunctions_workflow import StepfunctionsWorkflow
 from datajob.stepfunctions_workflow import task

@@ -3,8 +3,8 @@ from pathlib import Path
 from aws_cdk import core
 
 from datajob import ROOT_DIR
-from datajob.glue.glue_job import GlueJob
 from datajob.datajob_context import DatajobContext
+from datajob.glue.glue_job import GlueJob
 
 
 class TechSkillsParserStack(core.Stack):
