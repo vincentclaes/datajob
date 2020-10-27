@@ -3,7 +3,7 @@ from aws_cdk import core
 from datajob.datajob_stack import DataJobStack
 from datajob import ROOT_DIR
 from moto import mock_s3
-from datajob.data_job_context import DataJobContext
+from datajob.datajob_context import DatajobContext
 
 from datajob.glue.glue_job import GlueJob
 from mock import patch
@@ -19,10 +19,9 @@ class DataJobStackTest(unittest.TestCase):
                      env={"region": "eu-west-1", "account": "3098726354"}
                      ) as djs:
 
-            GlueJob(
+            djs.add(GlueJob(
                 djs,
                 "test",
-                glue_job_context=djs.glue_job_context,
                 stage=djs.stage,
                 path_to_glue_job="sampleproject/src/sample/simple.py",
                 job_type="pythonshell",
@@ -32,7 +31,7 @@ class DataJobStackTest(unittest.TestCase):
                 arguments={
                     "--some-args": f"some-value",
                 }
-            )
+            ))
 
 
 

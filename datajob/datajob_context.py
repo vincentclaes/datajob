@@ -5,10 +5,10 @@ from aws_cdk import aws_iam as iam, core, aws_s3_deployment, aws_s3
 
 from datajob import logger
 
-class DataJobContextError(Exception):
+class DatajobContextError(Exception):
     """any exception occuring when constructing data job context."""
 
-class DataJobContext(core.Construct):
+class DatajobContext(core.Construct):
     """
     GlueJobContext is a class that creates all the services necessary for a glue job to run.
     You have to instantiate once and pass the instance to the different GlueJobs.
@@ -85,7 +85,7 @@ class DataJobContext(core.Construct):
     def _get_wheel_name(self, glue_deployment_bucket_name, wheel_deployment_name, project_root, dist_folder="dist"):
         dist_file_names = list(Path(project_root, dist_folder).glob('*.whl'))
         if len(dist_file_names) != 1:
-            raise DataJobContextError(f"we expected 1 wheel: {dist_file_names}")
+            raise DatajobContextError(f"we expected 1 wheel: {dist_file_names}")
         # todo - improve creation of s3 urls
         return f"s3://{glue_deployment_bucket_name}/{wheel_deployment_name}/{dist_file_names[0]}"
 

@@ -4,7 +4,7 @@ from aws_cdk import core
 
 from datajob import ROOT_DIR
 from datajob.glue.glue_job import GlueJob
-from datajob.data_job_context import DataJobContext
+from datajob.datajob_context import DatajobContext
 
 
 class TechSkillsParserStack(core.Stack):
@@ -36,7 +36,7 @@ class TechSkillsParserStack(core.Stack):
         self.project_root = project_root
         self.stage = stage
         self.unique_stack_name = unique_stack_name
-        self.glue_job_context = DataJobContext(
+        self.glue_job_context = DatajobContext(
             self,
             unique_stack_name=self.unique_stack_name,
             project_root=self.project_root,

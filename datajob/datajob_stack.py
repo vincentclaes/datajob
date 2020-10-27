@@ -1,5 +1,5 @@
 from aws_cdk import core
-from datajob.data_job_context import DataJobContext
+from datajob.datajob_context import DatajobContext
 
 
 class DataJobStack(core.Stack):
@@ -28,10 +28,11 @@ class DataJobStack(core.Stack):
         self.unique_stack_name = unique_stack_name
         self.include_folder = include_folder
         self.resources = []
+        self.datajob_context = None
 
     def __enter__(self):
         """first steps we have to do when entering the context manager."""
-        self.glue_job_context = DataJobContext(
+        self.datajob_context = DatajobContext(
             self,
             unique_stack_name=self.unique_stack_name,
             project_root=self.project_root,
@@ -45,4 +46,4 @@ class DataJobStack(core.Stack):
 
     def add(self, task):
         setattr(self, task.unique_name, task)
-        task.deploy()
+        task.deploy(datajob_context=self.datajob_context)
