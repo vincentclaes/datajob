@@ -10,7 +10,7 @@ from datajob.datajob_context import DatajobContext
 @stepfunctions_workflow.task
 class GlueJob(core.Construct):
     """
-    Configure a glue job to run some business logic.
+    Configure a glue_job_include_packaged_project job to run some business logic.
     """
 
     def __init__(
@@ -29,18 +29,18 @@ class GlueJob(core.Construct):
     ):
         """
         :param scope: aws cdk core construct object.
-        :param glue_job_name: a name for this glue job (will appear on the glue console).
+        :param glue_job_name: a name for this glue_job_include_packaged_project job (will appear on the glue_job_include_packaged_project console).
         :param stage: the stage name to which we are deploying
-        :param path_to_glue_job: the path to the glue job relative to the project root.
+        :param path_to_glue_job: the path to the glue_job_include_packaged_project job relative to the project root.
         :param job_type: choose pythonshell for plain python / glueetl for a spark cluster.
         :param glue_version: at the time of writing choose 1.0 for pythonshell / 2.0 for spark.
         :param max_capacity: max nodes we want to run.
-        :param arguments: the arguments as a dict for this glue job.
+        :param arguments: the arguments as a dict for this glue_job_include_packaged_project job.
         :param python_version: 3 is the default
-        :param args: any extra args for the glue.CfnJob
-        :param kwargs: any extra kwargs for the glue.CfnJob
+        :param args: any extra args for the glue_job_include_packaged_project.CfnJob
+        :param kwargs: any extra kwargs for the glue_job_include_packaged_project.CfnJob
         """
-        logger.info(f"creating glue job {glue_job_name}")
+        logger.info(f"creating glue_job_include_packaged_project job {glue_job_name}")
         super().__init__(scope, glue_job_name, **kwargs)
         self.unique_name = f"{glue_job_name}-{stage}"
         self.path_to_glue_job = path_to_glue_job
@@ -51,7 +51,7 @@ class GlueJob(core.Construct):
         self.max_capacity = max_capacity
         self.args = args
         self.kwargs = kwargs
-        logger.info(f"glue job {glue_job_name} created.")
+        logger.info(f"glue_job_include_packaged_project job {glue_job_name} created.")
 
     def deploy(self, datajob_context):
         s3_url_glue_job = self._deploy_glue_job_code(
@@ -78,7 +78,7 @@ class GlueJob(core.Construct):
     ):
         """path to the script on s3 for this job."""
         s3_url_glue_job = f"s3://{glue_job_context.glue_deployment_bucket_name}/{glue_job_id}/{glue_job_file_name}"
-        logger.debug(f"s3 url for glue job {glue_job_id}: {s3_url_glue_job}")
+        logger.debug(f"s3 url for glue_job_include_packaged_project job {glue_job_id}: {s3_url_glue_job}")
         return s3_url_glue_job
 
     @staticmethod
@@ -97,18 +97,18 @@ class GlueJob(core.Construct):
         glue_job_name: str,
         path_to_glue_job: str,
     ):
-        """deploy the code of this glue job to the deployment bucket (can be found in the glue context object)"""
+        """deploy the code of this glue_job_include_packaged_project job to the deployment bucket (can be found in the glue_job_include_packaged_project context object)"""
         glue_job_dir, glue_job_file_name = GlueJob._get_glue_job_dir_and_file_name(
             path_to_glue_job=path_to_glue_job
         )
-        logger.debug(f"deploying glue job folder {glue_job_dir}")
+        logger.debug(f"deploying glue_job_include_packaged_project job folder {glue_job_dir}")
         aws_s3_deployment.BucketDeployment(
             self,
             f"{glue_job_name}-CodeDeploy",
             sources=[
                 # we can either sync dirs or zip files.
                 # To keep it easy for now we agreed to sync the full dir.
-                # todo - sync only the glue job itself.
+                # todo - sync only the glue_job_include_packaged_project job itself.
                 aws_s3_deployment.Source.asset(glue_job_dir)
             ],
             destination_bucket=datajob_context.glue_deployment_bucket,
@@ -135,7 +135,7 @@ class GlueJob(core.Construct):
         *args,
         **kwargs,
     ):
-        """Create a glue job with the necessary configuration like, paths to wheel and business logic and arguments"""
+        """Create a glue_job_include_packaged_project job with the necessary configuration like, paths to wheel and business logic and arguments"""
         logger.debug(f"creating Glue Job {glue_job_name}")
         default_arguments = None
         if datajob_context.s3_url_wheel:

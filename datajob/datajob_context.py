@@ -10,9 +10,13 @@ class DatajobContextError(Exception):
     """any exception occuring when constructing data job context."""
 
 
+class DatajobContextWheelError(Exception):
+    """any exception occuring when constructing data job context."""
+
+
 class DatajobContext(core.Construct):
     """
-    GlueJobContext is a class that creates all the services necessary for a glue job to run.
+    GlueJobContext is a class that creates all the services necessary for a glue_job_include_packaged_project job to run.
     You have to instantiate once and pass the instance to the different GlueJobs.
     """
 
@@ -32,7 +36,7 @@ class DatajobContext(core.Construct):
         :param include_folder: specify the name of the folder we would like to include in the deployment bucket.
         :param kwargs: any extra kwargs for the core.Construct
         """
-        logger.info("creating glue context.")
+        logger.info("creating glue_job_include_packaged_project context.")
         super().__init__(scope, unique_stack_name, **kwargs)
         self.project_root = project_root
         self.unique_stack_name = unique_stack_name
@@ -53,7 +57,7 @@ class DatajobContext(core.Construct):
         if include_folder:
             self._deploy_local_folder(include_folder)
         self.glue_job_role = self._create_role()
-        logger.info("glue context created.")
+        logger.info("glue_job_include_packaged_project context created.")
 
     def _create_deployment_bucket(self, unique_stack_name):
         """use the unique stackname to create an s3 bucket for deployment purposes."""
@@ -73,22 +77,29 @@ class DatajobContext(core.Construct):
         glue_deployment_bucket_name: str,
     ) -> str:
         """create a wheel and add the .whl file to the deployment bucket"""
-        self._create_wheel_for_glue_job(project_root)
-        wheel_deployment_name = f"{unique_stack_name}-WheelDeployment"
-        # todo - we should get this name dynamically
-        logger.debug(f"deploying wheel {wheel_deployment_name}")
-        aws_s3_deployment.BucketDeployment(
-            self,
-            wheel_deployment_name,
-            sources=[aws_s3_deployment.Source.asset(str(Path(project_root, "dist")))],
-            destination_bucket=glue_deployment_bucket,
-            destination_key_prefix=wheel_deployment_name,
-        )
-        s3_url_wheel = self._get_wheel_name(
-            glue_deployment_bucket_name, wheel_deployment_name, project_root
-        )
-        logger.debug(f"wheel will be located at {s3_url_wheel}")
-        return s3_url_wheel
+        try:
+            self._create_wheel_for_glue_job(project_root)
+            wheel_deployment_name = f"{unique_stack_name}-WheelDeployment"
+            # todo - we should get this name dynamically
+            logger.debug(f"deploying wheel {wheel_deployment_name}")
+            aws_s3_deployment.BucketDeployment(
+                self,
+                wheel_deployment_name,
+                sources=[
+                    aws_s3_deployment.Source.asset(str(Path(project_root, "dist")))
+                ],
+                destination_bucket=glue_deployment_bucket,
+                destination_key_prefix=wheel_deployment_name,
+            )
+            s3_url_wheel = self._get_wheel_name(
+                glue_deployment_bucket_name, wheel_deployment_name, project_root
+            )
+            logger.debug(f"wheel will be located at {s3_url_wheel}")
+        except DatajobContextWheelError as e:
+            logger.warning("something went wrong while creating a wheel." f"{e}")
+            s3_url_wheel = None
+        finally:
+            return s3_url_wheel
 
     def _get_wheel_name(
         self,
@@ -110,12 +121,17 @@ class DatajobContext(core.Construct):
         todo - use the setuptools/disttools api to create a setup.py.
         relying on a subprocess feels dangerous.
         """
-        logger.debug("creating wheel for glue job")
-        # p = subprocess.Popen(["python", str(Path(project_root, "setup.py")), "bdist_wheel"], stdout=subprocess.PIPE,
-        #                      stderr=subprocess.PIPE, shell=True)
-        # out, err = p.communicate()
-        cmd = f"cd {project_root}; python setup.py bdist_wheel"
-        subprocess.call(cmd, shell=True)
+        setup_py_file = Path(project_root, "setup.py")
+        if setup_py_file.is_file():
+            logger.debug(f"found a setup.py file in {project_root}")
+            logger.debug("creating wheel for glue_job_include_packaged_project job")
+            cmd = f"cd {project_root}; python setup.py bdist_wheel"
+            subprocess.call(cmd, shell=True)
+        else:
+            raise DatajobContextWheelError(
+                f"no setup.py file detected in project root {project_root}. "
+                f"Hence we cannot create a python wheel for this project"
+            )
 
     def _deploy_local_folder(self, include_folder):
         """deploy a local folder from our project to the deployment bucket."""
@@ -134,13 +150,13 @@ class DatajobContext(core.Construct):
         )
 
     def _create_role(self):
-        """create a role that let our glue job interact with the AWS environment."""
+        """create a role that let our glue_job_include_packaged_project job interact with the AWS environment."""
         role_name = f"{self.unique_stack_name}-GlueRole"
         logger.debug(f"creating role {role_name}")
         glue_job_role = iam.Role(
             self,
             role_name,
-            assumed_by=iam.ServicePrincipal("glue.amazonaws.com"),
+            assumed_by=iam.ServicePrincipal("glue_job_include_packaged_project.amazonaws.com"),
             managed_policies=[
                 iam.ManagedPolicy.from_aws_managed_policy_name("AmazonS3FullAccess"),
                 iam.ManagedPolicy.from_aws_managed_policy_name(
