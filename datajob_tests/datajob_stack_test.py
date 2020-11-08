@@ -11,11 +11,11 @@ class DataJobStackTest(unittest.TestCase):
     @mock_s3
     def test_datajob_stack_runs_without_errors_successfully(self):
         with DataJobStack(
-            scope=core.App(),
-            unique_stack_name="a-unique-name",
+            stack_name="a-unique-name",
             stage="stage",
-            project_root="/Users/vincent/Workspace/datajob/datajob_tests/sampleproject",
-            env={"region": "eu-west-1", "account": "3098726354"},
+            project_root="sampleproject/",
+            region="eu-west-1",
+            account="3098726354",
         ) as djs:
 
             djs.add(

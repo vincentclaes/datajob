@@ -12,11 +12,21 @@ python = "^3.7"
 "aws-cdk.aws-s3-deployment" = "^1.70.0"
 stepfunctions = "^1.1.2"
 contextvars = "^2.4"
+typer = "^0.3.2"
+dephell = "^0.8.3"
 
 [tool.poetry.dev-dependencies]
 mock = "^4.0.2"
 moto = "^1.3.16"
+dephell = "^0.8.3"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+datajob = 'datajob.datajob:run'
+
+[tool.dephell.main]
+from = {format = "poetry", path = "pyproject.toml"}
+to = {format = "setuppy", path = "setup.py"}
