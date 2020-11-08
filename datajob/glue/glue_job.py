@@ -19,10 +19,10 @@ class GlueJob(core.Construct):
         glue_job_name: str,
         stage: str,
         path_to_glue_job: str,
-        job_type: str,
-        glue_version: str,
-        max_capacity: int,
-        arguments: dict,
+        job_type: str = "pythonshell",
+        glue_version: str = None,
+        max_capacity: int = None,
+        arguments: dict = None,
         python_version: str = "3",
         *args,
         **kwargs,
@@ -126,22 +126,24 @@ class GlueJob(core.Construct):
         self,
         datajob_context: DatajobContext,
         glue_job_name: str,
-        s3_url_glue_job: str,
-        arguments: dict,
-        job_type: str,
-        python_version: str,
-        glue_version: str,
-        max_capacity: int,
+        s3_url_glue_job: str = None,
+        arguments: dict = None,
+        job_type: str = "pythonshell",
+        python_version: str = "3",
+        glue_version: str = None,
+        max_capacity: int = None,
         *args,
         **kwargs,
     ):
         """Create a glue job with the necessary configuration like, paths to wheel and business logic and arguments"""
         logger.debug(f"creating Glue Job {glue_job_name}")
-        extra_py_files = {
-            # path to the wheel of this project
-            "--extra-py-files": datajob_context.s3_url_wheel
-        }
-        default_arguments = {**extra_py_files, **arguments}
+        default_arguments = None
+        if datajob_context.s3_url_wheel:
+            extra_py_files = {
+                # path to the wheel of this project
+                "--extra-py-files": datajob_context.s3_url_wheel
+            }
+            default_arguments = {**extra_py_files, **arguments}
         glue.CfnJob(
             self,
             id=glue_job_name,

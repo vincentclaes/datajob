@@ -5,16 +5,16 @@ from datajob.datajob_context import DatajobContext
 
 class DataJobStack(core.Stack):
     def __init__(
-        self,
-        stack_name: str,
-        stage: str,
-        scope: core.Construct = core.App(),
-        project_root: str = None,
-        include_folder: str = None,
-        account:str = None,
-        region:str = None,
-        **kwargs,
-        ) -> None:
+            self,
+            stack_name: str,
+            stage: str,
+            scope: core.Construct = core.App(),
+            project_root: str = None,
+            include_folder: str = None,
+            account: str = None,
+            region: str = None,
+            **kwargs,
+            ) -> None:
         """
 
         :param scope: aws cdk core construct object.

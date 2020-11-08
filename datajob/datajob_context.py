@@ -20,7 +20,7 @@ class DatajobContext(core.Construct):
         self,
         scope: core.Construct,
         unique_stack_name: str,
-        project_root: str,
+        project_root: str = None,
         include_folder: str = None,
         **kwargs,
     ) -> None:
@@ -40,12 +40,16 @@ class DatajobContext(core.Construct):
             self.glue_deployment_bucket,
             self.glue_deployment_bucket_name,
         ) = self._create_deployment_bucket(self.unique_stack_name)
-        self.s3_url_wheel = self._build_and_deploy_wheel(
-            self.unique_stack_name,
-            self.project_root,
-            self.glue_deployment_bucket,
-            self.glue_deployment_bucket_name,
-        )
+
+        self.s3_url_wheel = None
+        if self.project_root:
+            self.s3_url_wheel = self._build_and_deploy_wheel(
+                self.unique_stack_name,
+                self.project_root,
+                self.glue_deployment_bucket,
+                self.glue_deployment_bucket_name,
+            )
+
         if include_folder:
             self._deploy_local_folder(include_folder)
         self.glue_job_role = self._create_role()
