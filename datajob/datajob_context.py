@@ -2,6 +2,7 @@ import subprocess
 from pathlib import Path
 
 from aws_cdk import aws_iam as iam, core, aws_s3_deployment, aws_s3
+from aws_empty_bucket.empty_s3_bucket import EmptyS3Bucket
 
 from datajob import logger
 
@@ -60,11 +61,14 @@ class DatajobContext(core.Construct):
         logger.info("glue_job_include_packaged_project context created.")
 
     def _create_deployment_bucket(self, unique_stack_name):
-        """use the unique stackname to create an s3 bucket for deployment purposes."""
+        """use the unique stackname to create an s3 bucket for deployment purposes.
+        We take an EmptyS3Bucket so that we can remove the stack including the deployment bucket with its contents.
+        if we take a regular S3 bucket, the bucket will be orphaned from the stack leaving
+        our account with all oprhaned s3 buckets. """
         glue_deployment_bucket_name = f"{unique_stack_name}-deployment-bucket"
         # todo - can we validate the bucket name?
         logger.debug(f"creating deployment bucket {glue_deployment_bucket_name}")
-        glue_deployment_bucket = aws_s3.Bucket(
+        glue_deployment_bucket = EmptyS3Bucket(
             self, glue_deployment_bucket_name,
             bucket_name=glue_deployment_bucket_name,
             removal_policy=core.RemovalPolicy.DESTROY
