@@ -1,8 +1,12 @@
-import typer
-import subprocess
-from datajob.package import wheel
+import os
 import pathlib
+import subprocess
 from pathlib import Path
+
+import typer
+
+from datajob.package import wheel
+from datajob import logger
 
 app = typer.Typer()
 filepath = pathlib.Path(__file__).resolve().parent
@@ -17,14 +21,17 @@ def run():
     context_settings={"allow_extra_args": True, "ignore_unknown_options": True}
 )
 def deploy(
-    config: str = typer.Option(...),
-    package: bool = typer.Option(False, "--package"),
-    ctx: typer.Context = typer.Option(list),
+        config: str = typer.Option(Path, callback=os.path.abspath),
+        package: bool = typer.Option(False, "--package"),
+        ctx: typer.Context = typer.Option(list),
 ):
     if package:
-        wheel.create(project_root=package)
+        # todo - check if we are building in the right directory
+        project_root = str(Path(config).parent)
+        wheel.create(project_root=project_root)
     # create stepfunctions if requested
-    args = ["--app", f"python {config}"]
+    # make sure you have quotes around the app arguments
+    args = ["--app", f""" "python {config}" """]
     extra_args = ctx.args
     call_cdk(command="deploy", args=args, extra_args=extra_args)
 
@@ -46,4 +53,6 @@ def destroy(config: str = typer.Option(...)):
 def call_cdk(command: str, args: list = None, extra_args: list = None):
     args = args if args else []
     extra_args = extra_args if extra_args else []
-    subprocess.call(" ".join(["cdk", command] + args + extra_args), shell=True)
+    full_command = " ".join(["cdk", command] + args + extra_args)
+    print(f"cdk command {full_command}")
+    subprocess.call(full_command, shell=True)
