@@ -14,6 +14,7 @@ stepfunctions = "^1.1.2"
 contextvars = "^2.4"
 typer = "^0.3.2"
 dephell = "^0.8.3"
+aws-empty-bucket = "^2.4.0"
 
 [tool.poetry.dev-dependencies]
 mock = "^4.0.2"

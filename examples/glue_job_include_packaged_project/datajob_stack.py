@@ -2,7 +2,7 @@ from datajob.datajob_stack import DataJobStack
 from datajob.glue.glue_job import GlueJob
 
 with DataJobStack(
-    stack_name="glue_job_include_packaged_project-job-include-packaged-project", stage="dev", project_root="./"
+    stack_name="some-glue-job", stage="dev", project_root="./"
 ) as datajob_stack:
     datajob_stack.add(
         GlueJob(

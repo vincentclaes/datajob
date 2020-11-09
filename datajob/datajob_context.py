@@ -11,7 +11,7 @@ class DatajobContextError(Exception):
 
 
 class DatajobContextWheelError(Exception):
-    """any exception occuring when constructing data job context."""
+    """any exception occuring when constructing wheel in data job context."""
 
 
 class DatajobContext(core.Construct):
@@ -65,7 +65,9 @@ class DatajobContext(core.Construct):
         # todo - can we validate the bucket name?
         logger.debug(f"creating deployment bucket {glue_deployment_bucket_name}")
         glue_deployment_bucket = aws_s3.Bucket(
-            self, glue_deployment_bucket_name, bucket_name=glue_deployment_bucket_name
+            self, glue_deployment_bucket_name,
+            bucket_name=glue_deployment_bucket_name,
+            removal_policy=core.RemovalPolicy.DESTROY
         )
         return glue_deployment_bucket, glue_deployment_bucket_name
 
@@ -156,7 +158,7 @@ class DatajobContext(core.Construct):
         glue_job_role = iam.Role(
             self,
             role_name,
-            assumed_by=iam.ServicePrincipal("glue_job_include_packaged_project.amazonaws.com"),
+            assumed_by=iam.ServicePrincipal("glue.amazonaws.com"),
             managed_policies=[
                 iam.ManagedPolicy.from_aws_managed_policy_name("AmazonS3FullAccess"),
                 iam.ManagedPolicy.from_aws_managed_policy_name(

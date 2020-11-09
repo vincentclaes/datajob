@@ -27,4 +27,6 @@ save this code in a file called `datajob_stack.py`
 
 to deploy execute:
 
+    export AWS_DEFAULT_ACCOUNT=077590795309
+    export AWS_PROFILE=my-profile
     cdk deploy --app "python datajob_stack.py"

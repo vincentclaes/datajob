@@ -44,7 +44,7 @@ class GlueJob(core.Construct):
         super().__init__(scope, glue_job_name, **kwargs)
         self.unique_name = f"{glue_job_name}-{stage}"
         self.path_to_glue_job = path_to_glue_job
-        self.arguments = arguments
+        self.arguments = arguments if arguments else {}
         self.job_type = job_type
         self.python_version = python_version
         self.glue_version = glue_version
