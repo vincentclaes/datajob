@@ -78,7 +78,9 @@ class GlueJob(core.Construct):
     ):
         """path to the script on s3 for this job."""
         s3_url_glue_job = f"s3://{glue_job_context.glue_deployment_bucket_name}/{glue_job_id}/{glue_job_file_name}"
-        logger.debug(f"s3 url for glue_job_include_packaged_project job {glue_job_id}: {s3_url_glue_job}")
+        logger.debug(
+            f"s3 url for glue_job_include_packaged_project job {glue_job_id}: {s3_url_glue_job}"
+        )
         return s3_url_glue_job
 
     @staticmethod
@@ -101,7 +103,9 @@ class GlueJob(core.Construct):
         glue_job_dir, glue_job_file_name = GlueJob._get_glue_job_dir_and_file_name(
             path_to_glue_job=path_to_glue_job
         )
-        logger.debug(f"deploying glue_job_include_packaged_project job folder {glue_job_dir}")
+        logger.debug(
+            f"deploying glue_job_include_packaged_project job folder {glue_job_dir}"
+        )
         aws_s3_deployment.BucketDeployment(
             self,
             f"{glue_job_name}-CodeDeploy",

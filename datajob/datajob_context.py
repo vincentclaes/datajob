@@ -64,14 +64,15 @@ class DatajobContext(core.Construct):
         """use the unique stackname to create an s3 bucket for deployment purposes.
         We take an EmptyS3Bucket so that we can remove the stack including the deployment bucket with its contents.
         if we take a regular S3 bucket, the bucket will be orphaned from the stack leaving
-        our account with all oprhaned s3 buckets. """
+        our account with all oprhaned s3 buckets."""
         glue_deployment_bucket_name = f"{unique_stack_name}-deployment-bucket"
         # todo - can we validate the bucket name?
         logger.debug(f"creating deployment bucket {glue_deployment_bucket_name}")
         glue_deployment_bucket = EmptyS3Bucket(
-            self, glue_deployment_bucket_name,
+            self,
+            glue_deployment_bucket_name,
             bucket_name=glue_deployment_bucket_name,
-            removal_policy=core.RemovalPolicy.DESTROY
+            removal_policy=core.RemovalPolicy.DESTROY,
         )
         return glue_deployment_bucket, glue_deployment_bucket_name
 
@@ -84,7 +85,6 @@ class DatajobContext(core.Construct):
     ) -> str:
         """create a wheel and add the .whl file to the deployment bucket"""
         try:
-            self._create_wheel_for_glue_job(project_root)
             wheel_deployment_name = f"{unique_stack_name}-WheelDeployment"
             # todo - we should get this name dynamically
             logger.debug(f"deploying wheel {wheel_deployment_name}")
@@ -119,25 +119,6 @@ class DatajobContext(core.Construct):
             raise DatajobContextError(f"we expected 1 wheel: {dist_file_names}")
         # todo - improve creation of s3 urls
         return f"s3://{glue_deployment_bucket_name}/{wheel_deployment_name}/{dist_file_names[0]}"
-
-    @staticmethod
-    def _create_wheel_for_glue_job(project_root):
-        """launch a subprocess to built a wheel.
-
-        todo - use the setuptools/disttools api to create a setup.py.
-        relying on a subprocess feels dangerous.
-        """
-        setup_py_file = Path(project_root, "setup.py")
-        if setup_py_file.is_file():
-            logger.debug(f"found a setup.py file in {project_root}")
-            logger.debug("creating wheel for glue_job_include_packaged_project job")
-            cmd = f"cd {project_root}; python setup.py bdist_wheel"
-            subprocess.call(cmd, shell=True)
-        else:
-            raise DatajobContextWheelError(
-                f"no setup.py file detected in project root {project_root}. "
-                f"Hence we cannot create a python wheel for this project"
-            )
 
     def _deploy_local_folder(self, include_folder):
         """deploy a local folder from our project to the deployment bucket."""
