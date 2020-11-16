@@ -19,6 +19,7 @@ class GlueJob(core.Construct):
         glue_job_name: str,
         stage: str,
         path_to_glue_job: str,
+        project_root: str = None,
         job_type: str = "pythonshell",
         glue_version: str = None,
         max_capacity: int = None,
@@ -43,7 +44,8 @@ class GlueJob(core.Construct):
         logger.info(f"creating glue_job_include_packaged_project job {glue_job_name}")
         super().__init__(scope, glue_job_name, **kwargs)
         self.unique_name = f"{glue_job_name}-{stage}"
-        self.path_to_glue_job = path_to_glue_job
+        self.project_root = project_root
+        self.path_to_glue_job = str(Path(project_root, path_to_glue_job)) if self.project_root is not None else path_to_glue_job
         self.arguments = arguments if arguments else {}
         self.job_type = job_type
         self.python_version = python_version
