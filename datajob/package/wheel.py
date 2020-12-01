@@ -20,7 +20,7 @@ def create(project_root):
     setup_py_file = Path(project_root, "setup.py")
     if setup_py_file.is_file():
         logger.debug(f"found a setup.py file in {project_root}")
-        logger.debug("creating wheel for glue_job_include_packaged_project job")
+        logger.debug("creating wheel for glue job")
         cmd = f"cd {project_root}; python setup.py bdist_wheel"
         subprocess.call(cmd, shell=True)
     else:

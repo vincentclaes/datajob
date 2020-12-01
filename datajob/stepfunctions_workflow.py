@@ -18,7 +18,7 @@ class StepfunctionsWorkflow(object):
 
         with StepfunctionsWorkflow("techskills-parser", "arn:aws:iam:::role/some-role") as tech_skills_parser_orchestration:
 
-            some-glue_job_include_packaged_project-job-1 >> [some-glue_job_include_packaged_project-job-2,some-glue_job_include_packaged_project-job-3] >> some-glue_job_include_packaged_project-job-4
+            some-glue-job-1 >> [some-glue-job-2,some-glue-job-3] >> some-glue-job-4
 
         tech_skills_parser_orchestration.execute()
 
@@ -52,7 +52,7 @@ class StepfunctionsWorkflow(object):
 
     @staticmethod
     def _create_glue_start_job_run_step(job_name):
-        logger.debug("creating a step for a glue_job_include_packaged_project job.")
+        logger.debug("creating a step for a glue job.")
         return GlueStartJobRunStep(
             job_name,
             wait_for_completion=True,

@@ -5,14 +5,20 @@ import pathlib
 current_dir = pathlib.Path(__file__).parent.absolute()
 
 with DataJobStack(
-    stack_name="some-glue-job", stage="dev", project_root=current_dir
+    stack_name="simple-data-pipeline", stage="dev", project_root=current_dir
 ) as datajob_stack:
-    datajob_stack.add(
         GlueJob(
-            scope=datajob_stack,
+            datajob_stack=datajob_stack,
             glue_job_name="task1",
-            stage=datajob_stack.stage,
-            path_to_glue_job="glue_job_include_packaged_project/task1.py",
-            project_root=datajob_stack.project_root
+            path_to_glue_job="simple_data_pipeline/task1.py",
         )
-    )
+        GlueJob(
+            datajob_stack=datajob_stack,
+            glue_job_name="task2",
+            path_to_glue_job="simple_data_pipeline/task2.py",
+        )
+        GlueJob(
+            datajob_stack=datajob_stack,
+            glue_job_name="task3",
+            path_to_glue_job="simple_data_pipeline/task3.py",
+        )
