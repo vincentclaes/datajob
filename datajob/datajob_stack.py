@@ -55,7 +55,7 @@ class DataJobStack(core.Stack):
 
     def add(self, task):
         setattr(self, task.unique_name, task)
-        task.deploy(datajob_context=self.datajob_context)
+        task.create(datajob_context=self.datajob_context)
 
     @staticmethod
     def _create_unique_stack_name(stack_name, stage):

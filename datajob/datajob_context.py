@@ -17,7 +17,7 @@ class DatajobContextWheelError(Exception):
 
 class DatajobContext(core.Construct):
     """
-    GlueJobContext is a class that creates all the services necessary for a glue_job_include_packaged_project job to run.
+    GlueJobContext is a class that creates all the services necessary for a glue job to run.
     You have to instantiate once and pass the instance to the different GlueJobs.
     """
 
@@ -37,7 +37,7 @@ class DatajobContext(core.Construct):
         :param include_folder: specify the name of the folder we would like to include in the deployment bucket.
         :param kwargs: any extra kwargs for the core.Construct
         """
-        logger.info("creating glue_job_include_packaged_project context.")
+        logger.info("creating glue context.")
         super().__init__(scope, unique_stack_name, **kwargs)
         self.project_root = project_root
         self.unique_stack_name = unique_stack_name
@@ -58,7 +58,7 @@ class DatajobContext(core.Construct):
         if include_folder:
             self._deploy_local_folder(include_folder)
         self.glue_job_role = self._create_role()
-        logger.info("glue_job_include_packaged_project context created.")
+        logger.info("glue context created.")
 
     def _create_deployment_bucket(self, unique_stack_name):
         """use the unique stackname to create an s3 bucket for deployment purposes.
@@ -137,7 +137,7 @@ class DatajobContext(core.Construct):
         )
 
     def _create_role(self):
-        """create a role that let our glue_job_include_packaged_project job interact with the AWS environment."""
+        """create a role that let our glue job interact with the AWS environment."""
         role_name = f"{self.unique_stack_name}-GlueRole"
         logger.debug(f"creating role {role_name}")
         glue_job_role = iam.Role(

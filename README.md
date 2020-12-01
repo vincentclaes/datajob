@@ -30,4 +30,4 @@ to deploy execute:
     export AWS_DEFAULT_ACCOUNT=077590795309
     export AWS_PROFILE=my-profile
     # cdk deploy --app "python datajob_stack.py"
-    datajob deploy --stage dev --config examples/glue_job_include_packaged_project/datajob_stack.py
+    datajob deploy --stage dev --config examples/simple_data_pipeline/datajob_stack.py

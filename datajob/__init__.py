@@ -3,6 +3,7 @@ import os
 import pathlib
 from pathlib import Path
 
+
 ROOT_DIR = pathlib.Path(__file__).parent.absolute()
 
 # if someone tried to log something before basicConfig is called, Python creates a default handler that
@@ -16,3 +17,4 @@ log_level = os.environ.get("LOG_LEVEL", "INFO")
 logging.basicConfig(level=logging.getLevelName(log_level))
 project_name = Path(__file__).parent.stem
 logger = logging.getLogger(project_name)
+
