@@ -1,9 +1,9 @@
 import unittest
-from datajob import datajob
-from sys import argv
+
 from mock import patch
-import typer
 from typer.testing import CliRunner
+
+from datajob import datajob
 
 
 class DatajobTest(unittest.TestCase):

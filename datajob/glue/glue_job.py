@@ -4,8 +4,8 @@ from aws_cdk import aws_glue as glue, core, aws_s3_deployment
 
 from datajob import logger
 from datajob import stepfunctions_workflow
-from datajob.datajob_context import DatajobContext
 from datajob.datajob_base import DataJobBase
+from datajob.datajob_context import DatajobContext
 
 
 @stepfunctions_workflow.task

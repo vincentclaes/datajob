@@ -6,7 +6,6 @@ from pathlib import Path
 import typer
 
 from datajob.package import wheel
-from datajob import logger
 
 app = typer.Typer()
 filepath = pathlib.Path(__file__).resolve().parent

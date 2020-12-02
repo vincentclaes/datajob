@@ -1,4 +1,3 @@
-import subprocess
 from pathlib import Path
 
 from aws_cdk import aws_iam as iam, core, aws_s3_deployment, aws_s3
