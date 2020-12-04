@@ -3,9 +3,9 @@ import unittest
 from moto import mock_stepfunctions
 from stepfunctions.steps.compute import GlueStartJobRunStep
 from stepfunctions.steps.states import Parallel
-
-from datajob import stepfunctions_workflow
-from datajob.stepfunctions_workflow import StepfunctionsWorkflow
+from datajob.datajob_stack import DataJobStack
+from datajob.stepfunctions import stepfunctions_workflow
+from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
 
 
 @stepfunctions_workflow.task
@@ -15,14 +15,22 @@ class SomeMockedClass(object):
 
 
 class StepfunctionsWorkflowTestTest(unittest.TestCase):
+
     @mock_stepfunctions
     def test_create_tasks_for_orchestration_simple_flow_successfully(self):
         task1 = stepfunctions_workflow.task(SomeMockedClass("task1"))
         task2 = stepfunctions_workflow.task(SomeMockedClass("task2"))
         task3 = stepfunctions_workflow.task(SomeMockedClass("task3"))
         task4 = stepfunctions_workflow.task(SomeMockedClass("task4"))
-
+        djs = DataJobStack(
+            stack_name="a-unique-name",
+            stage="stage",
+            project_root="sampleproject/",
+            region="eu-west-1",
+            account="3098726354",
+        )
         with StepfunctionsWorkflow(
+                djs,
                 "some-name",
                 "arn:aws:iam::303915887687:role/some-role"
         ) as a_step_functions_workflow:
@@ -45,8 +53,15 @@ class StepfunctionsWorkflowTestTest(unittest.TestCase):
         task1 = stepfunctions_workflow.task(SomeMockedClass("task1"))
         task2 = stepfunctions_workflow.task(SomeMockedClass("task2"))
         task3 = stepfunctions_workflow.task(SomeMockedClass("task2"))
-
+        djs = DataJobStack(
+            stack_name="a-unique-name",
+            stage="stage",
+            project_root="sampleproject/",
+            region="eu-west-1",
+            account="3098726354",
+        )
         with StepfunctionsWorkflow(
+                djs,
                 "some-name",
                 "arn:aws:iam::303915887687:role/some-role"
         ) as a_step_functions_workflow:

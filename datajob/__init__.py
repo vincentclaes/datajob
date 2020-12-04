@@ -3,7 +3,6 @@ import os
 import pathlib
 from pathlib import Path
 
-
 ROOT_DIR = pathlib.Path(__file__).parent.absolute()
 
 # if someone tried to log something before basicConfig is called, Python creates a default handler that

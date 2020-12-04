@@ -5,13 +5,14 @@ from stepfunctions import steps
 from stepfunctions.steps.compute import GlueStartJobRunStep
 from stepfunctions.steps.states import Parallel
 from stepfunctions.workflow import Workflow
-
 from datajob import logger
+from datajob.datajob_base import DataJobBase
+from aws_cdk import core
 
 __workflow = contextvars.ContextVar("workflow")
 
 
-class StepfunctionsWorkflow(object):
+class StepfunctionsWorkflow(DataJobBase):
     """Class that defines the methods to create and execute an orchestration using the step functions sdk.
 
     example:
@@ -24,8 +25,8 @@ class StepfunctionsWorkflow(object):
 
     """
 
-    def __init__(self, unique_stack_name, role_arn):
-        self.unique_stack_name = unique_stack_name
+    def __init__(self, datajob_stack: core.Construct, name: str, role_arn: str = None, **kwargs):
+        super().__init__(datajob_stack, name, **kwargs)
         self.role_arn = role_arn
         self.chain_of_tasks = []
         self.workflow = None
@@ -65,9 +66,9 @@ class StepfunctionsWorkflow(object):
             f"creating a chain from all the different steps. \n {self.chain_of_tasks}"
         )
         workflow_definition = steps.Chain(self.chain_of_tasks)
-        logger.debug(f"creating a workflow with name {self.unique_stack_name}")
+        logger.debug(f"creating a workflow with name {self.unique_name}")
         self.workflow = Workflow(
-            name=self.unique_stack_name + "-" + uuid.uuid4().hex,
+            name=self.unique_name,
             definition=workflow_definition,
             role=self.role_arn,
         )
@@ -75,7 +76,7 @@ class StepfunctionsWorkflow(object):
 
     def __enter__(self):
         """first steps we have to do when entering the context manager."""
-        logger.info(f"creating step functions workflow for {self.unique_stack_name}")
+        logger.info(f"creating step functions workflow for {self.unique_name}")
         _set_workflow(self)
         return self
 
@@ -83,7 +84,7 @@ class StepfunctionsWorkflow(object):
         """steps we have to do when exiting the context manager."""
         self._build_workflow()
         _set_workflow(None)
-        logger.info(f"step functions workflow {self.unique_stack_name} created")
+        logger.info(f"step functions workflow {self.unique_name} created")
 
 
 def task(self):

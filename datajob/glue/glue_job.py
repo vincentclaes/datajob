@@ -1,10 +1,9 @@
 from pathlib import Path
 
 from aws_cdk import aws_glue as glue, core, aws_s3_deployment
-
 from datajob import logger
-from datajob import stepfunctions_workflow
 from datajob.datajob_base import DataJobBase
+from datajob.stepfunctions import stepfunctions_workflow
 from datajob.datajob_context import DatajobContext
 
 
@@ -17,7 +16,7 @@ class GlueJob(DataJobBase):
     def __init__(
         self,
         datajob_stack: core.Construct,
-        glue_job_name: str,
+        name: str,
         path_to_glue_job: str,
         job_type: str = "pythonshell",
         glue_version: str = None,
@@ -29,7 +28,7 @@ class GlueJob(DataJobBase):
     ):
         """
         :param datajob_stack: aws cdk core construct object.
-        :param glue_job_name: a name for this glue job (will appear on the glue console).
+        :param name: a name for this glue job (will appear on the glue console).
         :param path_to_glue_job: the path to the glue job relative to the project root.
         :param job_type: choose pythonshell for plain python / glueetl for a spark cluster.
         :param glue_version: at the time of writing choose 1.0 for pythonshell / 2.0 for spark.
@@ -39,10 +38,9 @@ class GlueJob(DataJobBase):
         :param args: any extra args for the glue.CfnJob
         :param kwargs: any extra kwargs for the glue.CfnJob
         """
-        logger.info(f"creating glue job {glue_job_name}")
-        super().__init__(datajob_stack, glue_job_name, **kwargs)
+        logger.info(f"creating glue job {name}")
+        super().__init__(datajob_stack, name, **kwargs)
         self.path_to_glue_job = str(Path(self.project_root, path_to_glue_job)) if self.project_root is not None else path_to_glue_job
-        self.unique_name = f"{glue_job_name}-{self.stage}"
         self.arguments = arguments if arguments else {}
         self.job_type = job_type
         self.python_version = python_version
@@ -50,7 +48,7 @@ class GlueJob(DataJobBase):
         self.max_capacity = max_capacity
         self.args = args
         self.kwargs = kwargs
-        logger.info(f"glue job {glue_job_name} created.")
+        logger.info(f"glue job {name} created.")
 
     def create(self, datajob_context):
         s3_url_glue_job = self._deploy_glue_job_code(

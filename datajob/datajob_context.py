@@ -148,9 +148,6 @@ class DatajobContext(core.Construct):
                 iam.ManagedPolicy.from_aws_managed_policy_name(
                     "CloudWatchLogsFullAccess"
                 ),
-                iam.ManagedPolicy.from_aws_managed_policy_name(
-                    "AmazonSSMReadOnlyAccess"
-                ),
             ],
         )
         return glue_job_role
