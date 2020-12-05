@@ -84,7 +84,7 @@ class DatajobContext(core.Construct):
     ) -> str:
         """create a wheel and add the .whl file to the deployment bucket"""
         try:
-            wheel_deployment_name = f"{unique_stack_name}-WheelDeployment"
+            wheel_deployment_name = f"{unique_stack_name}-wheel"
             # todo - we should get this name dynamically
             logger.debug(f"deploying wheel {wheel_deployment_name}")
             aws_s3_deployment.BucketDeployment(
@@ -117,7 +117,7 @@ class DatajobContext(core.Construct):
         if len(dist_file_names) != 1:
             raise DatajobContextError(f"we expected 1 wheel: {dist_file_names}")
         # todo - improve creation of s3 urls
-        return f"s3://{glue_deployment_bucket_name}/{wheel_deployment_name}/{dist_file_names[0]}"
+        return f"s3://{glue_deployment_bucket_name}/{wheel_deployment_name}/{dist_file_names[0].name}"
 
     def _deploy_local_folder(self, include_folder):
         """deploy a local folder from our project to the deployment bucket."""

@@ -24,5 +24,9 @@ with DataJobStack(
         path_to_glue_job="simple_data_pipeline/task3.py",
     )
 
-    with StepfunctionsWorkflow(datajob_stack=datajob_stack, name="simple-data-pipeline", role_arn="arn:aws:iam::077590795309:role/stepfunctions-datajob"):
+    with StepfunctionsWorkflow(
+        datajob_stack=datajob_stack,
+        name="simple-data-pipeline",
+        role_arn="arn:aws:iam::077590795309:role/stepfunctions-datajob",
+    ) as sfn:
         [task1, task2] >> task3

@@ -1,6 +1,8 @@
 import contextvars
 import uuid
-
+import json
+import tempfile
+from pathlib import Path
 from stepfunctions import steps
 from stepfunctions.steps.compute import GlueStartJobRunStep
 from stepfunctions.steps.states import Parallel
@@ -8,6 +10,7 @@ from stepfunctions.workflow import Workflow
 from datajob import logger
 from datajob.datajob_base import DataJobBase
 from aws_cdk import core
+from aws_cdk import cloudformation_include as cfn_inc
 
 __workflow = contextvars.ContextVar("workflow")
 
@@ -25,7 +28,9 @@ class StepfunctionsWorkflow(DataJobBase):
 
     """
 
-    def __init__(self, datajob_stack: core.Construct, name: str, role_arn: str = None, **kwargs):
+    def __init__(
+        self, datajob_stack: core.Construct, name: str, role_arn: str = None, **kwargs
+    ):
         super().__init__(datajob_stack, name, **kwargs)
         self.role_arn = role_arn
         self.chain_of_tasks = []
@@ -72,7 +77,14 @@ class StepfunctionsWorkflow(DataJobBase):
             definition=workflow_definition,
             role=self.role_arn,
         )
-        self.workflow.create()
+
+    def create(self):
+        """create sfn stack"""
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            sfn_cf_file_path = str(Path(tmp_dir, self.unique_name))
+            with open(sfn_cf_file_path, "w") as text_file:
+                text_file.write(self.workflow.get_cloudformation_template())
+            cfn_inc.CfnInclude(self, self.unique_name, template_file=sfn_cf_file_path)
 
     def __enter__(self):
         """first steps we have to do when entering the context manager."""

@@ -20,9 +20,9 @@ def run():
     context_settings={"allow_extra_args": True, "ignore_unknown_options": True}
 )
 def deploy(
-        config: str = typer.Option(Path, callback=os.path.abspath),
-        package: bool = typer.Option(False, "--package"),
-        ctx: typer.Context = typer.Option(list),
+    config: str = typer.Option(Path, callback=os.path.abspath),
+    package: bool = typer.Option(False, "--package"),
+    ctx: typer.Context = typer.Option(list),
 ):
     if package:
         # todo - check if we are building in the right directory
@@ -45,8 +45,13 @@ def orchestrate(config: str = typer.Option(...)):
 @app.command(
     context_settings={"allow_extra_args": True, "ignore_unknown_options": True}
 )
-def destroy(config: str = typer.Option(...)):
-    call_cdk(command="destroy", args=" ".join(["--app", f"python {config}"]))
+def destroy(
+    config: str = typer.Option(Path, callback=os.path.abspath),
+    ctx: typer.Context = typer.Option(list),
+):
+    args = ["--app", f""" "python {config}" """]
+    extra_args = ctx.args
+    call_cdk(command="destroy", args=args, extra_args=extra_args)
 
 
 def call_cdk(command: str, args: list = None, extra_args: list = None):

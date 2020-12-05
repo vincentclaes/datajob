@@ -1,7 +1,7 @@
 import os
 
 from aws_cdk import core
-
+from datajob import logger
 from datajob.datajob_context import DatajobContext
 
 
@@ -53,6 +53,8 @@ class DataJobStack(core.Stack):
 
     def __exit__(self, exc_type, exc_value, traceback):
         """steps we have to do when exiting the context manager."""
+        logger.debug("creating resources and synthesizing stack.")
+        self.create_resources()
         self.scope.synth()
 
     def add(self, task):
@@ -62,3 +64,7 @@ class DataJobStack(core.Stack):
     @staticmethod
     def _create_unique_stack_name(stack_name, stage):
         return f"{stack_name}-{stage}"
+
+    def create_resources(self):
+        """create each of the resources of this stack"""
+        [resource.create() for resource in self.resources]

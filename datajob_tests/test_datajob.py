@@ -28,7 +28,9 @@ class DatajobTest(unittest.TestCase):
 
     @patch("datajob.package.wheel.create")
     @patch("datajob.datajob.call_cdk")
-    def test_datajob_deploy_cli_runs_with_project_root_successfully(self, m_call_cdk, m_create_wheel):
+    def test_datajob_deploy_cli_runs_with_project_root_successfully(
+        self, m_call_cdk, m_create_wheel
+    ):
         result = self.runner.invoke(
             datajob.app,
             ["deploy", "--config", "some_config.py", "--package"],

@@ -15,7 +15,6 @@ class SomeMockedClass(object):
 
 
 class StepfunctionsWorkflowTestTest(unittest.TestCase):
-
     @mock_stepfunctions
     def test_create_tasks_for_orchestration_simple_flow_successfully(self):
         task1 = stepfunctions_workflow.task(SomeMockedClass("task1"))
@@ -30,9 +29,7 @@ class StepfunctionsWorkflowTestTest(unittest.TestCase):
             account="3098726354",
         )
         with StepfunctionsWorkflow(
-                djs,
-                "some-name",
-                "arn:aws:iam::303915887687:role/some-role"
+            djs, "some-name", "arn:aws:iam::303915887687:role/some-role"
         ) as a_step_functions_workflow:
             task1 >> [task2, task3] >> task4
 
@@ -48,7 +45,7 @@ class StepfunctionsWorkflowTestTest(unittest.TestCase):
 
     @mock_stepfunctions
     def test_create_tasks_for_orchestration_starts_with_parallel_flow_successfully(
-            self,
+        self,
     ):
         task1 = stepfunctions_workflow.task(SomeMockedClass("task1"))
         task2 = stepfunctions_workflow.task(SomeMockedClass("task2"))
@@ -61,9 +58,7 @@ class StepfunctionsWorkflowTestTest(unittest.TestCase):
             account="3098726354",
         )
         with StepfunctionsWorkflow(
-                djs,
-                "some-name",
-                "arn:aws:iam::303915887687:role/some-role"
+            djs, "some-name", "arn:aws:iam::303915887687:role/some-role"
         ) as a_step_functions_workflow:
             [task1, task2] >> task3
 

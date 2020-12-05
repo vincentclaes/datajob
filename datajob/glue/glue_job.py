@@ -40,7 +40,11 @@ class GlueJob(DataJobBase):
         """
         logger.info(f"creating glue job {name}")
         super().__init__(datajob_stack, name, **kwargs)
-        self.path_to_glue_job = str(Path(self.project_root, path_to_glue_job)) if self.project_root is not None else path_to_glue_job
+        self.path_to_glue_job = (
+            str(Path(self.project_root, path_to_glue_job))
+            if self.project_root is not None
+            else path_to_glue_job
+        )
         self.arguments = arguments if arguments else {}
         self.job_type = job_type
         self.python_version = python_version
@@ -50,14 +54,14 @@ class GlueJob(DataJobBase):
         self.kwargs = kwargs
         logger.info(f"glue job {name} created.")
 
-    def create(self, datajob_context):
+    def create(self):
         s3_url_glue_job = self._deploy_glue_job_code(
-            datajob_context=datajob_context,
+            datajob_context=self.datajob_context,
             glue_job_name=self.unique_name,
             path_to_glue_job=self.path_to_glue_job,
         )
         self._create_glue_job(
-            datajob_context=datajob_context,
+            datajob_context=self.datajob_context,
             glue_job_name=self.unique_name,
             s3_url_glue_job=s3_url_glue_job,
             arguments=self.arguments,
@@ -75,9 +79,7 @@ class GlueJob(DataJobBase):
     ):
         """path to the script on s3 for this job."""
         s3_url_glue_job = f"s3://{glue_job_context.glue_deployment_bucket_name}/{glue_job_id}/{glue_job_file_name}"
-        logger.debug(
-            f"s3 url for glue job {glue_job_id}: {s3_url_glue_job}"
-        )
+        logger.debug(f"s3 url for glue job {glue_job_id}: {s3_url_glue_job}")
         return s3_url_glue_job
 
     @staticmethod
@@ -101,9 +103,7 @@ class GlueJob(DataJobBase):
         glue_job_dir, glue_job_file_name = GlueJob._get_glue_job_dir_and_file_name(
             path_to_glue_job=path_to_glue_job
         )
-        logger.debug(
-            f"deploying glue job folder {glue_job_dir}"
-        )
+        logger.debug(f"deploying glue job folder {glue_job_dir}")
         aws_s3_deployment.BucketDeployment(
             self,
             f"{glue_job_name}-CodeDeploy",
