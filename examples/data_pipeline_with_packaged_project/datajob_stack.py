@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from datajob.datajob_stack import DataJobStack
 from datajob.glue.glue_job import GlueJob
 from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
