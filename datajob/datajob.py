@@ -59,4 +59,5 @@ def call_cdk(command: str, args: list = None, extra_args: list = None):
     extra_args = extra_args if extra_args else []
     full_command = " ".join(["cdk", command] + args + extra_args)
     print(f"cdk command {full_command}")
+    # todo - shell=True is not secure
     subprocess.call(full_command, shell=True)

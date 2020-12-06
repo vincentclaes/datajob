@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from aws_cdk import aws_glue as glue, core, aws_s3_deployment
+from aws_cdk import aws_iam as iam
 
 from datajob import logger
 from datajob.datajob_base import DataJobBase
@@ -24,6 +25,7 @@ class GlueJob(DataJobBase):
         max_capacity: int = None,
         arguments: dict = None,
         python_version: str = "3",
+        role: iam.Role = None,
         *args,
         **kwargs,
     ):
@@ -53,6 +55,13 @@ class GlueJob(DataJobBase):
         self.max_capacity = max_capacity
         self.args = args
         self.kwargs = kwargs
+        self.role = (
+            self.get_role(
+                unique_name=self.unique_name, service_principal="glue.amazonaws.com"
+            )
+            if role is None
+            else role
+        )
         logger.info(f"glue job {name} created.")
 
     def create(self):
@@ -152,7 +161,7 @@ class GlueJob(DataJobBase):
             self,
             id=glue_job_name,
             name=glue_job_name,
-            role=datajob_context.glue_job_role.role_arn,
+            role=self.role.role_arn,
             command=glue.CfnJob.JobCommandProperty(
                 name=job_type,
                 python_version=python_version,
