@@ -1,0 +1,16 @@
+name: examples
+on: pull_request
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checking out
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+      - name: cdk synthesize
+        uses: vincentclaes/aws-cdk-github-actions@master
+        with:
+          working-directory: ./examples/data_pipeline_with_packaged_project
+          cdk_subcommand: 'synthesize --context stage=some-stage --app "python datajob_stack.py"'

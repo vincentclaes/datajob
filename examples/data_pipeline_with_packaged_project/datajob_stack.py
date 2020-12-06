@@ -11,17 +11,17 @@ with DataJobStack(
     task1 = GlueJob(
         datajob_stack=datajob_stack,
         name="task1",
-        path_to_glue_job="simple_data_pipeline/task1.py",
+        path_to_glue_job="data_pipeline_with_packaged_project/task1.py",
     )
     task2 = GlueJob(
         datajob_stack=datajob_stack,
         name="task2",
-        path_to_glue_job="simple_data_pipeline/task2.py",
+        path_to_glue_job="data_pipeline_with_packaged_project/task2.py",
     )
     task3 = GlueJob(
         datajob_stack=datajob_stack,
         name="task3",
-        path_to_glue_job="simple_data_pipeline/task3.py",
+        path_to_glue_job="data_pipeline_with_packaged_project/task3.py",
     )
 
     with StepfunctionsWorkflow(
