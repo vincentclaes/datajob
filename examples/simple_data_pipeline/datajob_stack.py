@@ -6,7 +6,7 @@ import pathlib
 current_dir = pathlib.Path(__file__).parent.absolute()
 
 with DataJobStack(
-    stack_name="simple-data-pipeline", stage="dev", project_root=current_dir
+    stack_name="simple-data-pipeline", project_root=current_dir
 ) as datajob_stack:
     task1 = GlueJob(
         datajob_stack=datajob_stack,

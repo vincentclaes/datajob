@@ -1,7 +1,7 @@
 from abc import abstractmethod
 
-from aws_cdk import core
 from aws_cdk import aws_iam as iam
+from aws_cdk import core
 
 from datajob import logger
 from datajob.datajob_stack import DataJobStack

@@ -1,4 +1,3 @@
-import subprocess
 from pathlib import Path
 
 from aws_cdk import core, aws_s3_deployment, aws_s3
@@ -42,38 +41,57 @@ class DatajobContext(core.Construct):
         self.project_root = project_root
         self.unique_stack_name = unique_stack_name
         (
-            self.glue_deployment_bucket,
-            self.glue_deployment_bucket_name,
+            self.deployment_bucket,
+            self.deployment_bucket_name,
         ) = self._create_deployment_bucket(self.unique_stack_name)
-
+        (
+            self.data_bucket,
+            self.data_bucket_name,
+        ) = self._create_data_bucket(self.unique_stack_name)
         self.s3_url_wheel = None
         if self.project_root:
             self.s3_url_wheel = self._build_and_deploy_wheel(
                 self.unique_stack_name,
                 self.project_root,
-                self.glue_deployment_bucket,
-                self.glue_deployment_bucket_name,
+                self.deployment_bucket,
+                self.deployment_bucket_name,
             )
 
         if include_folder:
             self._deploy_local_folder(include_folder)
         logger.info("glue context created.")
 
-    def _create_deployment_bucket(self, unique_stack_name):
-        """use the unique stackname to create an s3 bucket for deployment purposes.
+    def _create_data_bucket(self, unique_stack_name):
+        """use the unique stack name to create an s3 bucket for your data.
         We take an EmptyS3Bucket so that we can remove the stack including the deployment bucket with its contents.
         if we take a regular S3 bucket, the bucket will be orphaned from the stack leaving
         our account with all oprhaned s3 buckets."""
-        glue_deployment_bucket_name = f"{unique_stack_name}-deployment-bucket"
+        data_bucket_name = f"{unique_stack_name}"
         # todo - can we validate the bucket name?
-        logger.debug(f"creating deployment bucket {glue_deployment_bucket_name}")
-        glue_deployment_bucket = EmptyS3Bucket(
+        logger.debug(f"creating deployment bucket {data_bucket_name}")
+        data_bucket = EmptyS3Bucket(
             self,
-            glue_deployment_bucket_name,
-            bucket_name=glue_deployment_bucket_name,
+            data_bucket_name,
+            bucket_name=data_bucket_name,
             removal_policy=core.RemovalPolicy.DESTROY,
         )
-        return glue_deployment_bucket, glue_deployment_bucket_name
+        return data_bucket, data_bucket_name
+
+    def _create_deployment_bucket(self, unique_stack_name):
+        """use the unique stack name to create an s3 bucket for deployment purposes.
+        We take an EmptyS3Bucket so that we can remove the stack including the deployment bucket with its contents.
+        if we take a regular S3 bucket, the bucket will be orphaned from the stack leaving
+        our account with all oprhaned s3 buckets."""
+        deployment_bucket_name = f"{unique_stack_name}-deployment-bucket"
+        # todo - can we validate the bucket name?
+        logger.debug(f"creating deployment bucket {deployment_bucket_name}")
+        deployment_bucket = EmptyS3Bucket(
+            self,
+            deployment_bucket_name,
+            bucket_name=deployment_bucket_name,
+            removal_policy=core.RemovalPolicy.DESTROY,
+        )
+        return deployment_bucket, deployment_bucket_name
 
     def _build_and_deploy_wheel(
         self,
@@ -132,6 +150,6 @@ class DatajobContext(core.Construct):
                     str(Path(self.project_root, include_folder))
                 )
             ],
-            destination_bucket=self.glue_deployment_bucket,
+            destination_bucket=self.deployment_bucket,
             destination_key_prefix=include_folder,
         )

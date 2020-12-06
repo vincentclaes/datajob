@@ -19,6 +19,7 @@ def create(project_root):
         logger.debug(f"found a setup.py file in {project_root}")
         logger.debug("creating wheel for glue job")
         cmd = f"cd {project_root}; python setup.py bdist_wheel"
+        print(f"wheel command: {cmd}")
         # todo - shell=True is not secure
         subprocess.call(cmd, shell=True)
     else:

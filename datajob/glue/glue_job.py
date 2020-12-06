@@ -88,7 +88,7 @@ class GlueJob(DataJobBase):
         glue_job_context: DatajobContext, glue_job_id: str, glue_job_file_name: str
     ):
         """path to the script on s3 for this job."""
-        s3_url_glue_job = f"s3://{glue_job_context.glue_deployment_bucket_name}/{glue_job_id}/{glue_job_file_name}"
+        s3_url_glue_job = f"s3://{glue_job_context.deployment_bucket_name}/{glue_job_id}/{glue_job_file_name}"
         logger.debug(f"s3 url for glue job {glue_job_id}: {s3_url_glue_job}")
         return s3_url_glue_job
 
@@ -123,7 +123,7 @@ class GlueJob(DataJobBase):
                 # todo - sync only the glue job itself.
                 aws_s3_deployment.Source.asset(glue_job_dir)
             ],
-            destination_bucket=datajob_context.glue_deployment_bucket,
+            destination_bucket=datajob_context.deployment_bucket,
             destination_key_prefix=glue_job_name,
         )
 

@@ -3,10 +3,9 @@ import tempfile
 import uuid
 from pathlib import Path
 
+from aws_cdk import aws_iam as iam
 from aws_cdk import cloudformation_include as cfn_inc
 from aws_cdk import core
-from aws_cdk import aws_iam as iam
-
 from stepfunctions import steps
 from stepfunctions.steps.compute import GlueStartJobRunStep
 from stepfunctions.steps.states import Parallel

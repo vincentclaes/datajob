@@ -14,7 +14,8 @@ class DatajobTest(unittest.TestCase):
     @patch("datajob.datajob.call_cdk")
     def test_datajob_deploy_cli_runs_successfully(self, m_call_cdk):
         result = self.runner.invoke(
-            datajob.app, ["deploy", "--config", "some_config.py"]
+            datajob.app,
+            ["deploy", "--config", "some_config.py", "--stage", "some-stage"],
         )
         self.assertEqual(result.exit_code, 0)
 
@@ -22,7 +23,15 @@ class DatajobTest(unittest.TestCase):
     def test_datajob_deploy_cli_runs_with_unknown_args_successfully(self, m_call_cdk):
         result = self.runner.invoke(
             datajob.app,
-            ["deploy", "--config", "some_config.py", "--unknown-arg", "unkown-value"],
+            [
+                "deploy",
+                "--config",
+                "some_config.py",
+                "--stage",
+                "some-stage",
+                "--unknown-arg",
+                "unkown-value",
+            ],
         )
         self.assertEqual(result.exit_code, 0)
 
@@ -33,10 +42,25 @@ class DatajobTest(unittest.TestCase):
     ):
         result = self.runner.invoke(
             datajob.app,
-            ["deploy", "--config", "some_config.py", "--package"],
+            [
+                "deploy",
+                "--config",
+                "some_config.py",
+                "--stage",
+                "some-stage",
+                "--package",
+            ],
         )
         self.assertEqual(result.exit_code, 0)
         self.assertEqual(m_create_wheel.call_count, 1)
+
+    @patch("datajob.datajob.call_cdk")
+    def test_datajob_deploy_cli_runs_with_stage_successfully(self, m_call_cdk):
+        result = self.runner.invoke(
+            datajob.app,
+            ["deploy", "--config", "some_config.py", "--stage", "some-stage"],
+        )
+        self.assertEqual(result.exit_code, 0)
 
 
 if __name__ == "__main__":

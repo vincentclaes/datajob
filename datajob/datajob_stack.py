@@ -10,7 +10,7 @@ class DataJobStack(core.Stack):
     def __init__(
         self,
         stack_name: str,
-        stage: str,
+        stage: str = None,
         project_root: str = None,
         include_folder: str = None,
         account: str = None,
@@ -33,10 +33,10 @@ class DataJobStack(core.Stack):
         )
         region = region if region is not None else os.environ.get("AWS_DEFAULT_REGION")
         env = {"region": region, "account": account}
-        self.stage = stage
+        self.scope = scope
+        self.stage = stage if stage is not None else self.get_context_parameter("stage")
         self.unique_stack_name = self._create_unique_stack_name(stack_name, self.stage)
         super().__init__(scope=scope, id=self.unique_stack_name, env=env, **kwargs)
-        self.scope = scope
         self.project_root = project_root
         self.include_folder = include_folder
         self.resources = []
@@ -69,3 +69,13 @@ class DataJobStack(core.Stack):
     def create_resources(self):
         """create each of the resources of this stack"""
         [resource.create() for resource in self.resources]
+
+    def get_context_parameter(self, name):
+        """get a cdk context parameter from the cli."""
+        context_parameter = self.scope.node.try_get_context(name)
+        if not context_parameter:
+            raise ValueError(
+                "we expect a stage to be set on the cli. e.g 'cdk deploy -c stage=my-stage'"
+            )
+        logger.debug(f"context parameter {name} found.")
+        return context_parameter
