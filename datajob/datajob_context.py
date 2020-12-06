@@ -1,5 +1,5 @@
 from pathlib import Path
-
+import subprocess
 from aws_cdk import aws_iam as iam, core, aws_s3_deployment, aws_s3
 from aws_empty_bucket.empty_s3_bucket import EmptyS3Bucket
 
@@ -83,6 +83,8 @@ class DatajobContext(core.Construct):
         glue_deployment_bucket_name: str,
     ) -> str:
         """create a wheel and add the .whl file to the deployment bucket"""
+        s3_url_wheel = None
+        self._create_wheel_for_glue_job(project_root)
         try:
             wheel_deployment_name = f"{unique_stack_name}-wheel"
             # todo - we should get this name dynamically
@@ -135,6 +137,16 @@ class DatajobContext(core.Construct):
             destination_key_prefix=include_folder,
         )
 
+    @staticmethod
+    def _create_wheel_for_glue_job(project_root):
+        """launch a subprocess to built a wheel.
+
+        todo - use the setuptools/disttools api to create a setup.py.
+        relying on a subprocess feels dangerous.
+        """
+        logger.debug("creating wheel for glue job")
+        subprocess.call(["python", str(Path(project_root, "setup.py")), "bdist_wheel"])
+
     def _create_role(self):
         """create a role that let our glue job interact with the AWS environment."""
         role_name = f"{self.unique_stack_name}-GlueRole"
@@ -151,3 +163,4 @@ class DatajobContext(core.Construct):
             ],
         )
         return glue_job_role
+

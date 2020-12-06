@@ -1,4 +1,4 @@
-from .glue_helper import some_helper_class
+from simple_data_pipeline.glue_helper import some_helper_class
 
 
 def main():
