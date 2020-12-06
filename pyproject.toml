@@ -1,9 +1,16 @@
 [tool.poetry]
 name = "datajob"
 version = "0.1.0"
-description = ""
-authors = ["vincent <vclaes1986@gmail.com>"]
-license = "apache-2.0"
+description = "library to smooth deployment of data pipelines on AWS."
+authors = ["Vincent Claes <vincent.v.claes@gmail.com>"]
+license = "Apache Software License (Apache 2.0)"
+
+readme = 'README.md'  # Markdown files are supported
+
+repository = "https://github.com/vincentclaes/datajob"
+homepage = "https://github.com/vincentclaes/datajob"
+
+keywords = ["pipelines", "machine learning", "data pipelines", "data science", "data engineering"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
