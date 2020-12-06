@@ -1,6 +1,5 @@
 import unittest
 
-from aws_cdk import core
 from moto import mock_s3
 
 from datajob.datajob_stack import DataJobStack

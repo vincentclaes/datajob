@@ -1,5 +1,6 @@
-from pathlib import Path
 import subprocess
+from pathlib import Path
+
 from aws_cdk import aws_iam as iam, core, aws_s3_deployment, aws_s3
 from aws_empty_bucket.empty_s3_bucket import EmptyS3Bucket
 

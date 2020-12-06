@@ -1,7 +1,9 @@
 from abc import abstractmethod
+
 from aws_cdk import core
-from datajob.datajob_stack import DataJobStack
+
 from datajob import logger
+from datajob.datajob_stack import DataJobStack
 
 
 class DataJobBase(core.Construct):
