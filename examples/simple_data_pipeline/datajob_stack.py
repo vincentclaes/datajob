@@ -27,6 +27,5 @@ with DataJobStack(
     with StepfunctionsWorkflow(
         datajob_stack=datajob_stack,
         name="simple-data-pipeline",
-        role_arn="arn:aws:iam::077590795309:role/stepfunctions-datajob",
     ) as sfn:
         [task1, task2] >> task3

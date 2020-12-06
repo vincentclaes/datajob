@@ -5,6 +5,8 @@ from pathlib import Path
 
 from aws_cdk import cloudformation_include as cfn_inc
 from aws_cdk import core
+from aws_cdk import aws_iam as iam
+
 from stepfunctions import steps
 from stepfunctions.steps.compute import GlueStartJobRunStep
 from stepfunctions.steps.states import Parallel
@@ -21,7 +23,7 @@ class StepfunctionsWorkflow(DataJobBase):
 
     example:
 
-        with StepfunctionsWorkflow("techskills-parser", "arn:aws:iam:::role/some-role") as tech_skills_parser_orchestration:
+        with StepfunctionsWorkflow("techskills-parser") as tech_skills_parser_orchestration:
 
             some-glue-job-1 >> [some-glue-job-2,some-glue-job-3] >> some-glue-job-4
 
@@ -30,12 +32,18 @@ class StepfunctionsWorkflow(DataJobBase):
     """
 
     def __init__(
-        self, datajob_stack: core.Construct, name: str, role_arn: str = None, **kwargs
+        self, datajob_stack: core.Construct, name: str, role: iam.Role = None, **kwargs
     ):
         super().__init__(datajob_stack, name, **kwargs)
-        self.role_arn = role_arn
         self.chain_of_tasks = []
         self.workflow = None
+        self.role = (
+            self.get_role(
+                unique_name=self.unique_name, service_principal="states.amazonaws.com"
+            )
+            if role is None
+            else role
+        )
 
     def add_task(self, task_other):
         """add a task to the workflow we would like to orchestrate."""
@@ -76,7 +84,7 @@ class StepfunctionsWorkflow(DataJobBase):
         self.workflow = Workflow(
             name=self.unique_name,
             definition=workflow_definition,
-            role=self.role_arn,
+            role=self.role.role_arn,
         )
 
     def create(self):
