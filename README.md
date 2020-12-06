@@ -1,6 +1,6 @@
 # Datajob
 
-Build and deploy a serverless data pipeline with no effort.
+Build and deploy a serverless data pipeline with no effort on AWS.
 
 # Installation
     
