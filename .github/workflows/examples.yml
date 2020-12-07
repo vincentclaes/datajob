@@ -12,6 +12,6 @@ jobs:
       - name: cdk synthesize
         uses: vincentclaes/aws-cdk-github-actions@master
         with:
-          working-directory: ./examples/data_pipeline_with_packaged_project
+          working_directory: ./examples/data_pipeline_with_packaged_project
           cdk_subcommand: 'synthesize -c stage=some-stage'
           actions_comment: false
