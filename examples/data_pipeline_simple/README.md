@@ -1,6 +1,9 @@
 # Data pipeline simple
 
-a simple data pipeline with 3 tasks that are executed sequentially and in parallel.
+A simple data pipeline with 3 tasks where the tasks are executed both sequentially and in parallel.
+The tasks are glue pythonshell jobs and they are orchestrated using step functions.
+
+# Deployment
 
     export AWS_DEFAULT_ACCOUNT=my-account-number
     export AWS_PROFILE=my-profile

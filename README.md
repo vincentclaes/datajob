@@ -11,14 +11,19 @@ any suggestions can be shared by creating an [issue](https://github.com/vincentc
 
 # Installation
  
- datajob can be installed using pip. Beware that we depend on aws cdk cli!
+ datajob can be installed using pip. Beware that we depend on [aws cdk cli](https://github.com/aws/aws-cdk)!
     
     pip install datajob
     npm install -g aws-cdk
 
 # Create a pipeline
     
-see the full example in `examples/data_pipeline_simple`
+see the full example in [examples/data_pipeline_simple](https://github.com/vincentclaes/datajob/tree/add-simple-example/examples/data_pipeline_simple)
+
+- The idea is that you create a [`DataJobStack`](https://github.com/vincentclaes/datajob/blob/add-simple-example/datajob/datajob_stack.py) as and that you assign it one or more `GlueJob`.
+- Each [`GlueJob`](https://github.com/vincentclaes/datajob/blob/add-simple-example/datajob/glue/glue_job.py) has at least a name, a path to the glue job and takes a `DataJobStack` instance as argument.
+- We can orchestrate our glue jobs using a [`StepfunctionsWorkflow`](https://github.com/vincentclaes/datajob/blob/add-simple-example/datajob/stepfunctions/stepfunctions_workflow.py) where we define our jobs as sequential or as parallel. 
+
 
     from datajob.datajob_stack import DataJobStack
     from datajob.glue.glue_job import GlueJob
