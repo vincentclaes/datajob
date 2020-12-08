@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 here = str(pathlib.Path(__file__).parent.resolve())
 
 setup(
-    name="simple_data_pipeline",  # Required
+    name="data_pipeline_with_packaged_project",  # Required
     version="latest",  # Required
     description="A sample Python project",  # Optional
     author="A. Random Developer",  # Optional
