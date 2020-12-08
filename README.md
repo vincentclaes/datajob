@@ -2,16 +2,16 @@
 
 Build and deploy a serverless data pipeline with no effort on AWS.
 
-- Create and deploy glue jobs 
+- Create and deploy glue jobs
 - Package your project and make it available on AWS
 - Orchestrate your pipeline using stepfunctions as simple as `task1 >> [task2,task3] >> task4`
 
 Any suggestions can be shared by creating an [issue](https://github.com/vincentclaes/datajob/issues)
 
 # Installation
- 
+
  datajob can be installed using pip. Beware that we depend on [aws cdk cli](https://github.com/aws/aws-cdk)!
-    
+
     pip install datajob
     npm install -g aws-cdk
 
@@ -20,7 +20,7 @@ See the full example [here](https://github.com/vincentclaes/datajob/tree/add-sim
 
 ## Create a pipeline
 
-The code below is saved in the root of your project in a file called `datajob_stack.py` 
+The code below is saved in the root of your project in a file called `datajob_stack.py`
 
 
       from datajob.datajob_stack import DataJobStack
@@ -59,7 +59,7 @@ The code below is saved in the root of your project in a file called `datajob_st
     - In our example we have 3 `GlueJob` called `task1`, `task2`, `task3`
     - You can find the code for the glue jobs [here](https://github.com/vincentclaes/datajob/tree/main/examples/data_pipeline_simple/data_pipeline_simple)
 
-- We can orchestrate our glue jobs using a [`StepfunctionsWorkflow`](https://github.com/vincentclaes/datajob/blob/add-simple-example/datajob/stepfunctions/stepfunctions_workflow.py), where we orchestrate our `GlueJob` sequentially or in parallel. 
+- We can orchestrate our glue jobs using a [`StepfunctionsWorkflow`](https://github.com/vincentclaes/datajob/blob/add-simple-example/datajob/stepfunctions/stepfunctions_workflow.py), where we orchestrate our `GlueJob` sequentially or in parallel.
     - The instance of `StepfunctionsWorkflow` is called `sfn` and it orchestrates `task1`, `task2` in parallel and starts `task3` only when task1 and task2 both are finished.
 
 
@@ -73,5 +73,11 @@ Execute the following commands to deploy our example:
     cd examples/data_pipeline_simple
     datajob deploy --stage dev --config datajob_stack.py
 
-> Note: When using datajob cli to deploy your pipline, we shell out to aws cdk. 
+> Note: When using datajob cli to deploy your pipline, we shell out to aws cdk.
 > You can circumvent shelling out to aws cdk by running `cdk` explicitly
+
+# Local development
+
+clone the repo andd execute:
+
+    make install
