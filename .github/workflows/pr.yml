@@ -1,0 +1,23 @@
+name: test-on-pr
+on: pull_request
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checking out
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+      - name: install
+        run: make install
+      - name: tests
+        run: python -m unittest
+      - name: run example data_pipeline_simple
+        run: |
+          cd examples/data_pipeline_simple;
+          datajob synthesize --stage stage --config datajob_stack.py;
+      - name: run example data_pipeline_with_packaged_project
+        run: |
+          cd examples/data_pipeline_with_packaged_project;
+          datajob synthesize --stage stage --config datajob_stack.py;

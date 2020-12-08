@@ -78,6 +78,4 @@ Execute the following commands to deploy our example:
 
 # Local development
 
-clone the repo andd execute:
-
     make install
