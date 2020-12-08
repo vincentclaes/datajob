@@ -18,6 +18,7 @@ jobs:
           sudo -H pip3 install --upgrade setuptools
           sudo -H pip3 install --upgrade wheel
           sudo -H pip3 install --upgrade poetry
+          sudo -H pip3 install --upgrade keyrings.alt
       - name: install
         run: make install
       - name: tests
