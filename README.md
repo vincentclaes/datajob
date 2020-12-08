@@ -25,12 +25,12 @@ see the full example in [examples/data_pipeline_simple](https://github.com/vince
 - We can orchestrate our glue jobs using a [`StepfunctionsWorkflow`](https://github.com/vincentclaes/datajob/blob/add-simple-example/datajob/stepfunctions/stepfunctions_workflow.py) where we define our jobs as sequential or as parallel. 
 
 
-    from datajob.datajob_stack import DataJobStack
-    from datajob.glue.glue_job import GlueJob
-    from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
-    
-    
-    with DataJobStack(stack_name="data-pipeline-simple") as datajob_stack:
+     from datajob.datajob_stack import DataJobStack
+     from datajob.glue.glue_job import GlueJob
+     from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
+
+
+     with DataJobStack(stack_name="data-pipeline-simple") as datajob_stack:
 
         task1 = GlueJob(
             datajob_stack=datajob_stack,
