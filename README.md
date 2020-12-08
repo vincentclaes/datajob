@@ -25,34 +25,34 @@ see the full example in [examples/data_pipeline_simple](https://github.com/vince
 - We can orchestrate our glue jobs using a [`StepfunctionsWorkflow`](https://github.com/vincentclaes/datajob/blob/add-simple-example/datajob/stepfunctions/stepfunctions_workflow.py) where we define our jobs as sequential or as parallel. 
 
 
-     from datajob.datajob_stack import DataJobStack
-     from datajob.glue.glue_job import GlueJob
-     from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
+      from datajob.datajob_stack import DataJobStack
+      from datajob.glue.glue_job import GlueJob
+      from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
 
 
-     with DataJobStack(stack_name="data-pipeline-simple") as datajob_stack:
+      with DataJobStack(stack_name="data-pipeline-simple") as datajob_stack:
 
-        task1 = GlueJob(
-            datajob_stack=datajob_stack,
-            name="task1",
-            path_to_glue_job="data_pipeline_simple/task1.py",
-        )
-        task2 = GlueJob(
-            datajob_stack=datajob_stack,
-            name="task2",
-            path_to_glue_job="data_pipeline_simple/task2.py",
-        )
-        task3 = GlueJob(
-            datajob_stack=datajob_stack,
-            name="task3",
-            path_to_glue_job="data_pipeline_simple/task3.py",
-        )
+          task1 = GlueJob(
+              datajob_stack=datajob_stack,
+              name="task1",
+              path_to_glue_job="data_pipeline_simple/task1.py",
+          )
+          task2 = GlueJob(
+              datajob_stack=datajob_stack,
+              name="task2",
+              path_to_glue_job="data_pipeline_simple/task2.py",
+          )
+          task3 = GlueJob(
+              datajob_stack=datajob_stack,
+              name="task3",
+              path_to_glue_job="data_pipeline_simple/task3.py",
+          )
 
-    with StepfunctionsWorkflow(
-        datajob_stack=datajob_stack,
-        name="data-pipeline-simple",
-    ) as sfn:
-        [task1, task2] >> task3
+      with StepfunctionsWorkflow(
+          datajob_stack=datajob_stack,
+          name="data-pipeline-simple",
+      ) as sfn:
+          [task1, task2] >> task3
 
 
         
