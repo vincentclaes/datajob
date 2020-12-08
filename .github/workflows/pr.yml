@@ -14,7 +14,7 @@ jobs:
           sudo apt-get install python3-dev python3-pip python3-venv python3-wheel gcc libpq-dev -y;
           pip install --upgrade pip
           pip install --upgrade setuptools
-          pip install wheel
+          pip uninstall wheel
       - name: install
         run: make install
       - name: tests

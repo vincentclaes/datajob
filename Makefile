@@ -1,5 +1,5 @@
 install:
-	sudo -H pip install poetry
+	pip install poetry
 	poetry install
 	poetry shell
 	# install pre commit hooks to check the code
