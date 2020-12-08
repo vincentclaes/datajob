@@ -32,7 +32,6 @@ def deploy(
     # create stepfunctions if requested
     # make sure you have quotes around the app arguments
     args = ["--app", f""" "python {config}" """, "-c", f"stage={stage}"]
-
     extra_args = ctx.args
     call_cdk(command="deploy", args=args, extra_args=extra_args)
 
