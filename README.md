@@ -16,14 +16,8 @@ any suggestions can be shared by creating an [issue](https://github.com/vincentc
     pip install datajob
     npm install -g aws-cdk
 
-# Create a pipeline
-    
-see the full example in [examples/data_pipeline_simple](https://github.com/vincentclaes/datajob/tree/add-simple-example/examples/data_pipeline_simple)
-
-- The idea is that you create a [`DataJobStack`](https://github.com/vincentclaes/datajob/blob/add-simple-example/datajob/datajob_stack.py) as and that you assign it one or more `GlueJob`.
-- Each [`GlueJob`](https://github.com/vincentclaes/datajob/blob/add-simple-example/datajob/glue/glue_job.py) has at least a name, a path to the glue job and takes a `DataJobStack` instance as argument.
-- We can orchestrate our glue jobs using a [`StepfunctionsWorkflow`](https://github.com/vincentclaes/datajob/blob/add-simple-example/datajob/stepfunctions/stepfunctions_workflow.py) where we define our jobs as sequential or as parallel. 
-
+# Example
+## Create a pipeline
 
     from datajob.datajob_stack import DataJobStack
     from datajob.glue.glue_job import GlueJob
@@ -54,9 +48,17 @@ see the full example in [examples/data_pipeline_simple](https://github.com/vince
     ) as sfn:
         [task1, task2] >> task3
 
+this code is saved in the root of your project in a file called `datajob_stack.py` 
+see the full example [here](https://github.com/vincentclaes/datajob/tree/add-simple-example/examples/data_pipeline_simple)
 
-        
-save this code in a file called `datajob_stack.py` in the root of your project
+- The idea is that you create a [`DataJobStack`](https://github.com/vincentclaes/datajob/blob/add-simple-example/datajob/datajob_stack.py) and that you assign it some resources; one or more `GlueJob` and a `StepfunctionsWorkflow`.
+    - The instance of `DataJobStack` in the example below is `datajob_stack`
+- Each [`GlueJob`](https://github.com/vincentclaes/datajob/blob/add-simple-example/datajob/glue/glue_job.py) has at least a name, a path to the glue job and takes a `DataJobStack` instance as argument.
+    - In our example we have 3 `GlueJob` called `task1`, `task2`, `task3`
+- We can orchestrate our glue jobs using a [`StepfunctionsWorkflow`](https://github.com/vincentclaes/datajob/blob/add-simple-example/datajob/stepfunctions/stepfunctions_workflow.py) where we orchestrate our `GlueJob` sequentially or in parallel. 
+    - The instance of `StepfunctionsWorkflow` is called `sfn` and it orchestrates `task1`, `task2` in parallel and `task3` when task1 and task2 both are finished.
+
+
 
 ## Deploy a pipeline
 
