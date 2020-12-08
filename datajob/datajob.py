@@ -39,8 +39,14 @@ def deploy(
 @app.command(
     context_settings={"allow_extra_args": True, "ignore_unknown_options": True}
 )
-def orchestrate(config: str = typer.Option(...)):
-    pass
+def synthesize(
+    stage: str = typer.Option(...),
+    config: str = typer.Option(Path, callback=os.path.abspath),
+    ctx: typer.Context = typer.Option(list)
+):
+    args = ["--app", f""" "python {config}" """, "-c", f"stage={stage}"]
+    extra_args = ctx.args
+    call_cdk(command="synthesize", args=args, extra_args=extra_args)
 
 
 @app.command(
@@ -60,6 +66,7 @@ def call_cdk(command: str, args: list = None, extra_args: list = None):
     args = args if args else []
     extra_args = extra_args if extra_args else []
     full_command = " ".join(["cdk", command] + args + extra_args)
-    print(f"cdk command: {full_command}")
+    print(f"cdk command:"
+          f" {full_command}")
     # todo - shell=True is not secure
     subprocess.call(full_command, shell=True)
