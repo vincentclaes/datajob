@@ -15,12 +15,12 @@ jobs:
           sudo -H pip3 install --upgrade poetry
           poetry install
       - name: tests
-        run: poetry run python -m unittestecho; $?
+        run: poetry run python -m unittest; $?
       - name: run example data_pipeline_simple
         run: |
           cd examples/data_pipeline_simple;
-          poetry run datajob synthesize --stage stage --config datajob_stack.py; echo $?
+          poetry run datajob synthesize --stage stage --config datajob_stack.py; $?
       - name: run example data_pipeline_with_packaged_project
         run: |
           cd examples/data_pipeline_with_packaged_project;
-          poetry run datajob synthesize --stage stage --config datajob_stack.py; echo $?
+          poetry run datajob synthesize --stage stage --config datajob_stack.py; $?
