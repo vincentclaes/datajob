@@ -15,7 +15,9 @@ jobs:
           sudo -H pip3 install --upgrade poetry
           poetry install
       - name: tests
-        run: python -m unittest datajob_tests/
+        run: |
+          cd datajob_tests/
+          python -m unittest
       - name: run example data_pipeline_simple
         run: |
           cd examples/data_pipeline_simple;
