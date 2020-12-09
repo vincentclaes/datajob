@@ -11,7 +11,7 @@ jobs:
           ref: ${{ github.ref }}
       - name: install
         run: |
-          npm insall -g aws-cdk
+          npm install -g aws-cdk
           sudo -H pip3 install --upgrade poetry
           poetry install
       - name: tests
