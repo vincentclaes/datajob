@@ -3,7 +3,7 @@ on: pull_request
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: vincentclaes/Docker-Python3-Ubuntu
     steps:
       - name: checking out
         uses: actions/checkout@v2
