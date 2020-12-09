@@ -75,7 +75,3 @@ Execute the following commands to deploy our example:
 
 > Note: When using datajob cli to deploy your pipline, we shell out to aws cdk.
 > You can circumvent shelling out to aws cdk by running `cdk` explicitly
-
-# Local development
-
-    make install
