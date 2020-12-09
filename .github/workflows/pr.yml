@@ -14,13 +14,12 @@ jobs:
           sudo -H npm install -g aws-cdk
           sudo -H pip3 install --upgrade poetry
           poetry install
-          poetry config virtualenvs.create false
       - name: tests
-        run: python -m unittest; echo $?
+        run: python -m unittest datajob_tests/
       - name: run example data_pipeline_simple
         run: |
           cd examples/data_pipeline_simple;
-          datajob synthesize --stage stage --config datajob_stack.py; echo $?
+          poetry run cdk synthesize --app  "python datajob_stack.py"  -c stage=stage
       - name: run example data_pipeline_with_packaged_project
         run: |
           cd examples/data_pipeline_with_packaged_project;
