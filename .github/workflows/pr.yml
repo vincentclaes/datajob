@@ -14,7 +14,6 @@ jobs:
           sudo -H npm install -g aws-cdk
           sudo -H pip3 install --upgrade poetry
           poetry install
-          poetry config settings.virtualenvs.create false
       - name: tests
         run: poetry run python -m unittestecho; $?
       - name: run example data_pipeline_simple
