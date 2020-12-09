@@ -3,17 +3,16 @@ on: pull_request
 
 jobs:
   build:
-    runs-on: vincentclaes/Docker-Python3-Ubuntu
+    runs-on: ubuntu-20.04
     steps:
       - name: checking out
         uses: actions/checkout@v2
         with:
           ref: ${{ github.ref }}
-      - name: install ubuntu tools
+      - name: install
         run: |
           sudo -H pip3 install --upgrade poetry
-      - name: install
-        run: make install
+          make install
       - name: tests
         run: python -m unittest
       - name: run example data_pipeline_simple
