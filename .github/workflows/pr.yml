@@ -17,7 +17,7 @@ jobs:
       - name: tests
         run: |
           cd datajob_tests/
-          python -m unittest
+          poetry run python -m unittest
       - name: run example data_pipeline_simple
         run: |
           cd examples/data_pipeline_simple;
