@@ -3,5 +3,5 @@ install:
 	poetry install
 	poetry shell
 	# install pre commit hooks to check the code
-	# before commiting.
+	# before committing.
 	pre-commit install
