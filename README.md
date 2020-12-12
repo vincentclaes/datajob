@@ -58,7 +58,7 @@ See the full example [here](https://github.com/vincentclaes/datajob/tree/add-sim
             [task1, task2] >> task3
 
 
-## Deploy a pipeline
+## Deploy example
 
 Deploy your pipeline using a unique identifier `--stage` and point to the configuration of the pipeline using `--config`
 
