@@ -17,55 +17,50 @@ Any suggestions can be shared by creating an [issue](https://github.com/vincentc
 
 # Example
 
+A simple data pipeline with 3 Glue python shell tasks where the tasks are executed both sequentially and in parallel.
 See the full example [here](https://github.com/vincentclaes/datajob/tree/add-simple-example/examples/data_pipeline_simple)
 
-The code below is saved in the root of your project in a file called `datajob_stack.py`
+    from datajob.datajob_stack import DataJobStack
+    from datajob.glue.glue_job import GlueJob
+    from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
 
 
-      from datajob.datajob_stack import DataJobStack
-      from datajob.glue.glue_job import GlueJob
-      from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
+    # the datajob_stack is the instance that will result in a cloudformation stack.
+    # we inject the datajob_stack object through all the resources that we want to add.
+    with DataJobStack(stack_name="data-pipeline-simple") as datajob_stack:
 
+        # here we define 3 glue jobs with the datajob_stack object,
+        # a name and the relative path to the source code.
+        task1 = GlueJob(
+            datajob_stack=datajob_stack,
+            name="task1",
+            path_to_glue_job="data_pipeline_simple/task1.py",
+        )
+        task2 = GlueJob(
+            datajob_stack=datajob_stack,
+            name="task2",
+            path_to_glue_job="data_pipeline_simple/task2.py",
+        )
+        task3 = GlueJob(
+            datajob_stack=datajob_stack,
+            name="task3",
+            path_to_glue_job="data_pipeline_simple/task3.py",
+        )
 
-      with DataJobStack(stack_name="data-pipeline-simple") as datajob_stack:
-
-          task1 = GlueJob(
-              datajob_stack=datajob_stack,
-              name="task1",
-              path_to_glue_job="data_pipeline_simple/task1.py",
-          )
-          task2 = GlueJob(
-              datajob_stack=datajob_stack,
-              name="task2",
-              path_to_glue_job="data_pipeline_simple/task2.py",
-          )
-          task3 = GlueJob(
-              datajob_stack=datajob_stack,
-              name="task3",
-              path_to_glue_job="data_pipeline_simple/task3.py",
-          )
-
-      with StepfunctionsWorkflow(
-          datajob_stack=datajob_stack,
-          name="data-pipeline-simple",
-      ) as sfn:
-          [task1, task2] >> task3
-
-- The idea is that you create a [`DataJobStack`](https://github.com/vincentclaes/datajob/blob/add-simple-example/datajob/datajob_stack.py) and that you assign it some resources; one or more `GlueJob` and a `StepfunctionsWorkflow`.
-    - The instance of `DataJobStack` in the example is `datajob_stack`
-
-- Each [`GlueJob`](https://github.com/vincentclaes/datajob/blob/add-simple-example/datajob/glue/glue_job.py) has at least a name, a path to the glue job and takes a `DataJobStack` instance as argument.
-    - In our example we have 3 `GlueJob` called `task1`, `task2`, `task3`
-    - You can find the code for the glue jobs [here](https://github.com/vincentclaes/datajob/tree/main/examples/data_pipeline_simple/data_pipeline_simple)
-
-- We can orchestrate our glue jobs using a [`StepfunctionsWorkflow`](https://github.com/vincentclaes/datajob/blob/add-simple-example/datajob/stepfunctions/stepfunctions_workflow.py), where we orchestrate our `GlueJob` sequentially or in parallel.
-    - The instance of `StepfunctionsWorkflow` is called `sfn` and it orchestrates `task1`, `task2` in parallel and starts `task3` only when task1 and task2 both are finished.
+        # we instantiate a step functions workflow and add the sources
+        # we want to orchestrate. We got the orchestration idea from
+        # airflow where we use a list to run tasks in parallel
+        # and we use bit operator '>>' to chain the tasks in our workflow.
+        with StepfunctionsWorkflow(
+            datajob_stack=datajob_stack,
+            name="data-pipeline-simple",
+        ) as sfn:
+            [task1, task2] >> task3
 
 
 ## Deploy a pipeline
 
 Deploy your pipeline using a unique identifier `--stage` and point to the configuration of the pipeline using `--config`
-Execute the following commands to deploy our example:
 
     export AWS_DEFAULT_ACCOUNT=my-account-number
     export AWS_PROFILE=my-profile
@@ -74,14 +69,14 @@ Execute the following commands to deploy our example:
 
 > Note: When using datajob cli to deploy your pipline, we shell out to aws cdk.
 > You can circumvent shelling out to aws cdk by running `cdk` explicitly.
-> datajob prints out the commands it uses, to build the pipeline. if needed you can use those.
+> datajob prints out the commands it uses, to build the pipeline. If you want, you can use those.
 
     cd examples/data_pipeline_simple
     cdk deploy --app  "python datajob_stack.py"  -c stage=dev
 
 # Ideas
 
-- trigger a pipeline using the cli; datajob run --pipeline my-simple-pipeline.
+- trigger a pipeline using the cli; `datajob run --pipeline my-simple-pipeline`
 - implement a data bucket.
 - add a time based trigger to the step functions workflow.
 - add an s3 event trigger to the step functions workflow.
