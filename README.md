@@ -16,9 +16,8 @@ Any suggestions can be shared by creating an [issue](https://github.com/vincentc
     npm install -g aws-cdk
 
 # Example
-See the full example [here](https://github.com/vincentclaes/datajob/tree/add-simple-example/examples/data_pipeline_simple)
 
-## Create a pipeline
+See the full example [here](https://github.com/vincentclaes/datajob/tree/add-simple-example/examples/data_pipeline_simple)
 
 The code below is saved in the root of your project in a file called `datajob_stack.py`
 
@@ -74,4 +73,17 @@ Execute the following commands to deploy our example:
     datajob deploy --stage dev --config datajob_stack.py
 
 > Note: When using datajob cli to deploy your pipline, we shell out to aws cdk.
-> You can circumvent shelling out to aws cdk by running `cdk` explicitly
+> You can circumvent shelling out to aws cdk by running `cdk` explicitly.
+> datajob prints out the commands it uses, to build the pipeline. if needed you can use those.
+
+    cd examples/data_pipeline_simple
+    cdk deploy --app  "python datajob_stack.py"  -c stage=dev
+
+# Ideas
+
+- trigger a pipeline using the cli; datajob run --pipeline my-simple-pipeline.
+- implement a data bucket.
+- add a time based trigger to the step functions workflow.
+- add an s3 event trigger to the step functions workflow.
+- add a lambda that copies data from one s3 location to another.
+- version your data pipeline.
