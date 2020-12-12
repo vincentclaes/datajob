@@ -29,9 +29,7 @@ class StepfunctionsWorkflowTestTest(unittest.TestCase):
             region="eu-west-1",
             account="3098726354",
         )
-        with StepfunctionsWorkflow(
-            djs, "some-name", "arn:aws:iam::303915887687:role/some-role"
-        ) as a_step_functions_workflow:
+        with StepfunctionsWorkflow(djs, "some-name") as a_step_functions_workflow:
             task1 >> [task2, task3] >> task4
 
         self.assertTrue(
@@ -58,9 +56,7 @@ class StepfunctionsWorkflowTestTest(unittest.TestCase):
             region="eu-west-1",
             account="3098726354",
         )
-        with StepfunctionsWorkflow(
-            djs, "some-name", "arn:aws:iam::303915887687:role/some-role"
-        ) as a_step_functions_workflow:
+        with StepfunctionsWorkflow(djs, "some-name") as a_step_functions_workflow:
             [task1, task2] >> task3
 
         self.assertTrue(
