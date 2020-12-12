@@ -69,7 +69,8 @@ Deploy your pipeline using a unique identifier `--stage` and point to the config
 
 > Note: When using datajob cli to deploy your pipline, we shell out to aws cdk.
 > You can circumvent shelling out to aws cdk by running `cdk` explicitly.
-> datajob prints out the commands it uses, to build the pipeline. If you want, you can use those.
+> datajob cli prints out the commands it uses in the back to build the pipeline.
+> If you want, you can use those.
 
     cd examples/data_pipeline_simple
     cdk deploy --app  "python datajob_stack.py"  -c stage=dev
