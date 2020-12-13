@@ -56,7 +56,7 @@ See the full example [here](https://github.com/vincentclaes/datajob/tree/main/ex
             [task1, task2] >> task3
 
 
-## Deploy example
+## Deploy and destroy
 
 Deploy your pipeline using a unique identifier `--stage` and point to the configuration of the pipeline using `--config`
 
@@ -64,14 +64,17 @@ Deploy your pipeline using a unique identifier `--stage` and point to the config
     export AWS_PROFILE=my-profile
     cd examples/data_pipeline_simple
     datajob deploy --stage dev --config datajob_stack.py
+    datajob destroy --stage dev --config datajob_stack.py
 
-> Note: When using datajob cli to deploy your pipline, we shell out to aws cdk.
+
+> Note: When using datajob cli to deploy a pipeline, we shell out to aws cdk.
 > You can circumvent shelling out to aws cdk by running `cdk` explicitly.
 > datajob cli prints out the commands it uses in the back to build the pipeline.
 > If you want, you can use those.
 
     cd examples/data_pipeline_simple
     cdk deploy --app  "python datajob_stack.py"  -c stage=dev
+    cdk destroy --app  "python datajob_stack.py"  -c stage=dev
 
 # Ideas
 
