@@ -21,7 +21,7 @@ class GlueJob(DataJobBase):
         name: str,
         path_to_glue_job: str,
         job_type: str = "pythonshell",
-        glue_version: str = None,
+        glue_version: str = "1.0",
         max_capacity: int = None,
         arguments: dict = None,
         python_version: str = "3",
@@ -103,10 +103,7 @@ class GlueJob(DataJobBase):
         return glue_job_dir, glue_job_file_name
 
     def _deploy_glue_job_code(
-        self,
-        datajob_context: DatajobContext,
-        glue_job_name: str,
-        path_to_glue_job: str,
+        self, datajob_context: DatajobContext, glue_job_name: str, path_to_glue_job: str
     ):
         """deploy the code of this glue job to the deployment bucket
         (can be found in the glue context object)"""
