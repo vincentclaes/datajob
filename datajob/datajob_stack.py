@@ -19,12 +19,13 @@ class DataJobStack(core.Stack):
         **kwargs,
     ) -> None:
         """
-
         :param scope: aws cdk core construct object.
         :param stack_name: a name for this stack.
         :param stage: the stage name to which we are deploying
         :param project_root: the path to the root of this project
         :param include_folder:  specify the name of the folder we would like to include in the deployment bucket.
+        :param account: AWS account number
+        :param region: AWS region where we want to deploy our datajob to
         :param kwargs: any extra kwargs for the core.Construct
         """
 
@@ -43,7 +44,10 @@ class DataJobStack(core.Stack):
         self.datajob_context = None
 
     def __enter__(self):
-        """first steps we have to do when entering the context manager."""
+        """
+        As soon as we enter the contextmanager, we create the datajob context.
+        :return: datajob stack.
+        """
         self.datajob_context = DatajobContext(
             self,
             unique_stack_name=self.unique_stack_name,
@@ -53,24 +57,38 @@ class DataJobStack(core.Stack):
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-        """steps we have to do when exiting the context manager."""
+        """
+        steps we have to do when exiting the context manager.
+        - we will create the resources we have defined.
+        - we will synthesize our stack so that we have everything to deploy.
+        :param exc_type:
+        :param exc_value:
+        :param traceback:
+        :return: None
+        """
         logger.debug("creating resources and synthesizing stack.")
         self.create_resources()
         self.scope.synth()
 
-    def add(self, task):
+    def add(self, task: str) -> None:
         setattr(self, task.unique_name, task)
         task.create(datajob_context=self.datajob_context)
 
     @staticmethod
-    def _create_unique_stack_name(stack_name, stage):
+    def _create_unique_stack_name(stack_name: str, stage: str) -> str:
+        """
+        create a unique name for the datajob stack.
+        :param stack_name: a name for the stack.
+        :param stage: the stage name we give our pipeline.
+        :return: a unique name.
+        """
         return f"{stack_name}-{stage}"
 
     def create_resources(self):
         """create each of the resources of this stack"""
         [resource.create() for resource in self.resources]
 
-    def get_context_parameter(self, name):
+    def get_context_parameter(self, name: str) -> str:
         """get a cdk context parameter from the cli."""
         context_parameter = self.scope.node.try_get_context(name)
         if not context_parameter:
