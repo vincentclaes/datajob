@@ -23,7 +23,7 @@ class StepfunctionsWorkflowTestTest(unittest.TestCase):
         task3 = stepfunctions_workflow.task(SomeMockedClass("task3"))
         task4 = stepfunctions_workflow.task(SomeMockedClass("task4"))
         djs = DataJobStack(
-            stack_name="a-unique-name",
+            stack_name="a-unique-name-1",
             stage="stage",
             project_root="sampleproject/",
             region="eu-west-1",
@@ -50,7 +50,7 @@ class StepfunctionsWorkflowTestTest(unittest.TestCase):
         task2 = stepfunctions_workflow.task(SomeMockedClass("task2"))
         task3 = stepfunctions_workflow.task(SomeMockedClass("task2"))
         djs = DataJobStack(
-            stack_name="a-unique-name",
+            stack_name="a-unique-name-2",
             stage="stage",
             project_root="sampleproject/",
             region="eu-west-1",
