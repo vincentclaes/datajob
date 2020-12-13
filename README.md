@@ -6,7 +6,7 @@ Build and deploy a serverless data pipeline with no effort on AWS.
 - Package your project and make it available on AWS
 - Orchestrate your pipeline using stepfunctions as simple as `task1 >> [task2,task3] >> task4`
 
-Any suggestions can be shared by creating an [issue](https://github.com/vincentclaes/datajob/issues)
+Any suggestions can be shared by starting a [discussion](https://github.com/vincentclaes/datajob/discussions)
 
 # Installation
 
