@@ -18,7 +18,7 @@ Any suggestions can be shared by creating an [issue](https://github.com/vincentc
 # Example
 
 A simple data pipeline with 3 Glue python shell tasks where the tasks are executed both sequentially and in parallel.
-See the full example [here](https://github.com/vincentclaes/datajob/tree/add-simple-example/examples/data_pipeline_simple)
+See the full example [here](https://github.com/vincentclaes/datajob/tree/main/examples/data_pipeline_simple)
 
     from datajob.datajob_stack import DataJobStack
     from datajob.glue.glue_job import GlueJob
