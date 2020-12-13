@@ -25,8 +25,16 @@ class DataJobBase(core.Construct):
     def create(self):
         """create datajob"""
 
-    def get_role(self, unique_name, service_principal):
-        """get the role for the datajob"""
+    def get_role(self, unique_name: str, service_principal: str) -> iam.Role:
+        """
+        Get the default role for the datajob. We use administrator access
+        as the policy for our default role.
+        # todo - we probably want to refine the policies for this role
+        :param unique_name: a unique name we can give to our role.
+        :param service_principal: what is the service principal for our service.
+        for example: glue.amazonaws.com
+        :return: iam role object.
+        """
         role_name = unique_name + "-role"
         logger.debug(f"creating role {role_name}")
         glue_job_role = iam.Role(

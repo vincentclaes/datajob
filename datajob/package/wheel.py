@@ -5,12 +5,11 @@ from datajob import logger
 
 
 class DatajobPackageWheelError(Exception):
-    """any exception occuring when constructing wheel in data job context."""
+    """any exception occuring when constructing a wheel in data job context."""
 
 
 def create(project_root):
     """launch a subprocess to built a wheel.
-
     todo - use the setuptools/disttools api to create a setup.py.
     relying on a subprocess feels dangerous.
     """
