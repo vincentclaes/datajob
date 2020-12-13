@@ -3,7 +3,7 @@
 A simple data pipeline with 3 tasks where the tasks are executed both sequentially and in parallel.
 The tasks are glue pythonshell jobs and they are orchestrated using step functions.
 
-The definition of the datajob can be found in the file `datajob_stack.py`
+The definition of the datajob can be found in `datajob_stack.py`
 
 
 # Deployment
