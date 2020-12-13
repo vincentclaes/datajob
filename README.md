@@ -2,11 +2,9 @@
 
 Build and deploy a serverless data pipeline with no effort on AWS.
 
-- Create and deploy glue jobs
+- Deploy your code to a glue job
 - Package your project and make it available on AWS
 - Orchestrate your pipeline using stepfunctions as simple as `task1 >> [task2,task3] >> task4`
-
-Any suggestions can be shared by creating an [issue](https://github.com/vincentclaes/datajob/issues)
 
 # Installation
 
@@ -17,7 +15,7 @@ Any suggestions can be shared by creating an [issue](https://github.com/vincentc
 
 # Example
 
-A simple data pipeline with 3 Glue python shell tasks where the tasks are executed both sequentially and in parallel.
+A simple data pipeline with 3 Glue python shell tasks that are executed both sequentially and in parallel.
 See the full example [here](https://github.com/vincentclaes/datajob/tree/main/examples/data_pipeline_simple)
 
     from datajob.datajob_stack import DataJobStack
@@ -78,8 +76,17 @@ Deploy your pipeline using a unique identifier `--stage` and point to the config
 # Ideas
 
 - trigger a pipeline using the cli; `datajob run --pipeline my-simple-pipeline`
-- implement a data bucket.
+- implement a data bucket, that's used for your pipeline.
 - add a time based trigger to the step functions workflow.
 - add an s3 event trigger to the step functions workflow.
 - add a lambda that copies data from one s3 location to another.
 - version your data pipeline.
+- implement sagemaker services
+    - processing jobs
+    - hyperparameter tuning jobs
+    - training jobs
+    - create sagemaker model
+    - create sagemaker endpoint
+    - expose sagemaker endpoint to the internet by levering lambda + api gateway
+
+Any suggestions can be shared by starting a [discussion](https://github.com/vincentclaes/datajob/discussions)
