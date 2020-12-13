@@ -8,7 +8,7 @@ import pathlib
 current_dir = pathlib.Path(__file__).parent.absolute()
 
 with DataJobStack(
-    stack_name="simple-data-pipeline", project_root=current_dir
+    stack_name="data-pipeline-pkg", project_root=current_dir
 ) as datajob_stack:
     task1 = GlueJob(
         datajob_stack=datajob_stack,
@@ -16,8 +16,13 @@ with DataJobStack(
         path_to_glue_job="data_pipeline_with_packaged_project/task1.py",
     )
 
-    with StepfunctionsWorkflow(
+    task2 = GlueJob(
         datajob_stack=datajob_stack,
-        name="simple-data-pipeline",
+        name="task2",
+        path_to_glue_job="data_pipeline_with_packaged_project/task2.py",
+    )
+
+    with StepfunctionsWorkflow(
+        datajob_stack=datajob_stack, name="data-pipeline-pkg"
     ) as sfn:
-        task1
+        task1 >> task2
