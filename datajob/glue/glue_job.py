@@ -1,4 +1,5 @@
 from pathlib import Path
+from enum import Enum
 
 from aws_cdk import aws_glue as glue, core, aws_s3_deployment
 from aws_cdk import aws_iam as iam
@@ -7,6 +8,15 @@ from datajob import logger
 from datajob.datajob_base import DataJobBase
 from datajob.datajob_context import DatajobContext
 from datajob.stepfunctions import stepfunctions_workflow
+
+
+class GlueJobType(Enum):
+    PYTHONSHELL = "pythonshell"
+    GLUEETL = "glueetl"
+
+    @staticmethod
+    def get_values():
+        return [e.value for e in GlueJobType]
 
 
 @stepfunctions_workflow.task
@@ -20,8 +30,8 @@ class GlueJob(DataJobBase):
         datajob_stack: core.Construct,
         name: str,
         path_to_glue_job: str,
-        job_type: str = "pythonshell",
-        glue_version: str = "1.0",
+        job_type: str = GlueJobType.PYTHONSHELL.value,
+        glue_version: str = None,
         max_capacity: int = None,
         arguments: dict = None,
         python_version: str = "3",
@@ -49,9 +59,9 @@ class GlueJob(DataJobBase):
             else path_to_glue_job
         )
         self.arguments = arguments if arguments else {}
-        self.job_type = job_type
+        self.job_type = GlueJob._get_job_type(job_type=job_type)
         self.python_version = python_version
-        self.glue_version = glue_version
+        self.glue_version = GlueJob._get_glue_version(job_type=job_type)
         self.max_capacity = max_capacity
         self.args = args
         self.kwargs = kwargs
@@ -82,6 +92,22 @@ class GlueJob(DataJobBase):
             *self.args,
             **self.kwargs,
         )
+
+    @staticmethod
+    def _get_job_type(job_type: str) -> str:
+        assert job_type in GlueJobType.get_values(), ValueError(
+            f"Unknown job type {job_type}"
+        )
+        return job_type
+
+    @staticmethod
+    def _get_glue_version(glue_version: str, job_type: str) -> str:
+        if glue_version is None:
+            if job_type == "pythonshell" or None:
+                return "1.0"
+            elif job_type == "glueetl":
+                return "2.0"
+        return glue_version
 
     @staticmethod
     def _create_s3_url_for_job(
