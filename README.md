@@ -2,7 +2,7 @@
 
 Build and deploy a serverless data pipeline with no effort on AWS.
 
-- Create and deploy glue jobs
+- Deploy your code to a glue job
 - Package your project and make it available on AWS
 - Orchestrate your pipeline using stepfunctions as simple as `task1 >> [task2,task3] >> task4`
 
@@ -15,7 +15,7 @@ Build and deploy a serverless data pipeline with no effort on AWS.
 
 # Example
 
-A simple data pipeline with 3 Glue python shell tasks where the tasks are executed both sequentially and in parallel.
+A simple data pipeline with 3 Glue python shell tasks that are executed both sequentially and in parallel.
 See the full example [here](https://github.com/vincentclaes/datajob/tree/main/examples/data_pipeline_simple)
 
     from datajob.datajob_stack import DataJobStack
