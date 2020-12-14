@@ -20,7 +20,8 @@ Ideas to be implemented can be found [below](#ideas)
 
 # Installation
 
- datajob can be installed using pip. Beware that we depend on [aws cdk cli](https://github.com/aws/aws-cdk)!
+ datajob can be installed using pip. <br/>
+ Beware that we depend on [aws cdk cli](https://github.com/aws/aws-cdk)!
 
     pip install datajob
     npm install -g aws-cdk
