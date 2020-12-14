@@ -9,7 +9,8 @@
 - There is no custom or managed application needed to deploy and run your data pipeline on AWS!
 - The main dependencies are [AWS CDK](https://github.com/aws/aws-cdk) and [Step Functions SDK for data science](https://github.com/aws/aws-step-functions-data-science-sdk-python)
 
-#### Currently implemented
+Currently implemented:
+
 - Deploy your code to a glue job.
 - Package your project and make it available for your glue jobs.
 - Orchestrate your pipeline using stepfunctions as simple as `task1 >> [task2,task3] >> task4`
