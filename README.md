@@ -1,15 +1,21 @@
 # Datajob
 
-> Datajob is an MVP. [Feedback](https://github.com/vincentclaes/datajob/discussions) is much appreciated!
+> Datajob is an MVP. Do not use this in production. <br/>
+> [Feedback](https://github.com/vincentclaes/datajob/discussions) is much appreciated!
 
-Build and deploy a serverless data pipeline with no effort on AWS.
+###Build and deploy a serverless data pipeline with no effort on AWS.
 
-- Deploy your code to a glue job
-- Package your project and make it available on AWS
+- Datajob uses exclusively serverless services.
+- There is no custom or managed application needed to deploy and run your data pipeline on AWS!
+- The main dependencies are [AWS CDK](https://github.com/aws/aws-cdk) and [Step Functions SDK for data science](https://github.com/aws/aws-step-functions-data-science-sdk-python)
+
+#### Currently implemented
+- Deploy your code to a glue job.
+- Package your project and make it available for your glue jobs.
 - Orchestrate your pipeline using stepfunctions as simple as `task1 >> [task2,task3] >> task4`
 
-Datajob uses exclusively **serverless services**.
-There is no custom or managed application needed to deploy and run your data pipeline on AWS!
+Ideas to be implemented can be found [below](#ideas)
+
 
 # Installation
 
@@ -100,7 +106,9 @@ As simple as that!
 
 # Ideas
 
-These are the ideas, we would like to deploy;
+Any suggestions can be shared by starting a [discussion](https://github.com/vincentclaes/datajob/discussions)
+
+These are the ideas, we find interesting to implement;
 
 - trigger a pipeline using the cli; `datajob run --pipeline my-simple-pipeline`
 - implement a data bucket, that's used for your pipeline.
@@ -116,5 +124,3 @@ These are the ideas, we would like to deploy;
     - create sagemaker endpoint
     - expose sagemaker endpoint to the internet by levering lambda + api gateway
 - create a serverless UI that follows up on the different pipelines deployed on possibly different AWS accounts using Datajob
-
-Any suggestions can be shared by starting a [discussion](https://github.com/vincentclaes/datajob/discussions)
