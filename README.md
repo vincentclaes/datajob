@@ -3,7 +3,7 @@
 > Datajob is an MVP. Do not use this in production. <br/>
 > [Feedback](https://github.com/vincentclaes/datajob/discussions) is much appreciated!
 
-###Build and deploy a serverless data pipeline with no effort on AWS.
+### Build and deploy a serverless data pipeline with no effort on AWS.
 
 - Datajob uses exclusively serverless services.
 - There is no custom or managed application needed to deploy and run your data pipeline on AWS!
