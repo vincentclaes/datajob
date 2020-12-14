@@ -31,7 +31,8 @@ Ideas to be implemented can be found [below](#ideas)
 See the full code of the example [here](https://github.com/vincentclaes/datajob/tree/main/examples/data_pipeline_simple)
 
 **We have 3 scripts that we want to orchestrate sequentially and in parallel on AWS using Glue and Step Functions**.
-<br/>The definition of our pipeline can be found in `examples/data_pipeline_simple/datajob_stack.py`, and here below:
+
+The definition of our pipeline can be found in `examples/data_pipeline_simple/datajob_stack.py`, and here below:
 
     from datajob.datajob_stack import DataJobStack
     from datajob.glue.glue_job import GlueJob
