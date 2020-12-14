@@ -1,13 +1,15 @@
 # Datajob
 
+> Datajob is an MVP. [Feedback](https://github.com/vincentclaes/datajob/discussions) is much appreciated!
+
 Build and deploy a serverless data pipeline with no effort on AWS.
 
 - Deploy your code to a glue job
 - Package your project and make it available on AWS
 - Orchestrate your pipeline using stepfunctions as simple as `task1 >> [task2,task3] >> task4`
 
-Datajob uses exclusively serverless services.
-There is no custom or managed application needed to deploy and run your data pipeline on AWS.
+Datajob uses exclusively **serverless services**.
+There is no custom or managed application needed to deploy and run your data pipeline on AWS!
 
 # Installation
 
@@ -21,7 +23,7 @@ There is no custom or managed application needed to deploy and run your data pip
 See the full code of the example [here](https://github.com/vincentclaes/datajob/tree/main/examples/data_pipeline_simple)
 
 We have 3 scripts that we want to orchestrate sequentially and in parallel on AWS using Glue and Step Functions.
-This definition can be found in `examples/data_pipeline_simple/datajob_stack.py` and here:
+This definition can be found in `examples/data_pipeline_simple/datajob_stack.py` and here below:
 
     from datajob.datajob_stack import DataJobStack
     from datajob.glue.glue_job import GlueJob
@@ -76,12 +78,12 @@ Deploy your pipeline using a unique identifier `--stage` and point to the config
     cd examples/data_pipeline_simple
     datajob deploy --stage dev --config datajob_stack.py
 
-After running the commands, the code of the 3 tasks are deployed to a glue job and the glue jobs are orchestrated using step functions.
+After running the `deploy` command, the code of the 3 tasks are deployed to a glue job and the glue jobs are orchestrated using step functions.
 Go to the AWS console to the step functions service, look for `data-pipeline-simple` and click on "Start execution"
 
 ![DataPipelineSimple](assets/data-pipeline-simple.png)
 
-Follow up on the progress. Once the pipeline is finished you can pull it back down by using the command:
+Follow up on the progress. Once the pipeline is finished you can pull down the pipeline by using the command:
 
     datajob destroy --stage dev --config datajob_stack.py
 
@@ -98,6 +100,8 @@ As simple as that!
 
 # Ideas
 
+These are the ideas, we would like to deploy;
+
 - trigger a pipeline using the cli; `datajob run --pipeline my-simple-pipeline`
 - implement a data bucket, that's used for your pipeline.
 - add a time based trigger to the step functions workflow.
@@ -111,5 +115,6 @@ As simple as that!
     - create sagemaker model
     - create sagemaker endpoint
     - expose sagemaker endpoint to the internet by levering lambda + api gateway
+- create a serverless UI that follows up on the different pipelines deployed on possibly different AWS accounts using Datajob
 
 Any suggestions can be shared by starting a [discussion](https://github.com/vincentclaes/datajob/discussions)
