@@ -77,7 +77,7 @@ The definition of our pipeline can be found in `examples/data_pipeline_simple/da
 
 ## Deploy, Run and Destroy
 
-Set the aws account number and the profile that contains your aws credentials (`.aws/credentials`) as environment variables:
+Set the aws account number and the profile that contains your aws credentials (`~/.aws/credentials`) as environment variables:
 
     export AWS_DEFAULT_ACCOUNT=my-account-number
     export AWS_PROFILE=my-profile
