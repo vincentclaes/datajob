@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "datajob"
-version = "0.3.0"
+version = "0.4.0"
 description = "Build and deploy a serverless data pipeline with no effort on AWS."
 authors = ["Vincent Claes <vincent.v.claes@gmail.com>"]
 license = "Apache Software License (Apache 2.0)"
@@ -13,7 +13,7 @@ homepage = "https://github.com/vincentclaes/datajob"
 keywords = ["pipelines", "machine learning", "data pipelines", "data science", "data engineering"]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.6.1"
 "aws-cdk.core" = "^1.70.0"
 "aws-cdk.aws-glue" = "^1.70.0"
 "aws-cdk.aws-s3-deployment" = "^1.70.0"
