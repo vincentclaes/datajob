@@ -20,7 +20,7 @@ def run():
     context_settings={"allow_extra_args": True, "ignore_unknown_options": True}
 )
 def deploy(
-    stage: str = typer.Option(...),
+    stage: str = typer.Option(None),
     config: str = typer.Option(Path, callback=os.path.abspath),
     package: bool = typer.Option(False, "--package"),
     ctx: typer.Context = typer.Option(list),

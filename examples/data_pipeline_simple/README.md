@@ -11,4 +11,4 @@ The definition of the datajob can be found in `datajob_stack.py`
     export AWS_DEFAULT_ACCOUNT=my-account-number
     export AWS_PROFILE=my-profile
     cd examples/data_pipeline_simple
-    datajob deploy --stage dev --config datajob_stack.py
+    datajob deploy --config datajob_stack.py

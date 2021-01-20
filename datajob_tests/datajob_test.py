@@ -61,3 +61,10 @@ class DatajobTest(unittest.TestCase):
             ["deploy", "--config", "some_config.py", "--stage", "some-stage"],
         )
         self.assertEqual(result.exit_code, 0)
+
+    @patch("datajob.datajob.call_cdk")
+    def test_datajob_deploy_cli_runs_with_no_stage_successfully(self, m_call_cdk):
+        result = self.runner.invoke(
+            datajob.app, ["deploy", "--config", "some_config.py"]
+        )
+        self.assertEqual(result.exit_code, 0)
