@@ -37,7 +37,7 @@ class DataJobStack(core.Stack):
         region = region if region is not None else os.environ.get("AWS_DEFAULT_REGION")
         env = {"region": region, "account": account}
         self.scope = scope if scope else core.App()
-        self.stage = stage if stage is not None else self.get_stage()
+        self.stage = self.get_stage(stage)
         self.unique_stack_name = self._create_unique_stack_name(stack_name, self.stage)
         super().__init__(scope=scope, id=self.unique_stack_name, env=env, **kwargs)
         self.project_root = project_root
@@ -90,10 +90,22 @@ class DataJobStack(core.Stack):
         """create each of the resources of this stack"""
         [resource.create() for resource in self.resources]
 
-    def get_stage(self):
+    def get_stage(self, stage):
         """get the stage parameter and return a default if not found."""
         try:
-            return self.get_context_parameter("stage")
+            if stage == "None":
+                logger.debug("no stage parameter is passed via the cli.")
+                return DataJobStack.DEFAULT_STAGE
+            if stage:
+                logger.debug(
+                    "a stage parameter is passed via the cli or via the datajob stack configuration file."
+                )
+                return stage
+            if stage is None:
+                logger.debug(
+                    "No stage is passed to datajob stack, taking the default one."
+                )
+                return self.get_context_parameter("stage")
         except ValueError:
             return DataJobStack.DEFAULT_STAGE
 
