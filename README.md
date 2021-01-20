@@ -82,10 +82,10 @@ Set the aws account number and the profile that contains your aws credentials (`
     export AWS_DEFAULT_ACCOUNT=my-account-number
     export AWS_PROFILE=my-profile
 
-Deploy your pipeline using a unique identifier `--stage` and point to the configuration of the pipeline using `--config`
+Point to the configuration of the pipeline using `--config` and deploy
 
     cd examples/data_pipeline_simple
-    datajob deploy --stage dev --config datajob_stack.py
+    datajob deploy --config datajob_stack.py
 
 After running the `deploy` command, the code of the 3 tasks are deployed to a glue job and the glue jobs are orchestrated using step functions.
 Go to the AWS console to the step functions service, look for `data-pipeline-simple` and click on "Start execution"
