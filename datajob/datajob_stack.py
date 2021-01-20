@@ -93,7 +93,10 @@ class DataJobStack(core.Stack):
     def get_stage(self):
         """get the stage parameter and return a default if not found."""
         try:
-            return self.get_context_parameter("stage")
+            stage = self.get_context_parameter("stage")
+            if stage == "None":
+                logger.debug("no stage parameter is passed via the cli.")
+                return DataJobStack.DEFAULT_STAGE
         except ValueError:
             return DataJobStack.DEFAULT_STAGE
 
