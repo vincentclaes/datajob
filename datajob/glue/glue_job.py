@@ -65,12 +65,12 @@ class GlueJob(DataJobBase):
 
     def create(self):
         s3_url_glue_job = self._deploy_glue_job_code(
-            datajob_context=self.datajob_context,
+            context=self.context,
             glue_job_name=self.unique_name,
             path_to_glue_job=self.job_path,
         )
         self._create_glue_job(
-            datajob_context=self.datajob_context,
+            context=self.context,
             glue_job_name=self.unique_name,
             s3_url_glue_job=s3_url_glue_job,
             arguments=self.arguments,
@@ -136,16 +136,18 @@ class GlueJob(DataJobBase):
 
     @staticmethod
     def _create_s3_url_for_job(
-        glue_job_context: DatajobContext, glue_job_id: str, glue_job_file_name: str
+        context: DatajobContext, glue_job_id: str, glue_job_file_name: str
     ) -> str:
         """
         construct the path to s3 where the code resides of the glue job..
-        :param glue_job_context: DatajobContext that contains the name of the deployment bucket.
+        :param context: DatajobContext that contains the name of the deployment bucket.
         :param glue_job_id:
         :param glue_job_file_name:
         :return:
         """
-        s3_url_glue_job = f"s3://{glue_job_context.deployment_bucket_name}/{glue_job_id}/{glue_job_file_name}"
+        s3_url_glue_job = (
+            f"s3://{context.deployment_bucket_name}/{glue_job_id}/{glue_job_file_name}"
+        )
         logger.debug(f"s3 url for glue job {glue_job_id}: {s3_url_glue_job}")
         return s3_url_glue_job
 
@@ -164,7 +166,7 @@ class GlueJob(DataJobBase):
         return glue_job_dir, glue_job_file_name
 
     def _deploy_glue_job_code(
-        self, datajob_context: DatajobContext, glue_job_name: str, path_to_glue_job: str
+        self, context: DatajobContext, glue_job_name: str, path_to_glue_job: str
     ) -> str:
         """deploy the code of this glue job to the deployment bucket
         (can be found in the glue context object)"""
@@ -181,12 +183,12 @@ class GlueJob(DataJobBase):
                 # todo - sync only the glue job itself.
                 aws_s3_deployment.Source.asset(glue_job_dir)
             ],
-            destination_bucket=datajob_context.deployment_bucket,
+            destination_bucket=context.deployment_bucket,
             destination_key_prefix=glue_job_name,
         )
 
         s3_url_glue_job = GlueJob._create_s3_url_for_job(
-            glue_job_context=datajob_context,
+            context=context,
             glue_job_id=glue_job_name,
             glue_job_file_name=glue_job_file_name,
         )
@@ -194,7 +196,7 @@ class GlueJob(DataJobBase):
 
     def _create_glue_job(
         self,
-        datajob_context: DatajobContext,
+        context: DatajobContext,
         glue_job_name: str,
         s3_url_glue_job: str = None,
         arguments: dict = None,
@@ -209,10 +211,10 @@ class GlueJob(DataJobBase):
         paths to wheel and business logic and arguments"""
         logger.debug(f"creating Glue Job {glue_job_name}")
         default_arguments = None
-        if datajob_context.s3_url_wheel:
+        if context.s3_url_wheel:
             extra_py_files = {
                 # path to the wheel of this project
-                "--extra-py-files": datajob_context.s3_url_wheel
+                "--extra-py-files": context.s3_url_wheel
             }
             default_arguments = {**extra_py_files, **arguments}
         glue.CfnJob(
