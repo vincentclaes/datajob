@@ -7,6 +7,8 @@ from datajob.datajob_context import DatajobContext
 
 
 class DataJobStack(core.Stack):
+    DEFAULT_STAGE = "dev"
+
     def __init__(
         self,
         stack_name: str,
@@ -35,7 +37,7 @@ class DataJobStack(core.Stack):
         region = region if region is not None else os.environ.get("AWS_DEFAULT_REGION")
         env = {"region": region, "account": account}
         self.scope = scope
-        self.stage = stage if stage is not None else self.get_context_parameter("stage")
+        self.stage = stage if stage is not None else self.get_stage()
         self.unique_stack_name = self._create_unique_stack_name(stack_name, self.stage)
         super().__init__(scope=scope, id=self.unique_stack_name, env=env, **kwargs)
         self.project_root = project_root
@@ -87,6 +89,13 @@ class DataJobStack(core.Stack):
     def create_resources(self):
         """create each of the resources of this stack"""
         [resource.create() for resource in self.resources]
+
+    def get_stage(self):
+        """get the stage parameter and return a default if not found."""
+        try:
+            return self.get_context_parameter("stage")
+        except ValueError:
+            return DataJobStack.DEFAULT_STAGE
 
     def get_context_parameter(self, name: str) -> str:
         """get a cdk context parameter from the cli."""

@@ -61,7 +61,3 @@ class DatajobTest(unittest.TestCase):
             ["deploy", "--config", "some_config.py", "--stage", "some-stage"],
         )
         self.assertEqual(result.exit_code, 0)
-
-
-if __name__ == "__main__":
-    unittest.main()
