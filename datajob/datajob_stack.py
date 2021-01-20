@@ -17,7 +17,7 @@ class DataJobStack(core.Stack):
         include_folder: str = None,
         account: str = None,
         region: str = None,
-        scope: core.Construct = core.App(),
+        scope: core.Construct = None,
         **kwargs,
     ) -> None:
         """
@@ -36,21 +36,21 @@ class DataJobStack(core.Stack):
         )
         region = region if region is not None else os.environ.get("AWS_DEFAULT_REGION")
         env = {"region": region, "account": account}
-        self.scope = scope
+        self.scope = scope if scope else core.App()
         self.stage = stage if stage is not None else self.get_stage()
         self.unique_stack_name = self._create_unique_stack_name(stack_name, self.stage)
         super().__init__(scope=scope, id=self.unique_stack_name, env=env, **kwargs)
         self.project_root = project_root
         self.include_folder = include_folder
         self.resources = []
-        self.datajob_context = None
+        self.context = None
 
     def __enter__(self):
         """
         As soon as we enter the contextmanager, we create the datajob context.
         :return: datajob stack.
         """
-        self.datajob_context = DatajobContext(
+        self.context = DatajobContext(
             self,
             unique_stack_name=self.unique_stack_name,
             project_root=self.project_root,
@@ -74,7 +74,7 @@ class DataJobStack(core.Stack):
 
     def add(self, task: str) -> None:
         setattr(self, task.unique_name, task)
-        task.create(datajob_context=self.datajob_context)
+        task.create()
 
     @staticmethod
     def _create_unique_stack_name(stack_name: str, stage: str) -> str:
