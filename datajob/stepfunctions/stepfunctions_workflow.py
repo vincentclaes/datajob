@@ -1,6 +1,8 @@
 import contextvars
 import tempfile
 import uuid
+import os
+import boto3
 from pathlib import Path
 
 from aws_cdk import aws_iam as iam
@@ -31,7 +33,12 @@ class StepfunctionsWorkflow(DataJobBase):
     """
 
     def __init__(
-        self, datajob_stack: core.Construct, name: str, role: iam.Role = None, **kwargs
+        self,
+        datajob_stack: core.Construct,
+        name: str,
+        role: iam.Role = None,
+        region: str = None,
+        **kwargs,
     ):
         super().__init__(datajob_stack, name, **kwargs)
         self.chain_of_tasks = []
@@ -43,6 +50,7 @@ class StepfunctionsWorkflow(DataJobBase):
             if role is None
             else role
         )
+        self.region = region if region else os.environ["AWS_DEFAULT_REGION"]
 
     def add_task(self, task_other):
         """add a task to the workflow we would like to orchestrate."""
@@ -68,9 +76,7 @@ class StepfunctionsWorkflow(DataJobBase):
     def _create_glue_start_job_run_step(job_name):
         logger.debug("creating a step for a glue job.")
         return GlueStartJobRunStep(
-            job_name,
-            wait_for_completion=True,
-            parameters={"JobName": job_name},
+            job_name, wait_for_completion=True, parameters={"JobName": job_name}
         )
 
     def _build_workflow(self):
@@ -80,10 +86,12 @@ class StepfunctionsWorkflow(DataJobBase):
         )
         workflow_definition = steps.Chain(self.chain_of_tasks)
         logger.debug(f"creating a workflow with name {self.unique_name}")
+        self.client = boto3.client("stepfunctions", region_name=self.region)
         self.workflow = Workflow(
             name=self.unique_name,
             definition=workflow_definition,
             role=self.role.role_arn,
+            client=self.client,
         )
 
     def create(self):

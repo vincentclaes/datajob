@@ -1,6 +1,6 @@
 import unittest
 
-from mock import patch
+from unittest.mock import patch
 from typer.testing import CliRunner
 
 from datajob import datajob

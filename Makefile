@@ -1,7 +1,23 @@
 install:
-	pip install poetry
+	pip3 install poetry
+	poetry config virtualenvs.create true
 	poetry install
-	poetry shell
+
+
+install-dev:
+	make install
 	# install pre commit hooks to check the code
 	# before committing.
-	pre-commit install
+	poetry run pre-commit install
+
+tests:
+	poetry run pytest
+
+run-examples:
+	cd "${CURDIR}/examples/data_pipeline_simple" && poetry run datajob synthesize --config datajob_stack.py --stage dev
+	cd "${CURDIR}/examples/data_pipeline_with_packaged_project" && poetry run datajob synthesize --config datajob_stack.py --stage dev --package
+
+gh-actions:
+	make install
+	make tests
+	make run-examples
