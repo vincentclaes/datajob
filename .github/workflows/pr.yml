@@ -1,0 +1,22 @@
+name: Build-Test-RunExamples
+on: [pull_request]
+
+env:
+  IMAGE_TAG: local
+
+jobs:
+  Build-Test-RunExamples:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checking out
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.ref }}
+
+    - name: Build Container
+      run: |
+         cat .devcontainer/devcontainer.Dockerfile | docker build -t $IMAGE_TAG -
+
+    - name: Test
+      run: docker run -v $PWD:/workspace/vscode -w /workspace/vscode $IMAGE_TAG make gh-actions

@@ -1,4 +1,5 @@
 import unittest
+import os
 
 from moto import mock_stepfunctions
 from stepfunctions.steps.compute import GlueStartJobRunStep
@@ -16,6 +17,15 @@ class SomeMockedClass(object):
 
 
 class StepfunctionsWorkflowTestTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        # we need a AWS region else these tests will fail with boto3 stepfunctions.
+        # (even when using moto to mock stepfunctions!)
+        try:
+            os.environ["AWS_DEFAULT_REGION"]
+        except KeyError:
+            os.environ["AWS_DEFAULT_REGION"] = "eu-west-1"
+
     @mock_stepfunctions
     def test_create_tasks_for_orchestration_simple_flow_successfully(self):
         task1 = stepfunctions_workflow.task(SomeMockedClass("task1"))

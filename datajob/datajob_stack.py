@@ -17,7 +17,7 @@ class DataJobStack(core.Stack):
         include_folder: str = None,
         account: str = None,
         region: str = None,
-        scope: core.Construct = None,
+        scope: core.Construct = core.App(),
         **kwargs,
     ) -> None:
         """
@@ -36,7 +36,7 @@ class DataJobStack(core.Stack):
         )
         region = region if region is not None else os.environ.get("AWS_DEFAULT_REGION")
         env = {"region": region, "account": account}
-        self.scope = scope if scope else core.App()
+        self.scope = scope
         self.stage = self.get_stage(stage)
         self.unique_stack_name = self._create_unique_stack_name(stack_name, self.stage)
         super().__init__(scope=scope, id=self.unique_stack_name, env=env, **kwargs)
