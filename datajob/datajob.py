@@ -40,7 +40,7 @@ def deploy(
     context_settings={"allow_extra_args": True, "ignore_unknown_options": True}
 )
 def synthesize(
-    stage: str = typer.Option(...),
+    stage: str = typer.Option(None),
     config: str = typer.Option(Path, callback=os.path.abspath),
     ctx: typer.Context = typer.Option(list),
 ):
@@ -53,7 +53,7 @@ def synthesize(
     context_settings={"allow_extra_args": True, "ignore_unknown_options": True}
 )
 def destroy(
-    stage: str = typer.Option(...),
+    stage: str = typer.Option(None),
     config: str = typer.Option(Path, callback=os.path.abspath),
     ctx: typer.Context = typer.Option(list),
 ):

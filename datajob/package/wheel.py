@@ -10,11 +10,7 @@ class DatajobPackageWheelError(Exception):
 
 def create(project_root: str, package: str) -> None:
 
-    wheel_functions = {
-        "pip": _setuppy_wheel,
-        "pipenv": _setuppy_wheel,
-        "poetry": _poetry_wheel,
-    }
+    wheel_functions = {"setuppy": _setuppy_wheel, "poetry": _poetry_wheel}
     wheel_functions[package](project_root)
 
 
