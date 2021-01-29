@@ -1,21 +1,14 @@
 # Datajob
 
-> Datajob is an MVP. Do not use this in production. <br/>
-> [Feedback](https://github.com/vincentclaes/datajob/discussions) is much appreciated!
-
-### Build and deploy a serverless data pipeline with no effort on AWS.
-
-- Datajob uses exclusively serverless services.
-- There is no custom or managed application needed to deploy and run your data pipeline on AWS!
-- The main dependencies are [AWS CDK](https://github.com/aws/aws-cdk) and [Step Functions SDK for data science](https://github.com/aws/aws-step-functions-data-science-sdk-python)
-
-Currently implemented:
+#### Build and deploy a serverless data pipeline with no effort on AWS.
 
 - Deploy your code to a glue job.
 - Package your project and make it available for your glue jobs.
 - Orchestrate your pipeline using stepfunctions as simple as `task1 >> [task2,task3] >> task4`
 
-Ideas to be implemented can be found [below](#ideas)
+> The main dependencies are [AWS CDK](https://github.com/aws/aws-cdk) and [Step Functions SDK for data science](https://github.com/aws/aws-step-functions-data-science-sdk-python) <br/>
+> Ideas to be implemented can be found [below](#ideas) <br/>
+> [Feedback](https://github.com/vincentclaes/datajob/discussions) is much appreciated!
 
 
 # Installation
