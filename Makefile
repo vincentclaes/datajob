@@ -15,7 +15,8 @@ tests:
 
 run-examples:
 	cd "${CURDIR}/examples/data_pipeline_simple" && poetry run datajob synthesize --config datajob_stack.py --stage dev
-	cd "${CURDIR}/examples/data_pipeline_with_packaged_project" && poetry run datajob synthesize --config datajob_stack.py --stage dev --package
+	cd "${CURDIR}/examples/data_pipeline_with_packaged_project" && poetry run datajob synthesize --config datajob_stack.py --stage dev --package poetry
+	cd "${CURDIR}/examples/data_pipeline_with_packaged_project" && poetry run datajob synthesize --config datajob_stack.py --stage dev --package setuppy
 
 gh-actions:
 	make install
