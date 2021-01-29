@@ -33,8 +33,3 @@ with DataJobStack(stack_name="data-pipeline-simple") as datajob_stack:
         datajob_stack=datajob_stack, name="data-pipeline-simple"
     ) as sfn:
         [task1, task2] >> task3
-
-# to package and deploy this stack execute
-# cdk deploy --app  "python datajob_stack.py"  -c stage=dev
-# or use the datajob cli
-# datajob deploy --stage dev --config datajob_stack.py
