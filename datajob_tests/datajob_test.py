@@ -75,7 +75,7 @@ class DatajobTest(unittest.TestCase):
 
     @patch("datajob.package.wheel._setuppy_wheel")
     @patch("datajob.datajob.call_cdk")
-    def test_datajob_deploy_with_package_pip(self, m_call_cdk, m_create_wheel):
+    def test_datajob_deploy_with_package_setuppy(self, m_call_cdk, m_create_wheel):
         result = self.runner.invoke(
             datajob.app,
             [
@@ -85,25 +85,7 @@ class DatajobTest(unittest.TestCase):
                 "--stage",
                 "some-stage",
                 "--package",
-                "pip",
-            ],
-        )
-        self.assertEqual(result.exit_code, 0)
-        self.assertEqual(m_create_wheel.call_count, 1)
-
-    @patch("datajob.package.wheel._setuppy_wheel")
-    @patch("datajob.datajob.call_cdk")
-    def test_datajob_deploy_with_package_pipenv(self, m_call_cdk, m_create_wheel):
-        result = self.runner.invoke(
-            datajob.app,
-            [
-                "deploy",
-                "--config",
-                "some_config.py",
-                "--stage",
-                "some-stage",
-                "--package",
-                "pipenv",
+                "setuppy",
             ],
         )
         self.assertEqual(result.exit_code, 0)
