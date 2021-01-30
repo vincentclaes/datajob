@@ -11,7 +11,7 @@ class DatajobPackageWheelError(Exception):
 def create_wheel(project_root: str, package: str) -> None:
     """
     Select the function to build a wheel based on the argument provided with --package.
-    At the time of writing this can be (setuppy or poetry)
+    At the time of writing the arguments can be setuppy or poetry.
     :param project_root: the path to the root of your project.
     :param package: the tool you want to use to build your wheel using (setuppy, poetry, ...)
     :return: None
@@ -38,7 +38,7 @@ def _setuppy_wheel(project_root: str) -> None:
         )
 
 
-def _poetry_wheel(project_root):
+def _poetry_wheel(project_root: str) -> None:
     """
     build a wheel for your project using poetry.
     :param project_root: the path to the root of your project.
@@ -57,7 +57,11 @@ def _poetry_wheel(project_root):
 
 
 def _call_create_wheel_command(cmd: str) -> None:
-    """shell out and call the command to create the wheel."""
+    """
+    shell out and call the command to create the wheel.
+    :param cmd: the command to create a wheel
+    :return: None
+    """
     logger.debug("creating wheel")
     print(f"wheel command: {cmd}")
     # todo - shell=True is not secure
