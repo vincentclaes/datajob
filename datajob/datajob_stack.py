@@ -88,7 +88,7 @@ class DataJobStack(core.Stack):
 
     def create_resources(self):
         """create each of the resources of this stack"""
-        [resource.create() for resource in self.resources]
+        [resource.create_wheel() for resource in self.resources]
 
     def get_stage(self, stage):
         """get the stage parameter and return a default if not found."""

@@ -28,7 +28,7 @@ def deploy(
     if package:
         # todo - check if we are building in the right directory
         project_root = str(Path(config).parent)
-        wheel.create(project_root=project_root, package=package)
+        wheel.create_wheel(project_root=project_root, package=package)
     # create stepfunctions if requested
     # make sure you have quotes around the app arguments
     args = ["--app", f""" "python {config}" """, "-c", f"stage={stage}"]
