@@ -1,5 +1,6 @@
 import subprocess
 from pathlib import Path
+import shlex
 
 from datajob import logger
 
@@ -20,7 +21,7 @@ def create(project_root):
         cmd = f"cd {project_root}; python setup.py bdist_wheel"
         print(f"wheel command: {cmd}")
         # todo - shell=True is not secure
-        subprocess.call(cmd, shell=True)
+        subprocess.check_call(shlex.split(cmd))
     else:
         raise DatajobPackageWheelError(
             f"no setup.py file detected in project root {project_root}. "

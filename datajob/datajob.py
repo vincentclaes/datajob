@@ -4,6 +4,7 @@ import subprocess
 from pathlib import Path
 
 import typer
+import shlex
 
 from datajob.package import wheel
 
@@ -68,4 +69,5 @@ def call_cdk(command: str, args: list = None, extra_args: list = None):
     full_command = " ".join(["cdk", command] + args + extra_args)
     print(f"cdk command:" f" {full_command}")
     # todo - shell=True is not secure
-    subprocess.call(full_command, shell=True)
+    # subprocess.call(full_command, shell=True)
+    subprocess.check_call(shlex.split(full_command))
