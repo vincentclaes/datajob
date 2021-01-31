@@ -11,7 +11,9 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: 3.x
-      - run: pip install mkdocs-material mkdocstrings
+      - run: pip3 install poetry
+      - run: poetry config virtualenvs.create false
+      - run: poetry install
       - run: ls -la
       - run: pwd
       - run: mkdocs gh-deploy --force
