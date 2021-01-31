@@ -1,5 +1,5 @@
-from pathlib import Path
 from enum import Enum
+from pathlib import Path
 
 from aws_cdk import aws_glue as glue, core, aws_s3_deployment
 from aws_cdk import aws_iam as iam

@@ -1,10 +1,10 @@
 import os
 import pathlib
+import shlex
 import subprocess
 from pathlib import Path
 
 import typer
-import shlex
 
 from datajob.package import wheel
 
