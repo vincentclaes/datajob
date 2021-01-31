@@ -3,6 +3,9 @@
 ## Datajob CLI
 ### deploy
 ::: datajob.datajob.deploy
+    rendering:
+        show_root_heading: false
+        show_root_full_path: false
 ### synthesize
 ::: datajob.datajob.synthesize
 ### destroy
