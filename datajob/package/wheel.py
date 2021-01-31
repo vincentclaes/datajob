@@ -1,8 +1,6 @@
-import subprocess
 from pathlib import Path
-import shlex
 
-from datajob import logger
+from datajob import logger, call_subprocess
 
 
 class DatajobPackageWheelError(Exception):
@@ -27,16 +25,11 @@ def _setuppy_wheel(project_root: str) -> None:
     :param project_root: the path to the root of your project.
     :return: None
     """
-    setup_py_file = Path(project_root, "setup.py")
-    if setup_py_file.is_file():
-        logger.debug(f"found a setup.py file in {project_root}")
-        cmd = f"cd {project_root}; python setup.py bdist_wheel"
-        _call_create_wheel_command(cmd=cmd)
-    else:
-        raise DatajobPackageWheelError(
-            f"no setup.py file detected in project root {project_root}. "
-            f"Hence we cannot create a python wheel for this project"
-        )
+    _execute_packaging_logic(
+        project_root=project_root,
+        config_file="setup.py",
+        cmd="python setup.py bdist_wheel",
+    )
 
 
 def _poetry_wheel(project_root: str) -> None:
@@ -45,25 +38,26 @@ def _poetry_wheel(project_root: str) -> None:
     :param project_root: the path to the root of your project.
     :return: None
     """
-    poetry_file = Path(project_root, "pyproject.toml")
-    if poetry_file.is_file():
-        logger.debug(f"found a pyproject.toml file in {project_root}")
-        cmd = f"cd {project_root}; poetry build"
-        _call_create_wheel_command(cmd=cmd)
-    else:
-        raise DatajobPackageWheelError(
-            f"no pyproject.toml file detected in project root {project_root}. "
-            f"Hence we cannot create a python wheel for this project"
-        )
+    _execute_packaging_logic(
+        project_root=project_root, config_file="pyproject.toml", cmd="poetry build"
+    )
 
 
-def _call_create_wheel_command(cmd: str) -> None:
+def _execute_packaging_logic(project_root: str, config_file: str, cmd: str) -> None:
     """
-    shell out and call the command to create the wheel.
-    :param cmd: the command to create a wheel
+
+    :param project_root: the path to the root of your project.
+    :param config_file: the confgi file to package the project as a wheel (setup.py or pyproject.toml)
+    :param cmd: the command to execute to create a wheel.
     :return: None
     """
-    logger.debug("creating wheel")
-    print(f"wheel command: {cmd}")
-    # todo - shell=True is not secure
-    subprocess.call(cmd, shell=True)
+    config_file_full_path = Path(project_root, config_file)
+    logger.info(f"expecting {config_file_full_path}")
+    if config_file_full_path.is_file():
+        logger.debug(f"found a {config_file} file in {project_root}")
+        call_subprocess(cmd=cmd)
+    else:
+        raise DatajobPackageWheelError(
+            f"no {config_file} file detected in project root {project_root}. "
+            f"Hence we cannot create a python wheel for this project"
+        )

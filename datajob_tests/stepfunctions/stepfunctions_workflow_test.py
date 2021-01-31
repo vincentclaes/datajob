@@ -1,5 +1,5 @@
-import unittest
 import os
+import unittest
 
 from moto import mock_stepfunctions
 from stepfunctions.steps.compute import GlueStartJobRunStep
