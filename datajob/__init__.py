@@ -21,5 +21,11 @@ logger = logging.getLogger(project_name)
 
 
 def call_subprocess(cmd: str) -> None:
+    """
+    call a command as a subprocess in a secure way.
+    https://stackoverflow.com/a/59090212/1771155
+    :param cmd: the command to execute
+    :return: None
+    """
     print(f"datajob subprocess command: " f"{cmd}")
     subprocess.check_call(shlex.split(cmd))

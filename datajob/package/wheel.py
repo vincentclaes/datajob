@@ -45,7 +45,8 @@ def _poetry_wheel(project_root: str) -> None:
 
 def _execute_packaging_logic(project_root: str, config_file: str, cmd: str) -> None:
     """
-
+    check if the config file exists in the project root and execute the command to
+    create a wheel.
     :param project_root: the path to the root of your project.
     :param config_file: the confgi file to package the project as a wheel (setup.py or pyproject.toml)
     :param cmd: the command to execute to create a wheel.
