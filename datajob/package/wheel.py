@@ -18,7 +18,7 @@ def create(project_root):
     if setup_py_file.is_file():
         logger.debug(f"found a setup.py file in {project_root}")
         logger.debug("creating wheel for glue job")
-        cmd = f"cd {project_root}; python setup.py bdist_wheel"
+        cmd = f"cd {project_root} && python setup.py bdist_wheel"
         print(f"wheel command: {cmd}")
         # todo - shell=True is not secure
         subprocess.check_call(shlex.split(cmd))

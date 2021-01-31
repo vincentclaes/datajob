@@ -17,7 +17,7 @@ Make sure you have configured a `setup.py` in the root of your poject.
 
 ## Deployment
 
-    export AWS_DEFAULT_ACCOUNT=my-account-number
     export AWS_PROFILE=my-profile
+    export AWS_DEFAULT_REGION=eu-west-1
     cd examples/data_pipeline_with_packaged_project
     datajob deploy --stage dev --config datajob_stack.py --package
