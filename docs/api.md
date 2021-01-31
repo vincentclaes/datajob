@@ -13,6 +13,9 @@
 
 ## DatajobStack
 ::: datajob.datajob_stack.DataJobStack
+    handler: python
+    rendering:
+      option_x: etc
 ## DatajobContext
 ::: datajob.datajob_context.DatajobContext
 ## GlueJob

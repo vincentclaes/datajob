@@ -9,6 +9,12 @@ theme:
     primary: blue grey
     accent: amber
 
+markdown_extensions:
+  - toc:
+      toc_depth: 2
+#      slugify: !!python/name:pymdownx.slugs.uslugify_cased
+      permalink: true
+
 plugins:
   - search
   - mkdocstrings:
@@ -16,3 +22,5 @@ plugins:
         python:
           selection:
             docstring_style: "restructured-text"
+          rendering:
+            heading_level: 3
