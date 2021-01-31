@@ -1,0 +1,10 @@
+site_name: Datajob
+repo_name: Datajob on GitHub
+repo_url: https://github.com/vincentclaes/datajob
+
+theme:
+  name: material
+
+plugins:
+  - search
+  - mkdocstrings
