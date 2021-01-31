@@ -22,13 +22,13 @@ def run():
 def deploy(
     stage: str = typer.Option(None),
     config: str = typer.Option(Path, callback=os.path.abspath),
-    package: bool = typer.Option(False, "--package"),
+    package: str = typer.Option(None, "--package"),
     ctx: typer.Context = typer.Option(list),
 ):
     if package:
         # todo - check if we are building in the right directory
         project_root = str(Path(config).parent)
-        wheel.create(project_root=project_root)
+        wheel.create_wheel(project_root=project_root, package=package)
     # create stepfunctions if requested
     # make sure you have quotes around the app arguments
     args = ["--app", f""" "python {config}" """, "-c", f"stage={stage}"]
@@ -40,7 +40,7 @@ def deploy(
     context_settings={"allow_extra_args": True, "ignore_unknown_options": True}
 )
 def synthesize(
-    stage: str = typer.Option(...),
+    stage: str = typer.Option(None),
     config: str = typer.Option(Path, callback=os.path.abspath),
     ctx: typer.Context = typer.Option(list),
 ):
@@ -53,7 +53,7 @@ def synthesize(
     context_settings={"allow_extra_args": True, "ignore_unknown_options": True}
 )
 def destroy(
-    stage: str = typer.Option(...),
+    stage: str = typer.Option(None),
     config: str = typer.Option(Path, callback=os.path.abspath),
     ctx: typer.Context = typer.Option(list),
 ):

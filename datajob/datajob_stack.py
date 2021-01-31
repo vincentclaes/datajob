@@ -93,19 +93,17 @@ class DataJobStack(core.Stack):
     def get_stage(self, stage):
         """get the stage parameter and return a default if not found."""
         try:
-            if stage == "None":
-                logger.debug("no stage parameter is passed via the cli.")
+            if stage == "None" or not stage:
+                logger.debug(
+                    "No stage is passed to datajob stack, taking the default one."
+                )
                 return DataJobStack.DEFAULT_STAGE
-            if stage:
+            elif stage:
                 logger.debug(
                     "a stage parameter is passed via the cli or via the datajob stack configuration file."
                 )
                 return stage
-            if stage is None:
-                logger.debug(
-                    "No stage is passed to datajob stack, taking the default one."
-                )
-                return self.get_context_parameter("stage")
+
         except ValueError:
             return DataJobStack.DEFAULT_STAGE
 
