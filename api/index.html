@@ -1,0 +1,1242 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.7">
+    
+    
+      
+        <title>API documentation - Datajob</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.cb6bc1d0.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.39b8e14a.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#546d78">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="amber">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#api-documentation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href=".." title="Datajob" class="md-header-nav__button md-logo" aria-label="Datajob">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      <div class="md-header-nav__ellipsis">
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
+            Datajob
+          </span>
+        </div>
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
+            
+              API documentation
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header-nav__source">
+        
+<a href="https://github.com/vincentclaes/datajob/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Datajob on GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Datajob" class="md-nav__button md-logo" aria-label="Datajob">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Datajob
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/vincentclaes/datajob/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Datajob on GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Welcome to MkDocs
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          API documentation
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        API documentation
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#datajob-cli" class="md-nav__link">
+    Datajob CLI
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#datajobstack" class="md-nav__link">
+    DatajobStack
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#datajobcontext" class="md-nav__link">
+    DatajobContext
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gluejob" class="md-nav__link">
+    GlueJob
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#datajob-cli" class="md-nav__link">
+    Datajob CLI
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#datajobstack" class="md-nav__link">
+    DatajobStack
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#datajobcontext" class="md-nav__link">
+    DatajobContext
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gluejob" class="md-nav__link">
+    GlueJob
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/vincentclaes/datajob/edit/master/docs/api.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <h1 id="api-documentation">API documentation<a class="headerlink" href="#api-documentation" title="Permanent link">&para;</a></h1>
+<h2 id="datajob-cli">Datajob CLI<a class="headerlink" href="#datajob-cli" title="Permanent link">&para;</a></h2>
+<h3>deploy</h3>
+<div class="doc doc-object doc-function">
+<h3 class="hidden-toc" data-toc-label="datajob.datajob.deploy" id="datajob.datajob.deploy" style="visibility: hidden; position: absolute;">
+        </h3>
+<div class="doc doc-contents first">
+<details class="quote">
+          <summary>Source code in <code>datajob/datajob.py</code></summary>
+          <div class="highlight">
+<pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">(</span>
+    <span class="n">context_settings</span><span class="o">=</span><span class="p">{</span><span class="s2">"allow_extra_args"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"ignore_unknown_options"</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">deploy</span><span class="p">(</span>
+    <span class="n">stage</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span>
+    <span class="n">config</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="n">Path</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">),</span>
+    <span class="n">package</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"--package"</span><span class="p">),</span>
+    <span class="n">ctx</span><span class="p">:</span> <span class="n">typer</span><span class="o">.</span><span class="n">Context</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="nb">list</span><span class="p">),</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">package</span><span class="p">:</span>
+        <span class="c1"># todo - check if we are building in the right directory</span>
+        <span class="n">project_root</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">config</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
+        <span class="n">wheel</span><span class="o">.</span><span class="n">create_wheel</span><span class="p">(</span><span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span><span class="p">,</span> <span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">)</span>
+    <span class="c1"># create stepfunctions if requested</span>
+    <span class="c1"># make sure you have quotes around the app arguments</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"--app"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">""" "python </span><span class="si">{</span><span class="n">config</span><span class="si">}</span><span class="s2">" """</span><span class="p">,</span> <span class="s2">"-c"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"stage=</span><span class="si">{</span><span class="n">stage</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span>
+    <span class="n">extra_args</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">args</span>
+    <span class="n">call_cdk</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="s2">"deploy"</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span> <span class="n">extra_args</span><span class="o">=</span><span class="n">extra_args</span><span class="p">)</span>
+</code></pre>
+</div>
+</details>
+</div>
+</div>
+<h3>synthesize</h3>
+<div class="doc doc-object doc-function">
+<h3 class="hidden-toc" data-toc-label="datajob.datajob.synthesize" id="datajob.datajob.synthesize" style="visibility: hidden; position: absolute;">
+        </h3>
+<div class="doc doc-contents first">
+<details class="quote">
+          <summary>Source code in <code>datajob/datajob.py</code></summary>
+          <div class="highlight">
+<pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">(</span>
+    <span class="n">context_settings</span><span class="o">=</span><span class="p">{</span><span class="s2">"allow_extra_args"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"ignore_unknown_options"</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">synthesize</span><span class="p">(</span>
+    <span class="n">stage</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span>
+    <span class="n">config</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="n">Path</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">),</span>
+    <span class="n">ctx</span><span class="p">:</span> <span class="n">typer</span><span class="o">.</span><span class="n">Context</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="nb">list</span><span class="p">),</span>
+<span class="p">):</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"--app"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">""" "python </span><span class="si">{</span><span class="n">config</span><span class="si">}</span><span class="s2">" """</span><span class="p">,</span> <span class="s2">"-c"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"stage=</span><span class="si">{</span><span class="n">stage</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span>
+    <span class="n">extra_args</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">args</span>
+    <span class="n">call_cdk</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="s2">"synthesize"</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span> <span class="n">extra_args</span><span class="o">=</span><span class="n">extra_args</span><span class="p">)</span>
+</code></pre>
+</div>
+</details>
+</div>
+</div>
+<h3>destroy</h3>
+<div class="doc doc-object doc-function">
+<h3 class="hidden-toc" data-toc-label="datajob.datajob.destroy" id="datajob.datajob.destroy" style="visibility: hidden; position: absolute;">
+        </h3>
+<div class="doc doc-contents first">
+<details class="quote">
+          <summary>Source code in <code>datajob/datajob.py</code></summary>
+          <div class="highlight">
+<pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">(</span>
+    <span class="n">context_settings</span><span class="o">=</span><span class="p">{</span><span class="s2">"allow_extra_args"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"ignore_unknown_options"</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">destroy</span><span class="p">(</span>
+    <span class="n">stage</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span>
+    <span class="n">config</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="n">Path</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">),</span>
+    <span class="n">ctx</span><span class="p">:</span> <span class="n">typer</span><span class="o">.</span><span class="n">Context</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="nb">list</span><span class="p">),</span>
+<span class="p">):</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"--app"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">""" "python </span><span class="si">{</span><span class="n">config</span><span class="si">}</span><span class="s2">" """</span><span class="p">,</span> <span class="s2">"-c"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"stage=</span><span class="si">{</span><span class="n">stage</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span>
+    <span class="n">extra_args</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">args</span>
+    <span class="n">call_cdk</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="s2">"destroy"</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span> <span class="n">extra_args</span><span class="o">=</span><span class="n">extra_args</span><span class="p">)</span>
+</code></pre>
+</div>
+</details>
+</div>
+</div>
+<h2 id="datajobstack">DatajobStack<a class="headerlink" href="#datajobstack" title="Permanent link">&para;</a></h2>
+<div class="doc doc-object doc-class">
+<h3 class="hidden-toc" data-toc-label="datajob.datajob_stack.DataJobStack" id="datajob.datajob_stack.DataJobStack" style="visibility: hidden; position: absolute;">
+        </h3>
+<div class="doc doc-contents first">
+<div class="doc doc-children">
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" data-toc-label="__enter__()" id="datajob.datajob_stack.DataJobStack.__enter__">
+
+<code class="highlight language-python"><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-special"><code>special</code></small>
+  </span>
+
+      </h3>
+<div class="doc doc-contents ">
+<p>As soon as we enter the contextmanager, we create the datajob context.</p>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code></code></td>
+<td>
+<p>datajob stack.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<details class="quote">
+          <summary>Source code in <code>datajob/datajob_stack.py</code></summary>
+          <div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    As soon as we enter the contextmanager, we create the datajob context.</span>
+<span class="sd">    :return: datajob stack.</span>
+<span class="sd">    """</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">DatajobContext</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">unique_stack_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unique_stack_name</span><span class="p">,</span>
+        <span class="n">project_root</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">project_root</span><span class="p">,</span>
+        <span class="n">include_folder</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">include_folder</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span>
+</code></pre>
+</div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" data-toc-label="__exit__()" id="datajob.datajob_stack.DataJobStack.__exit__">
+
+<code class="highlight language-python"><span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-special"><code>special</code></small>
+  </span>
+
+      </h3>
+<div class="doc doc-contents ">
+<p>steps we have to do when exiting the context manager.
+- we will create the resources we have defined.
+- we will synthesize our stack so that we have everything to deploy.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>exc_type</code></td>
+<td><code></code></td>
+<td></td>
+<td><em>required</em></td>
+</tr>
+<tr>
+<td><code>exc_value</code></td>
+<td><code></code></td>
+<td></td>
+<td><em>required</em></td>
+</tr>
+<tr>
+<td><code>traceback</code></td>
+<td><code></code></td>
+<td></td>
+<td><em>required</em></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code></code></td>
+<td>
+<p>None</p>
+</td>
+</tr>
+</tbody>
+</table>
+<details class="quote">
+          <summary>Source code in <code>datajob/datajob_stack.py</code></summary>
+          <div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    steps we have to do when exiting the context manager.</span>
+<span class="sd">    - we will create the resources we have defined.</span>
+<span class="sd">    - we will synthesize our stack so that we have everything to deploy.</span>
+<span class="sd">    :param exc_type:</span>
+<span class="sd">    :param exc_value:</span>
+<span class="sd">    :param traceback:</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    """</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"creating resources and synthesizing stack."</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">create_resources</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">scope</span><span class="o">.</span><span class="n">synth</span><span class="p">()</span>
+</code></pre>
+</div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" data-toc-label="__init__()" id="datajob.datajob_stack.DataJobStack.__init__">
+
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stack_name</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">project_root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include_folder</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">account</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">region</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scope</span><span class="o">=&lt;</span><span class="n">aws_cdk</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">App</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x7f741ec0e0a0</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-special"><code>special</code></small>
+  </span>
+
+      </h3>
+<div class="doc doc-contents ">
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>scope</code></td>
+<td><code>Construct</code></td>
+<td>
+<p>aws cdk core construct object.</p>
+</td>
+<td><code>&lt;aws_cdk.core.App object at 0x7f741ec0e0a0&gt;</code></td>
+</tr>
+<tr>
+<td><code>stack_name</code></td>
+<td><code>str</code></td>
+<td>
+<p>a name for this stack.</p>
+</td>
+<td><em>required</em></td>
+</tr>
+<tr>
+<td><code>stage</code></td>
+<td><code>str</code></td>
+<td>
+<p>the stage name to which we are deploying</p>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>project_root</code></td>
+<td><code>str</code></td>
+<td>
+<p>the path to the root of this project</p>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>include_folder</code></td>
+<td><code>str</code></td>
+<td>
+<p>specify the name of the folder we would like to include in the deployment bucket.</p>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>account</code></td>
+<td><code>str</code></td>
+<td>
+<p>AWS account number</p>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>region</code></td>
+<td><code>str</code></td>
+<td>
+<p>AWS region where we want to deploy our datajob to</p>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>kwargs</code></td>
+<td><code></code></td>
+<td>
+<p>any extra kwargs for the core.Construct</p>
+</td>
+<td><code>{}</code></td>
+</tr>
+</tbody>
+</table>
+<details class="quote">
+          <summary>Source code in <code>datajob/datajob_stack.py</code></summary>
+          <div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">stack_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">stage</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">project_root</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">include_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">account</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">scope</span><span class="p">:</span> <span class="n">core</span><span class="o">.</span><span class="n">Construct</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">App</span><span class="p">(),</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">"""</span>
+<span class="sd">    :param scope: aws cdk core construct object.</span>
+<span class="sd">    :param stack_name: a name for this stack.</span>
+<span class="sd">    :param stage: the stage name to which we are deploying</span>
+<span class="sd">    :param project_root: the path to the root of this project</span>
+<span class="sd">    :param include_folder:  specify the name of the folder we would like to include in the deployment bucket.</span>
+<span class="sd">    :param account: AWS account number</span>
+<span class="sd">    :param region: AWS region where we want to deploy our datajob to</span>
+<span class="sd">    :param kwargs: any extra kwargs for the core.Construct</span>
+<span class="sd">    """</span>
+
+    <span class="n">account</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">account</span> <span class="k">if</span> <span class="n">account</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"AWS_DEFAULT_ACCOUNT"</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">region</span> <span class="o">=</span> <span class="n">region</span> <span class="k">if</span> <span class="n">region</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"AWS_DEFAULT_REGION"</span><span class="p">)</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"region"</span><span class="p">:</span> <span class="n">region</span><span class="p">,</span> <span class="s2">"account"</span><span class="p">:</span> <span class="n">account</span><span class="p">}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">scope</span> <span class="o">=</span> <span class="n">scope</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_stage</span><span class="p">(</span><span class="n">stage</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">unique_stack_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_unique_stack_name</span><span class="p">(</span><span class="n">stack_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage</span><span class="p">)</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="n">scope</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unique_stack_name</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">project_root</span> <span class="o">=</span> <span class="n">project_root</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">include_folder</span> <span class="o">=</span> <span class="n">include_folder</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">resources</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="kc">None</span>
+</code></pre>
+</div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" data-toc-label="create_resources()" id="datajob.datajob_stack.DataJobStack.create_resources">
+
+<code class="highlight language-python"><span class="n">create_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+      </h3>
+<div class="doc doc-contents ">
+<p>create each of the resources of this stack</p>
+<details class="quote">
+          <summary>Source code in <code>datajob/datajob_stack.py</code></summary>
+          <div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">create_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">"""create each of the resources of this stack"""</span>
+    <span class="p">[</span><span class="n">resource</span><span class="o">.</span><span class="n">create</span><span class="p">()</span> <span class="k">for</span> <span class="n">resource</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">resources</span><span class="p">]</span>
+</code></pre>
+</div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" data-toc-label="get_context_parameter()" id="datajob.datajob_stack.DataJobStack.get_context_parameter">
+
+<code class="highlight language-python"><span class="n">get_context_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></code>
+
+
+      </h3>
+<div class="doc doc-contents ">
+<p>get a cdk context parameter from the cli.</p>
+<details class="quote">
+          <summary>Source code in <code>datajob/datajob_stack.py</code></summary>
+          <div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">get_context_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">"""get a cdk context parameter from the cli."""</span>
+    <span class="n">context_parameter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">try_get_context</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">context_parameter</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">"we expect a stage to be set on the cli. e.g 'cdk deploy -c stage=my-stage'"</span>
+        <span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"context parameter </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> found."</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">context_parameter</span>
+</code></pre>
+</div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" data-toc-label="get_stage()" id="datajob.datajob_stack.DataJobStack.get_stage">
+
+<code class="highlight language-python"><span class="n">get_stage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stage</span><span class="p">)</span></code>
+
+
+      </h3>
+<div class="doc doc-contents ">
+<p>get the stage parameter and return a default if not found.</p>
+<details class="quote">
+          <summary>Source code in <code>datajob/datajob_stack.py</code></summary>
+          <div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">get_stage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stage</span><span class="p">):</span>
+    <span class="sd">"""get the stage parameter and return a default if not found."""</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">stage</span> <span class="o">==</span> <span class="s2">"None"</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">stage</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">"No stage is passed to datajob stack, taking the default one."</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">DataJobStack</span><span class="o">.</span><span class="n">DEFAULT_STAGE</span>
+        <span class="k">elif</span> <span class="n">stage</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">"a stage parameter is passed via the cli or via the datajob stack configuration file."</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">stage</span>
+
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">DataJobStack</span><span class="o">.</span><span class="n">DEFAULT_STAGE</span>
+</code></pre>
+</div>
+</details>
+</div>
+</div>
+</div>
+</div>
+</div>
+<h2 id="datajobcontext">DatajobContext<a class="headerlink" href="#datajobcontext" title="Permanent link">&para;</a></h2>
+<div class="doc doc-object doc-class">
+<h3 class="hidden-toc" data-toc-label="datajob.datajob_context.DatajobContext" id="datajob.datajob_context.DatajobContext" style="visibility: hidden; position: absolute;">
+        </h3>
+<div class="doc doc-contents first">
+<p>DatajobContext is a class that creates all the services necessary for a datajob to run.
+You have to instantiate this class once per DatajobStack.</p>
+<div class="doc doc-children">
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" data-toc-label="__init__()" id="datajob.datajob_context.DatajobContext.__init__">
+
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">,</span> <span class="n">unique_stack_name</span><span class="p">,</span> <span class="n">project_root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include_folder</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-special"><code>special</code></small>
+  </span>
+
+      </h3>
+<div class="doc doc-contents ">
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>scope</code></td>
+<td><code>Construct</code></td>
+<td>
+<p>aws cdk core construct object.</p>
+</td>
+<td><em>required</em></td>
+</tr>
+<tr>
+<td><code>unique_stack_name</code></td>
+<td><code>str</code></td>
+<td>
+<p>a unique name for this stack. like this the name of our resources will not collide with other deployments.</p>
+</td>
+<td><em>required</em></td>
+</tr>
+<tr>
+<td><code>stage</code></td>
+<td><code></code></td>
+<td>
+<p>the stage name to which we are deploying</p>
+</td>
+<td><em>required</em></td>
+</tr>
+<tr>
+<td><code>project_root</code></td>
+<td><code>str</code></td>
+<td>
+<p>the path to the root of this project</p>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>include_folder</code></td>
+<td><code>str</code></td>
+<td>
+<p>specify the name of the folder we would like to include in the deployment bucket.</p>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>kwargs</code></td>
+<td><code></code></td>
+<td>
+<p>any extra kwargs for the core.Construct</p>
+</td>
+<td><code>{}</code></td>
+</tr>
+</tbody>
+</table>
+<details class="quote">
+          <summary>Source code in <code>datajob/datajob_context.py</code></summary>
+          <div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">scope</span><span class="p">:</span> <span class="n">core</span><span class="o">.</span><span class="n">Construct</span><span class="p">,</span>
+    <span class="n">unique_stack_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">project_root</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">include_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">"""</span>
+<span class="sd">    :param scope: aws cdk core construct object.</span>
+<span class="sd">    :param unique_stack_name: a unique name for this stack. like this the name of our resources will not collide with other deployments.</span>
+<span class="sd">    :param stage: the stage name to which we are deploying</span>
+<span class="sd">    :param project_root: the path to the root of this project</span>
+<span class="sd">    :param include_folder: specify the name of the folder we would like to include in the deployment bucket.</span>
+<span class="sd">    :param kwargs: any extra kwargs for the core.Construct</span>
+<span class="sd">    """</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"creating datajob context."</span><span class="p">)</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">unique_stack_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">project_root</span> <span class="o">=</span> <span class="n">project_root</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">unique_stack_name</span> <span class="o">=</span> <span class="n">unique_stack_name</span>
+    <span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deployment_bucket</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deployment_bucket_name</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_deployment_bucket</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">unique_stack_name</span><span class="p">)</span>
+    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_bucket</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_bucket_name</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_data_bucket</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unique_stack_name</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">s3_url_wheel</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_root</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s3_url_wheel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_and_deploy_wheel</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">unique_stack_name</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">project_root</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deployment_bucket</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deployment_bucket_name</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">include_folder</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_deploy_local_folder</span><span class="p">(</span><span class="n">include_folder</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"datajob context created."</span><span class="p">)</span>
+</code></pre>
+</div>
+</details>
+</div>
+</div>
+</div>
+</div>
+</div>
+<h2 id="gluejob">GlueJob<a class="headerlink" href="#gluejob" title="Permanent link">&para;</a></h2>
+<div class="doc doc-object doc-class">
+<h3 class="hidden-toc" data-toc-label="datajob.glue.glue_job.GlueJob" id="datajob.glue.glue_job.GlueJob" style="visibility: hidden; position: absolute;">
+        </h3>
+<div class="doc doc-contents first">
+<div class="doc doc-children">
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" data-toc-label="__init__()" id="datajob.glue.glue_job.GlueJob.__init__">
+
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datajob_stack</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">job_path</span><span class="p">,</span> <span class="n">job_type</span><span class="o">=</span><span class="s1">'pythonshell'</span><span class="p">,</span> <span class="n">glue_version</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_capacity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">python_version</span><span class="o">=</span><span class="s1">'3'</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-special"><code>special</code></small>
+  </span>
+
+      </h3>
+<div class="doc doc-contents ">
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>datajob_stack</code></td>
+<td><code>Construct</code></td>
+<td>
+<p>aws cdk core construct object.</p>
+</td>
+<td><em>required</em></td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td><code>str</code></td>
+<td>
+<p>a name for this glue job (will appear on the glue console).</p>
+</td>
+<td><em>required</em></td>
+</tr>
+<tr>
+<td><code>job_path</code></td>
+<td><code>str</code></td>
+<td>
+<p>the path to the glue job relative to the project root.</p>
+</td>
+<td><em>required</em></td>
+</tr>
+<tr>
+<td><code>job_type</code></td>
+<td><code>str</code></td>
+<td>
+<p>choose pythonshell for plain python / glueetl for a spark cluster. pythonshell is the default.</p>
+</td>
+<td><code>'pythonshell'</code></td>
+</tr>
+<tr>
+<td><code>glue_version</code></td>
+<td><code>str</code></td>
+<td>
+<p>at the time of writing choose 1.0 for pythonshell / 2.0 for spark.</p>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>max_capacity</code></td>
+<td><code>int</code></td>
+<td>
+<p>max nodes we want to run.</p>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>arguments</code></td>
+<td><code>dict</code></td>
+<td>
+<p>the arguments as a dict for this glue job.</p>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>python_version</code></td>
+<td><code>str</code></td>
+<td>
+<p>3 is the default</p>
+</td>
+<td><code>'3'</code></td>
+</tr>
+<tr>
+<td><code>role</code></td>
+<td><code>Role</code></td>
+<td>
+<p>you can provide a cdk iam role object as arg. if not provided this class will instantiate a role,</p>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>args</code></td>
+<td><code></code></td>
+<td>
+<p>any extra args for the glue.CfnJob</p>
+</td>
+<td><code>()</code></td>
+</tr>
+<tr>
+<td><code>kwargs</code></td>
+<td><code></code></td>
+<td>
+<p>any extra kwargs for the glue.CfnJob</p>
+</td>
+<td><code>{}</code></td>
+</tr>
+</tbody>
+</table>
+<details class="quote">
+          <summary>Source code in <code>datajob/glue/glue_job.py</code></summary>
+          <div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">datajob_stack</span><span class="p">:</span> <span class="n">core</span><span class="o">.</span><span class="n">Construct</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">job_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">job_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">GlueJobType</span><span class="o">.</span><span class="n">PYTHONSHELL</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+    <span class="n">glue_version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">max_capacity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">arguments</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">python_version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"3"</span><span class="p">,</span>
+    <span class="n">role</span><span class="p">:</span> <span class="n">iam</span><span class="o">.</span><span class="n">Role</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    :param datajob_stack: aws cdk core construct object.</span>
+<span class="sd">    :param name: a name for this glue job (will appear on the glue console).</span>
+<span class="sd">    :param job_path: the path to the glue job relative to the project root.</span>
+<span class="sd">    :param job_type: choose pythonshell for plain python / glueetl for a spark cluster. pythonshell is the default.</span>
+<span class="sd">    :param glue_version: at the time of writing choose 1.0 for pythonshell / 2.0 for spark.</span>
+<span class="sd">    :param max_capacity: max nodes we want to run.</span>
+<span class="sd">    :param arguments: the arguments as a dict for this glue job.</span>
+<span class="sd">    :param python_version: 3 is the default</span>
+<span class="sd">    :param role: you can provide a cdk iam role object as arg. if not provided this class will instantiate a role,</span>
+<span class="sd">    :param args: any extra args for the glue.CfnJob</span>
+<span class="sd">    :param kwargs: any extra kwargs for the glue.CfnJob</span>
+<span class="sd">    """</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"creating glue job </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">datajob_stack</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">job_path</span> <span class="o">=</span> <span class="n">GlueJob</span><span class="o">.</span><span class="n">_get_job_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_root</span><span class="p">,</span> <span class="n">job_path</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span> <span class="o">=</span> <span class="n">arguments</span> <span class="k">if</span> <span class="n">arguments</span> <span class="k">else</span> <span class="p">{}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">job_type</span> <span class="o">=</span> <span class="n">GlueJob</span><span class="o">.</span><span class="n">_get_job_type</span><span class="p">(</span><span class="n">job_type</span><span class="o">=</span><span class="n">job_type</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">python_version</span> <span class="o">=</span> <span class="n">python_version</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">glue_version</span> <span class="o">=</span> <span class="n">GlueJob</span><span class="o">.</span><span class="n">_get_glue_version</span><span class="p">(</span>
+        <span class="n">glue_version</span><span class="o">=</span><span class="n">glue_version</span><span class="p">,</span> <span class="n">job_type</span><span class="o">=</span><span class="n">job_type</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">max_capacity</span> <span class="o">=</span> <span class="n">max_capacity</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">role</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_role</span><span class="p">(</span><span class="n">role</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">unique_name</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"glue job </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> created."</span><span class="p">)</span>
+</code></pre>
+</div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" data-toc-label="__rrshift__()" id="datajob.glue.glue_job.GlueJob.__rrshift__">
+
+<code class="highlight language-python"><span class="fm">__rrshift__</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-special"><code>special</code></small>
+  </span>
+
+      </h3>
+<div class="doc doc-contents ">
+<p>Called for [task1, task2] &gt;&gt; task3 because list don't have <strong>rshift</strong> operators.
+Therefore we reverse the order of the arguments and call <strong>rshift</strong></p>
+<details class="quote">
+          <summary>Source code in <code>datajob/glue/glue_job.py</code></summary>
+          <div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="fm">__rrshift__</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">"""Called for [task1, task2] &gt;&gt; task3 because list don't have __rshift__ operators.</span>
+<span class="sd">    Therefore we reverse the order of the arguments and call __rshift__"""</span>
+    <span class="fm">__rshift__</span><span class="p">(</span><span class="bp">self</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="o">=</span><span class="n">other</span><span class="p">)</span>
+</code></pre>
+</div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" data-toc-label="__rshift__()" id="datajob.glue.glue_job.GlueJob.__rshift__">
+
+<code class="highlight language-python"><span class="fm">__rshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-special"><code>special</code></small>
+  </span>
+
+      </h3>
+<div class="doc doc-contents ">
+<p>called when doing
+- task1 &gt;&gt; task2
+- task1 &gt;&gt; [task2,task3]</p>
+<details class="quote">
+          <summary>Source code in <code>datajob/glue/glue_job.py</code></summary>
+          <div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="fm">__rshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">"""called when doing</span>
+<span class="sd">    - task1 &gt;&gt; task2</span>
+<span class="sd">    - task1 &gt;&gt; [task2,task3]</span>
+<span class="sd">    """</span>
+    <span class="n">_handle_first</span><span class="p">(</span><span class="bp">self</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+    <span class="n">_connect</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span>
+</code></pre>
+</div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" data-toc-label="create()" id="datajob.glue.glue_job.GlueJob.create">
+
+<code class="highlight language-python"><span class="n">create</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+      </h3>
+<div class="doc doc-contents ">
+<p>create datajob</p>
+<details class="quote">
+          <summary>Source code in <code>datajob/glue/glue_job.py</code></summary>
+          <div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">s3_url_glue_job</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deploy_glue_job_code</span><span class="p">(</span>
+        <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">,</span>
+        <span class="n">glue_job_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unique_name</span><span class="p">,</span>
+        <span class="n">path_to_glue_job</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">job_path</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_create_glue_job</span><span class="p">(</span>
+        <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">,</span>
+        <span class="n">glue_job_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unique_name</span><span class="p">,</span>
+        <span class="n">s3_url_glue_job</span><span class="o">=</span><span class="n">s3_url_glue_job</span><span class="p">,</span>
+        <span class="n">arguments</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">arguments</span><span class="p">,</span>
+        <span class="n">job_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">job_type</span><span class="p">,</span>
+        <span class="n">python_version</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">python_version</span><span class="p">,</span>
+        <span class="n">glue_version</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">glue_version</span><span class="p">,</span>
+        <span class="n">max_capacity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_capacity</span><span class="p">,</span>
+        <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span>
+        <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre>
+</div>
+</details>
+</div>
+</div>
+</div>
+</div>
+</div>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href=".." class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Welcome to MkDocs
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/vendor.53cc9318.min.js"></script>
+      <script src="../assets/javascripts/bundle.e9c9f54f.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      
+      <script>
+        app = initialize({
+          base: "..",
+          features: [],
+          search: Object.assign({
+            worker: "../assets/javascripts/worker/search.9c0e82ba.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+    
+  </body>
+</html>
