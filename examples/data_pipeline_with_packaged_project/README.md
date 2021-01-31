@@ -20,4 +20,7 @@ Make sure you have configured a `setup.py` in the root of your poject.
     export AWS_DEFAULT_ACCOUNT=my-account-number
     export AWS_PROFILE=my-profile
     cd examples/data_pipeline_with_packaged_project
-    datajob deploy --stage dev --config datajob_stack.py --package
+    # if you want to use poetry to create a wheel
+    datajob deploy --config datajob_stack.py --package poetry
+    # if you want to create a wheel from setup.py
+    datajob deploy --config datajob_stack.py --package setuppy
