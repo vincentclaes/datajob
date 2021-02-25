@@ -60,7 +60,7 @@
         ) as sfn:
             [task1, task2] >> task3
 
-The definition of our pipeline can be found in `examples/data_pipeline_simple/datajob_stack.py`, and here below:
+The definition of our pipeline can be found in `examples/data_pipeline_simple/datajob_stack.py`.
 
 
 ## Deploy
