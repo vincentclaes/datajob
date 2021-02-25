@@ -1,4 +1,5 @@
 import os
+import traceback
 
 from aws_cdk import core
 
@@ -7,7 +8,8 @@ from datajob.datajob_context import DatajobContext
 
 
 class DataJobStack(core.Stack):
-    DEFAULT_STAGE = "dev"
+    STAGE_NAME = "stage"
+    STAGE_VALUE_DEFAULT = "dev"
 
     def __init__(
         self,
@@ -93,19 +95,22 @@ class DataJobStack(core.Stack):
     def get_stage(self, stage):
         """get the stage parameter and return a default if not found."""
         try:
-            if stage == "None" or not stage:
+            if stage:
                 logger.debug(
-                    "No stage is passed to datajob stack, taking the default one."
-                )
-                return DataJobStack.DEFAULT_STAGE
-            elif stage:
-                logger.debug(
-                    "a stage parameter is passed via the cli or via the datajob stack configuration file."
+                    "a stage parameter is passed directly to the stack object, take this value."
                 )
                 return stage
+            else:
+                logger.debug(
+                    "check cdk context if there is not a stage value provided."
+                )
+                return self.get_context_parameter(DataJobStack.STAGE_NAME)
 
         except ValueError:
-            return DataJobStack.DEFAULT_STAGE
+            logger.debug(
+                "no stage is provided to the datajob stack object or passed via the cli, taking the default one. "
+            )
+            return DataJobStack.STAGE_VALUE_DEFAULT
 
     def get_context_parameter(self, name: str) -> str:
         """get a cdk context parameter from the cli."""
