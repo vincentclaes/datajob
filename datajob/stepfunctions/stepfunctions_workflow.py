@@ -50,7 +50,9 @@ class StepfunctionsWorkflow(DataJobBase):
             if role is None
             else role
         )
-        self.region = region if region else os.environ["AWS_DEFAULT_REGION"]
+        self.region = (
+            region if region is not None else os.environ.get("AWS_DEFAULT_REGION")
+        )
 
     def add_task(self, task_other):
         """add a task to the workflow we would like to orchestrate."""
@@ -86,7 +88,7 @@ class StepfunctionsWorkflow(DataJobBase):
         )
         workflow_definition = steps.Chain(self.chain_of_tasks)
         logger.debug(f"creating a workflow with name {self.unique_name}")
-        self.client = boto3.client("stepfunctions", region_name=self.region)
+        self.client = boto3.client("stepfunctions")
         self.workflow = Workflow(
             name=self.unique_name,
             definition=workflow_definition,
