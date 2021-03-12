@@ -1,0 +1,125 @@
+{
+  "Description": "CloudFormation template for AWS Step Functions - State Machine",
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Resources": {
+    "zippodatalayerstgzippodatalayerstgdeploymentbucketB3019285": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketName": "zippo-data-layer-stg-deployment-bucket"
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "zippo-data-layer-stg/zippo-data-layer-stg/zippo-data-layer-stg-deployment-bucket/Resource"
+      }
+    },
+    "dumpdisplaynamestogbqzippodatalayerstgdumpdisplaynamestogbqroleB8262B3A": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "glue.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/AdministratorAccess"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "dumpdisplaynamestogbqzippodatalayerstgdumpdisplaynamestogbq7D271294": {
+      "Type": "AWS::Glue::Job",
+      "Properties": {
+        "Command": {
+          "Name": "pythonshell",
+          "PythonVersion": "3",
+          "ScriptLocation": "s3://zippo-data-layer-stg-deployment-bucket/zippo-data-layer-stg-dump-display-names-to-gbq/dump_display_names_to_gbq.py"
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "dumpdisplaynamestogbqzippodatalayerstgdumpdisplaynamestogbqroleB8262B3A",
+            "Arn"
+          ]
+        },
+        "DefaultArguments": {
+          "--extra-py-files": "s3://zippo-data-layer-stg-deployment-bucket/zippo-data-layer-stg-wheel/zippo_data_layer-0.1.0-py3-none-any.whl",
+          "--destination": "zippo.display_names_stg"
+        },
+        "GlueVersion": "1.0",
+        "MaxCapacity": 1,
+        "Name": "zippo-data-layer-stg-dump-display-names-to-gbq"
+      },
+      "Metadata": {
+        "aws:cdk:path": "zippo-data-layer-stg/dump-display-names-to-gbq/zippo-data-layer-stg-dump-display-names-to-gbq"
+      }
+    },
+    "zippodatalayerzippodatalayerstgzippodatalayerrole5D9A59C6": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "states.eu-west-1.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/AdministratorAccess"
+              ]
+            ]
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "zippo-data-layer-stg/zippo-data-layer/zippo-data-layer-stg-zippo-data-layer-role/Resource"
+      }
+    },
+    "StateMachineComponent": {
+      "Type": "AWS::StepFunctions::StateMachine",
+      "Properties": {
+        "RoleArn": "arn:aws:iam::313915887689:role/some-role",
+        "DefinitionString": "{\n  \"StartAt\": \"zippo-data-layer-stg-crop-raster-per-country\",\n  \"States\": {\n    \"zippo-data-layer-stg-crop-raster-per-country\": {\n      \"Parameters\": {\n        \"JobName\": \"zippo-data-layer-stg-crop-raster-per-country\"\n      },\n      \"Resource\": \"arn:aws:states:::glue:startJobRun.sync\",\n      \"Type\": \"Task\",\n      \"Next\": \"zippo-data-layer-stg-dump-data-layer-to-gbq\"\n    },\n    \"zippo-data-layer-stg-dump-data-layer-to-gbq\": {\n      \"Parameters\": {\n        \"JobName\": \"zippo-data-layer-stg-dump-data-layer-to-gbq\"\n      },\n      \"Resource\": \"arn:aws:states:::glue:startJobRun.sync\",\n      \"Type\": \"Task\",\n      \"Next\": \"zippo-data-layer-stg-dump-display-names-to-gbq\"\n    },\n    \"zippo-data-layer-stg-dump-display-names-to-gbq\": {\n      \"Parameters\": {\n        \"JobName\": \"zippo-data-layer-stg-dump-display-names-to-gbq\"\n      },\n      \"Resource\": \"arn:aws:states:::glue:startJobRun.sync\",\n      \"Type\": \"Task\",\n      \"End\": true\n    }\n  }\n}",
+        "StateMachineName": "zippo-data-layer-stg-zippo-data-layer"
+      }
+    },
+    "CDKMetadata": {
+      "Type": "AWS::CDK::Metadata",
+      "Properties": {
+        "Modules": "aws-cdk=1.87.1,@aws-cdk/alexa-ask=1.87.1,@aws-cdk/assets=1.87.1,@aws-cdk/aws-accessanalyzer=1.87.1,@aws-cdk/aws-acmpca=1.87.1,@aws-cdk/aws-amazonmq=1.87.1,@aws-cdk/aws-amplify=1.87.1,@aws-cdk/aws-apigateway=1.87.1,@aws-cdk/aws-apigatewayv2=1.87.1,@aws-cdk/aws-appconfig=1.87.1,@aws-cdk/aws-appflow=1.87.1,@aws-cdk/aws-applicationautoscaling=1.87.1,@aws-cdk/aws-applicationinsights=1.87.1,@aws-cdk/aws-appmesh=1.87.1,@aws-cdk/aws-appstream=1.87.1,@aws-cdk/aws-appsync=1.87.1,@aws-cdk/aws-athena=1.87.1,@aws-cdk/aws-auditmanager=1.87.1,@aws-cdk/aws-autoscaling=1.87.1,@aws-cdk/aws-autoscaling-common=1.87.1,@aws-cdk/aws-autoscaling-hooktargets=1.87.1,@aws-cdk/aws-autoscalingplans=1.87.1,@aws-cdk/aws-backup=1.87.1,@aws-cdk/aws-batch=1.87.1,@aws-cdk/aws-budgets=1.87.1,@aws-cdk/aws-cassandra=1.87.1,@aws-cdk/aws-ce=1.87.1,@aws-cdk/aws-certificatemanager=1.87.1,@aws-cdk/aws-chatbot=1.87.1,@aws-cdk/aws-cloud9=1.87.1,@aws-cdk/aws-cloudformation=1.87.1,@aws-cdk/aws-cloudfront=1.87.1,@aws-cdk/aws-cloudtrail=1.87.1,@aws-cdk/aws-cloudwatch=1.87.1,@aws-cdk/aws-codeartifact=1.87.1,@aws-cdk/aws-codebuild=1.87.1,@aws-cdk/aws-codecommit=1.87.1,@aws-cdk/aws-codedeploy=1.87.1,@aws-cdk/aws-codeguruprofiler=1.87.1,@aws-cdk/aws-codegurureviewer=1.87.1,@aws-cdk/aws-codepipeline=1.87.1,@aws-cdk/aws-codestar=1.87.1,@aws-cdk/aws-codestarconnections=1.87.1,@aws-cdk/aws-codestarnotifications=1.87.1,@aws-cdk/aws-cognito=1.87.1,@aws-cdk/aws-config=1.87.1,@aws-cdk/aws-databrew=1.87.1,@aws-cdk/aws-datapipeline=1.87.1,@aws-cdk/aws-datasync=1.87.1,@aws-cdk/aws-dax=1.87.1,@aws-cdk/aws-detective=1.87.1,@aws-cdk/aws-devopsguru=1.87.1,@aws-cdk/aws-directoryservice=1.87.1,@aws-cdk/aws-dlm=1.87.1,@aws-cdk/aws-dms=1.87.1,@aws-cdk/aws-docdb=1.87.1,@aws-cdk/aws-dynamodb=1.87.1,@aws-cdk/aws-ec2=1.87.1,@aws-cdk/aws-ecr=1.87.1,@aws-cdk/aws-ecr-assets=1.87.1,@aws-cdk/aws-ecs=1.87.1,@aws-cdk/aws-efs=1.87.1,@aws-cdk/aws-eks=1.87.1,@aws-cdk/aws-elasticache=1.87.1,@aws-cdk/aws-elasticbeanstalk=1.87.1,@aws-cdk/aws-elasticloadbalancing=1.87.1,@aws-cdk/aws-elasticloadbalancingv2=1.87.1,@aws-cdk/aws-elasticsearch=1.87.1,@aws-cdk/aws-emr=1.87.1,@aws-cdk/aws-emrcontainers=1.87.1,@aws-cdk/aws-events=1.87.1,@aws-cdk/aws-eventschemas=1.87.1,@aws-cdk/aws-fms=1.87.1,@aws-cdk/aws-fsx=1.87.1,@aws-cdk/aws-gamelift=1.87.1,@aws-cdk/aws-globalaccelerator=1.87.1,@aws-cdk/aws-glue=1.87.1,@aws-cdk/aws-greengrass=1.87.1,@aws-cdk/aws-greengrassv2=1.87.1,@aws-cdk/aws-guardduty=1.87.1,@aws-cdk/aws-iam=1.87.1,@aws-cdk/aws-imagebuilder=1.87.1,@aws-cdk/aws-inspector=1.87.1,@aws-cdk/aws-iot=1.87.1,@aws-cdk/aws-iot1click=1.87.1,@aws-cdk/aws-iotanalytics=1.87.1,@aws-cdk/aws-iotevents=1.87.1,@aws-cdk/aws-iotsitewise=1.87.1,@aws-cdk/aws-iotthingsgraph=1.87.1,@aws-cdk/aws-iotwireless=1.87.1,@aws-cdk/aws-ivs=1.87.1,@aws-cdk/aws-kendra=1.87.1,@aws-cdk/aws-kinesis=1.87.1,@aws-cdk/aws-kinesisanalytics=1.87.1,@aws-cdk/aws-kinesisfirehose=1.87.1,@aws-cdk/aws-kms=1.87.1,@aws-cdk/aws-lakeformation=1.87.1,@aws-cdk/aws-lambda=1.87.1,@aws-cdk/aws-licensemanager=1.87.1,@aws-cdk/aws-logs=1.87.1,@aws-cdk/aws-macie=1.87.1,@aws-cdk/aws-managedblockchain=1.87.1,@aws-cdk/aws-mediaconnect=1.87.1,@aws-cdk/aws-mediaconvert=1.87.1,@aws-cdk/aws-medialive=1.87.1,@aws-cdk/aws-mediapackage=1.87.1,@aws-cdk/aws-mediastore=1.87.1,@aws-cdk/aws-msk=1.87.1,@aws-cdk/aws-mwaa=1.87.1,@aws-cdk/aws-neptune=1.87.1,@aws-cdk/aws-networkfirewall=1.87.1,@aws-cdk/aws-networkmanager=1.87.1,@aws-cdk/aws-opsworks=1.87.1,@aws-cdk/aws-opsworkscm=1.87.1,@aws-cdk/aws-pinpoint=1.87.1,@aws-cdk/aws-pinpointemail=1.87.1,@aws-cdk/aws-qldb=1.87.1,@aws-cdk/aws-quicksight=1.87.1,@aws-cdk/aws-ram=1.87.1,@aws-cdk/aws-rds=1.87.1,@aws-cdk/aws-redshift=1.87.1,@aws-cdk/aws-resourcegroups=1.87.1,@aws-cdk/aws-robomaker=1.87.1,@aws-cdk/aws-route53=1.87.1,@aws-cdk/aws-route53-targets=1.87.1,@aws-cdk/aws-route53resolver=1.87.1,@aws-cdk/aws-s3=1.87.1,@aws-cdk/aws-s3-assets=1.87.1,@aws-cdk/aws-s3-deployment=1.87.1,@aws-cdk/aws-sagemaker=1.87.1,@aws-cdk/aws-sam=1.87.1,@aws-cdk/aws-sdb=1.87.1,@aws-cdk/aws-secretsmanager=1.87.1,@aws-cdk/aws-securityhub=1.87.1,@aws-cdk/aws-servicecatalog=1.87.1,@aws-cdk/aws-servicecatalogappregistry=1.87.1,@aws-cdk/aws-servicediscovery=1.87.1,@aws-cdk/aws-ses=1.87.1,@aws-cdk/aws-signer=1.87.1,@aws-cdk/aws-sns=1.87.1,@aws-cdk/aws-sns-subscriptions=1.87.1,@aws-cdk/aws-sqs=1.87.1,@aws-cdk/aws-ssm=1.87.1,@aws-cdk/aws-sso=1.87.1,@aws-cdk/aws-stepfunctions=1.87.1,@aws-cdk/aws-synthetics=1.87.1,@aws-cdk/aws-timestream=1.87.1,@aws-cdk/aws-transfer=1.87.1,@aws-cdk/aws-waf=1.87.1,@aws-cdk/aws-wafregional=1.87.1,@aws-cdk/aws-wafv2=1.87.1,@aws-cdk/aws-workspaces=1.87.1,@aws-cdk/cloud-assembly-schema=1.87.1,@aws-cdk/cloudformation-include=1.87.1,@aws-cdk/core=1.87.1,@aws-cdk/custom-resources=1.87.1,@aws-cdk/cx-api=1.87.1,@aws-cdk/lambda-layer-awscli=1.87.1,@aws-cdk/lambda-layer-kubectl=1.87.1,@aws-cdk/region-info=1.87.1,@aws-cdk/yaml-cfn=1.87.1,jsii-runtime=Python/3.6.8"
+      },
+      "Metadata": {
+        "aws:cdk:path": "zippo-data-layer-stg/CDKMetadata/Default"
+      }
+    }
+  }
+}

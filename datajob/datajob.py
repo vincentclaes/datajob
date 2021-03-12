@@ -2,11 +2,12 @@ import os
 import pathlib
 import shlex
 import subprocess
-from pathlib import Path
-
+import boto3
 import typer
 
+from pathlib import Path
 from datajob.package import wheel
+from datajob.stepfunctions import stepfunctions_run
 
 app = typer.Typer()
 filepath = pathlib.Path(__file__).resolve().parent
@@ -71,3 +72,8 @@ def call_cdk(command: str, args: list = None, extra_args: list = None):
     # todo - shell=True is not secure
     # subprocess.call(full_command, shell=True)
     subprocess.check_call(shlex.split(full_command))
+
+
+@app.command()
+def run(stack_name: str = typer.Option(None)):
+    stepfunctions_run.run(stack_name=stack_name)
