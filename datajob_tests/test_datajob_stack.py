@@ -1,5 +1,6 @@
 import unittest
 
+from datajob import DEFAULT_STACK_STAGE
 from datajob.datajob_stack import DataJobStack
 from aws_cdk import core
 
@@ -17,7 +18,7 @@ class TestDatajobStack(unittest.TestCase):
     def test_datajob_stack_with_no_stage(self):
         with DataJobStack(stack_name="datajob-stack-no-stage") as djs:
             pass
-        self.assertEqual(djs.stage, DataJobStack.STAGE_VALUE_DEFAULT)
+        self.assertEqual(djs.stage, DEFAULT_STACK_STAGE)
 
     def test_datajob_stack_with_stage_passed_via_cli(self):
         stage_value = "some-value"

@@ -9,7 +9,7 @@ import typer
 from datajob.package import wheel
 from datajob.stepfunctions import stepfunctions_execute
 from stepfunctions.workflow.widgets.utils import create_sfn_execution_url
-from datajob import console
+from datajob import console, DEFAULT_STACK_STAGE
 
 app = typer.Typer()
 filepath = pathlib.Path(__file__).resolve().parent
@@ -25,7 +25,7 @@ def run():
 )
 def deploy(
     stage: str = typer.Option(
-        None,
+        DEFAULT_STACK_STAGE,
         help="the stage of the data pipeline stack you would like to deploy (dev/stg/prd/ ...)",
     ),
     config: str = typer.Option(
@@ -56,7 +56,7 @@ def deploy(
 )
 def synthesize(
     stage: str = typer.Option(
-        None,
+        DEFAULT_STACK_STAGE,
         help="the stage of the data pipeline stack you would like to synthesize (dev/stg/prd/ ...)",
     ),
     config: str = typer.Option(
@@ -78,7 +78,7 @@ def synthesize(
 )
 def destroy(
     stage: str = typer.Option(
-        None,
+        DEFAULT_STACK_STAGE,
         help="the stage of the data pipeline stack you would like to destroy (dev/stg/prd/ ...)",
     ),
     config: str = typer.Option(

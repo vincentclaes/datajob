@@ -3,13 +3,12 @@ import traceback
 
 from aws_cdk import core
 
-from datajob import logger
+from datajob import logger, DEFAULT_STACK_STAGE
 from datajob.datajob_context import DatajobContext
 
 
 class DataJobStack(core.Stack):
     STAGE_NAME = "stage"
-    STAGE_VALUE_DEFAULT = "dev"
 
     def __init__(
         self,
@@ -110,7 +109,7 @@ class DataJobStack(core.Stack):
             logger.debug(
                 "no stage is provided to the datajob stack object or passed via the cli, taking the default one. "
             )
-            return DataJobStack.STAGE_VALUE_DEFAULT
+            return DEFAULT_STACK_STAGE
 
     def get_context_parameter(self, name: str) -> str:
         """get a cdk context parameter from the cli."""
