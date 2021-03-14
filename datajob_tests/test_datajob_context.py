@@ -3,7 +3,7 @@ import unittest
 from datajob.datajob_stack import DataJobStack, DatajobContext
 
 
-class DatajobContextTest(unittest.TestCase):
+class TestDatajobContext(unittest.TestCase):
     def test_datajob_context_initiates_without_error(self):
         exception_ = None
         try:

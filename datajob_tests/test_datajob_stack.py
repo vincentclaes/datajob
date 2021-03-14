@@ -4,7 +4,7 @@ from datajob.datajob_stack import DataJobStack
 from aws_cdk import core
 
 
-class DatajobStackTest(unittest.TestCase):
+class TestDatajobStack(unittest.TestCase):
     def test_datajob_stack_initiates_without_error(self):
         exception_ = None
         try:

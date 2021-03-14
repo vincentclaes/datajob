@@ -4,6 +4,7 @@ import pathlib
 import shlex
 import subprocess
 from pathlib import Path
+from rich.console import Console
 
 ROOT_DIR = pathlib.Path(__file__).parent.absolute()
 
@@ -29,3 +30,6 @@ def call_subprocess(cmd: str) -> None:
     """
     print(f"datajob subprocess command: " f"{cmd}")
     subprocess.check_call(shlex.split(cmd))
+
+
+console = Console(style="bold green", soft_wrap=True, log_path=False)

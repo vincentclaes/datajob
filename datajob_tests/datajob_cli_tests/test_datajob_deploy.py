@@ -13,7 +13,7 @@ from unittest import mock
 current_dir = str(pathlib.Path(__file__).absolute().parent)
 
 
-class DatajobTest(unittest.TestCase):
+class TestDatajobDeploy(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.runner = CliRunner()
@@ -112,25 +112,3 @@ class DatajobTest(unittest.TestCase):
             datajob.app, ["deploy", "--config", "some_config.py"]
         )
         self.assertEqual(result.exit_code, 0)
-
-    @mock.patch("datajob.stepfunctions.stepfunctions_run._get_cloudformation_resource")
-    def test_datajob_run_successfully(self, m_cfn):
-        stack_name = "some-stack"
-        m_cfn.return_value = {
-            "StackResourceSummaries": [
-                self._mock_cfn_list_resources("AWS::StepFunctions::StateMachine"),
-                self._mock_cfn_list_resources("AWS::IAM::Role"),
-                self._mock_cfn_list_resources("AWS::S3::Bucket"),
-            ]
-        }
-        result = self.runner.invoke(datajob.app, ["run", "--stack-name", stack_name])
-        pass
-
-    def _mock_cfn_list_resources(self, type):
-        return {
-            "LogicalResourceId": "zippodatalayerstgzippodatalayerstgdeploymentbucketB3019285",
-            "PhysicalResourceId": "zippo-data-layer-stg-deployment-bucket",
-            "ResourceType": type,
-            "LastUpdatedTimestamp": datetime.datetime(2011, 6, 21, 20, 15, 58),
-            "ResourceStatus": "CREATE_COMPLETE",
-        }
