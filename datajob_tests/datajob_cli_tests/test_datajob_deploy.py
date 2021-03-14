@@ -4,9 +4,16 @@ from unittest.mock import patch
 from typer.testing import CliRunner
 
 from datajob import datajob
+from moto import mock_cloudformation
+import boto3
+import pathlib
+import datetime
+from unittest import mock
+
+current_dir = str(pathlib.Path(__file__).absolute().parent)
 
 
-class DatajobTest(unittest.TestCase):
+class TestDatajobDeploy(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.runner = CliRunner()

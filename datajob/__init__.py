@@ -4,9 +4,10 @@ import pathlib
 import shlex
 import subprocess
 from pathlib import Path
+from rich.console import Console
 
 ROOT_DIR = pathlib.Path(__file__).parent.absolute()
-
+DEFAULT_STACK_STAGE = "dev"
 # if someone tried to log something before basicConfig is called, Python creates a default handler that
 # goes to the console and will ignore further basicConfig calls. Remove the handler if there is one.
 # https://stackoverflow.com/a/45624044/1771155
@@ -29,3 +30,6 @@ def call_subprocess(cmd: str) -> None:
     """
     print(f"datajob subprocess command: " f"{cmd}")
     subprocess.check_call(shlex.split(cmd))
+
+
+console = Console(style="bold green", soft_wrap=True, log_path=False)

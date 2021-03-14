@@ -16,7 +16,7 @@ class SomeMockedClass(object):
         self.unique_name = unique_name
 
 
-class StepfunctionsWorkflowTestTest(unittest.TestCase):
+class TestStepfunctionsWorkflow(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         # we need a AWS region else these tests will fail with boto3 stepfunctions.

@@ -4,7 +4,7 @@ from datajob.datajob_stack import DataJobStack
 from datajob.glue.glue_job import GlueJob, GlueJobType
 
 
-class GlueJobTest(unittest.TestCase):
+class TestGlueJob(unittest.TestCase):
     def test_create_glue_pythonshell_successfully(self):
         djs = DataJobStack(stack_name="some-stack", stage="stg")
         glue_job = GlueJob(djs, "some-task", "some/path/task.py")
