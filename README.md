@@ -67,7 +67,8 @@ The definition of our pipeline can be found in `examples/data_pipeline_simple/da
 
 Set the aws account number and the profile that contains your aws credentials (`~/.aws/credentials`) as environment variables:
 
-    export AWS_PROFILE=my-profile
+    export AWS_DEFAULT_ACCOUNT=<12 digit AWS account number>
+    export AWS_PROFILE=my-profile # e.g. default
     export AWS_DEFAULT_REGION=your-region # e.g. eu-west-1
 
 Point to the configuration of the pipeline using `--config` and deploy
