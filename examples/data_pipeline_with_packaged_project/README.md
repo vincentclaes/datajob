@@ -20,10 +20,11 @@ Make sure you have configured a `setup.py` in the root of your poject.
     export AWS_PROFILE=my-profile
     export AWS_DEFAULT_REGION=eu-west-1
     cd examples/data_pipeline_with_packaged_project
+
     # if you want to create a wheel from setup.py and create the services
     # and deploy the packaged dependencies
     datajob deploy --config datajob_stack.py --package setuppy
 
     # to execute the pipeline, pass the name of the step functions statemachine
     # which is the same as the name of the stack in this case.
-    datajob execute data-pipeline-pkg-dev-data-pipeline-pkg
+    datajob execute data-pipeline-pkg-dev-workflow
