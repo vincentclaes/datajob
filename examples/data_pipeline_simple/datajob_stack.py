@@ -29,7 +29,5 @@ with DataJobStack(stack_name="data-pipeline-simple") as datajob_stack:
     # we want to orchestrate. We got the orchestration idea from
     # airflow where we use a list to run tasks in parallel
     # and we use bit operator '>>' to chain the tasks in our workflow.
-    with StepfunctionsWorkflow(
-        datajob_stack=datajob_stack, name="data-pipeline-simple"
-    ) as sfn:
+    with StepfunctionsWorkflow(datajob_stack=datajob_stack, name="workflow") as sfn:
         [task1, task2] >> task3

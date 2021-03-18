@@ -3,7 +3,7 @@
 #### Build and deploy a serverless data pipeline with no effort on AWS.
 
 - Deploy your code to a glue job.
-- Package your project and make it available for your glue jobs.
+- Package your project as a wheel and make it available for your glue jobs.
 - Orchestrate your pipeline using stepfunctions as simple as `task1 >> [task2,task3] >> task4`
 
 > The main dependencies are [AWS CDK](https://github.com/aws/aws-cdk) and [Step Functions SDK for data science](https://github.com/aws/aws-step-functions-data-science-sdk-python) <br/>
@@ -21,7 +21,7 @@
 
 # Quickstart
 
-## Configure the pipeline
+### Configure the pipeline
 **We have 3 scripts that we want to orchestrate sequentially and in parallel on AWS using Glue and Step Functions**.
 
     from datajob.datajob_stack import DataJobStack
@@ -63,7 +63,7 @@
 The definition of our pipeline can be found in `examples/data_pipeline_simple/datajob_stack.py`.
 
 
-## Deploy
+### Deploy
 
 Set the aws account number and the profile that contains your aws credentials (`~/.aws/credentials`) as environment variables:
 
@@ -76,15 +76,13 @@ Point to the configuration of the pipeline using `--config` and deploy
     cd examples/data_pipeline_simple
     datajob deploy --config datajob_stack.py
 
-# Run
 After running the `deploy` command, the code of the 3 tasks are deployed to a glue job and the glue jobs are orchestrated using step functions.
-Go to the AWS console to the step functions service, look for `data-pipeline-simple` and click on "Start execution"
 
-![DataPipelineSimple](assets/data-pipeline-simple.png)
+### Run
 
-Follow up on the progress.
+    datajob execute --state-machine data-pipeline-simple-dev-workflow
 
-# Destroy
+### Destroy
 
 Once the pipeline is finished you can pull down the pipeline by using the command:
 
@@ -103,11 +101,10 @@ Any suggestions can be shared by starting a [discussion](https://github.com/vinc
 
 These are the ideas, we find interesting to implement;
 
-- trigger a pipeline using the cli; `datajob run --pipeline my-simple-pipeline`
-- implement a data bucket, that's used for your pipeline.
 - add a time based trigger to the step functions workflow.
 - add an s3 event trigger to the step functions workflow.
 - add a lambda that copies data from one s3 location to another.
+- add an sns that notifies in case of any failure.
 - version your data pipeline.
 - implement sagemaker services
     - processing jobs

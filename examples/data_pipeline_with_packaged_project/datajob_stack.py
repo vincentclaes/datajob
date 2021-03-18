@@ -22,7 +22,5 @@ with DataJobStack(
         job_path="data_pipeline_with_packaged_project/task2.py",
     )
 
-    with StepfunctionsWorkflow(
-        datajob_stack=datajob_stack, name="data-pipeline-pkg"
-    ) as sfn:
+    with StepfunctionsWorkflow(datajob_stack=datajob_stack, name="workflow") as sfn:
         task1 >> task2
