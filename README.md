@@ -2,8 +2,8 @@
 
 #### Build and deploy a serverless data pipeline with no effort on AWS.
 
-- Deploy your code to a glue job.
-- Package your project as a wheel and make it available for your glue jobs.
+- Build and deploy your code to a glue job.
+- Package your project as a wheel and make it available for your glue jobs. This enables you to `import my_project` in your glue job.
 - Orchestrate your pipeline using stepfunctions as simple as `task1 >> [task2,task3] >> task4`
 
 > The main dependencies are [AWS CDK](https://github.com/aws/aws-cdk) and [Step Functions SDK for data science](https://github.com/aws/aws-step-functions-data-science-sdk-python) <br/>
@@ -21,72 +21,79 @@
 
 # Quickstart
 
-### Configure the pipeline
+### Configuration
 **We have 3 scripts that we want to orchestrate sequentially and in parallel on AWS using Glue and Step Functions**.
 
-    from datajob.datajob_stack import DataJobStack
-    from datajob.glue.glue_job import GlueJob
-    from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
+```python
+from datajob.datajob_stack import DataJobStack
+from datajob.glue.glue_job import GlueJob
+from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
 
 
-    # the datajob_stack is the instance that will result in a cloudformation stack.
-    # we inject the datajob_stack object through all the resources that we want to add.
-    with DataJobStack(stack_name="data-pipeline-simple") as datajob_stack:
+# the datajob_stack is the instance that will result in a cloudformation stack.
+# we inject the datajob_stack object through all the resources that we want to add.
+with DataJobStack(stack_name="data-pipeline-simple") as datajob_stack:
 
-        # here we define 3 glue jobs with the datajob_stack object,
-        # a name and the relative path to the source code.
-        task1 = GlueJob(
-            datajob_stack=datajob_stack,
-            name="task1",
-            job_path="data_pipeline_simple/task1.py",
-        )
-        task2 = GlueJob(
-            datajob_stack=datajob_stack,
-            name="task2",
-            job_path="data_pipeline_simple/task2.py",
-        )
-        task3 = GlueJob(
-            datajob_stack=datajob_stack,
-            name="task3",
-            job_path="data_pipeline_simple/task3.py",
-        )
+    # here we define 3 glue jobs with the datajob_stack object,
+    # a name and the relative path to the source code.
+    task1 = GlueJob(
+        datajob_stack=datajob_stack,
+        name="task1",
+        job_path="data_pipeline_simple/task1.py",
+    )
+    task2 = GlueJob(
+        datajob_stack=datajob_stack,
+        name="task2",
+        job_path="data_pipeline_simple/task2.py",
+    )
+    task3 = GlueJob(
+        datajob_stack=datajob_stack,
+        name="task3",
+        job_path="data_pipeline_simple/task3.py",
+    )
 
-        # we instantiate a step functions workflow and add the sources
-        # we want to orchestrate. We got the orchestration idea from
-        # airflow where we use a list to run tasks in parallel
-        # and we use bit operator '>>' to chain the tasks in our workflow.
-        with StepfunctionsWorkflow(
-            datajob_stack=datajob_stack, name="data-pipeline-simple"
-        ) as sfn:
-            [task1, task2] >> task3
+    # we instantiate a step functions workflow and add the sources
+    # we want to orchestrate. We got the orchestration idea from
+    # airflow where we use a list to run tasks in parallel
+    # and we use bit operator '>>' to chain the tasks in our workflow.
+    with StepfunctionsWorkflow(datajob_stack=datajob_stack, name="workflow") as sfn:
+        [task1, task2] >> task3
+```
 
-The definition of our pipeline can be found in `examples/data_pipeline_simple/datajob_stack.py`.
+The definition of this simple pipeline can be found in `examples/data_pipeline_simple/datajob_stack.py`.
 
 
 ### Deploy
 
 Set the aws account number and the profile that contains your aws credentials (`~/.aws/credentials`) as environment variables:
 
-    export AWS_DEFAULT_ACCOUNT=<12 digit AWS account number>
-    export AWS_PROFILE=my-profile # e.g. default
-    export AWS_DEFAULT_REGION=your-region # e.g. eu-west-1
-
+```shell script
+export AWS_DEFAULT_ACCOUNT=<12 digit AWS account number>
+export AWS_PROFILE=my-profile # e.g. default
+export AWS_DEFAULT_REGION=your-region # e.g. eu-west-1
+```
 Point to the configuration of the pipeline using `--config` and deploy
 
-    cd examples/data_pipeline_simple
-    datajob deploy --config datajob_stack.py
+```shell script
+cd examples/data_pipeline_simple
+datajob deploy --config datajob_stack.py
+```
 
 After running the `deploy` command, the code of the 3 tasks are deployed to a glue job and the glue jobs are orchestrated using step functions.
 
 ### Run
 
-    datajob execute --state-machine data-pipeline-simple-dev-workflow
+```shell script
+datajob execute --state-machine data-pipeline-simple-dev-workflow
+```
 
 ### Destroy
 
 Once the pipeline is finished you can pull down the pipeline by using the command:
 
-    datajob destroy --config datajob_stack.py
+```shell script
+datajob destroy --config datajob_stack.py
+```
 
 As simple as that!
 
@@ -94,6 +101,18 @@ As simple as that!
 > You can circumvent shelling out to aws cdk by running `cdk` explicitly.
 > datajob cli prints out the commands it uses in the back to build the pipeline.
 > If you want, you can use those.
+
+# Functionality
+
+<details>
+<summary>Combine with cdk stack</summary>
+#todo
+</details>
+
+<details>
+<summary>Package your code as a wheel</summary>
+#todo
+</details>
 
 # Ideas
 
@@ -104,8 +123,9 @@ These are the ideas, we find interesting to implement;
 - add a time based trigger to the step functions workflow.
 - add an s3 event trigger to the step functions workflow.
 - add a lambda that copies data from one s3 location to another.
-- add an sns that notifies in case of any failure.
+- add an sns that notifies in case of any failure (slack/email)
 - version your data pipeline.
+- cli command to view the logs / glue jobs / s3 bucket
 - implement sagemaker services
     - processing jobs
     - hyperparameter tuning jobs
