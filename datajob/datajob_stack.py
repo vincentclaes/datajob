@@ -25,7 +25,7 @@ class DataJobStack(core.Stack):
         :param id: a name for this stack.
         :param stage: the stage name to which we are deploying
         :param project_root: the path to the root of this project
-        :param package:  specify the name of the folder we would like to include in the deployment bucket.
+        :param include_folder:  specify the name of the folder we would like to include in the deployment bucket.
         :param account: AWS account number
         :param region: AWS region where we want to deploy our datajob to
         :param kwargs: any extra kwargs for the core.Construct

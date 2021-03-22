@@ -31,16 +31,13 @@ class DataJobContext(core.Construct):
         unique_stack_name: str,
         project_root: str = None,
         include_folder: str = None,
-        package: bool = False,
         **kwargs,
     ) -> None:
         """
         :param scope: aws cdk core construct object.
         :param unique_stack_name: a unique name for this stack. like this the name of our resources will not collide with other deployments.
-        :param stage: the stage name to which we are deploying
-        :param package: the path to the root of this project
-        :param package: specify the name of the folder we would like to include in the deployment bucket.
-        :param kwargs: any extra kwargs for the core.Construct
+        :param project_root: the path to the root of this project
+        :param include_folder: specify the name of the folder we would like to include in the deployment bucket.
         """
         logger.info("creating datajob context.")
         super().__init__(scope, unique_stack_name, **kwargs)
@@ -63,7 +60,7 @@ class DataJobContext(core.Construct):
             )
 
         if include_folder:
-            self._deploy_local_folder(package)
+            self._deploy_local_folder(include_folder)
         logger.info("datajob context created.")
 
     def _create_data_bucket(self, unique_stack_name: str) -> tuple:
