@@ -4,6 +4,7 @@ import pathlib
 import shlex
 import subprocess
 from pathlib import Path
+
 from rich.console import Console
 
 ROOT_DIR = pathlib.Path(__file__).parent.absolute()

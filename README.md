@@ -22,69 +22,76 @@
 # Quickstart
 
 ### Configuration
-**We have 3 scripts that we want to orchestrate sequentially and in parallel on AWS using Glue and Step Functions**.
+
+We have a simple data pipeline composed of 2 glue jobs orchestrated sequentially.
+We add the following code in a file called `datajob_stack.py`
 
 ```python
+#!/usr/bin/env python
+
 from datajob.datajob_stack import DataJobStack
 from datajob.glue.glue_job import GlueJob
 from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
+import pathlib
 
+current_dir = pathlib.Path(__file__).parent.absolute()
 
 # the datajob_stack is the instance that will result in a cloudformation stack.
 # we inject the datajob_stack object through all the resources that we want to add.
-with DataJobStack(stack_name="data-pipeline-simple") as datajob_stack:
-
-    # here we define 3 glue jobs with the datajob_stack object,
-    # a name and the relative path to the source code.
+with DataJobStack(
+        id="data-pipeline-pkg", project_root=current_dir
+) as datajob_stack:
+    # here we define 2 glue jobs with the path to the source code.
     task1 = GlueJob(
         datajob_stack=datajob_stack,
         name="task1",
-        job_path="data_pipeline_simple/task1.py",
+        job_path="glue_jobs/task1.py",
     )
+
     task2 = GlueJob(
         datajob_stack=datajob_stack,
         name="task2",
-        job_path="data_pipeline_simple/task2.py",
-    )
-    task3 = GlueJob(
-        datajob_stack=datajob_stack,
-        name="task3",
-        job_path="data_pipeline_simple/task3.py",
+        job_path="glue_jobs/task2.py",
     )
 
-    # we instantiate a step functions workflow and add the sources
-    # we want to orchestrate. We got the orchestration idea from
-    # airflow where we use a list to run tasks in parallel
-    # and we use bit operator '>>' to chain the tasks in our workflow.
+    # we instantiate a step functions workflow
+    # and orchestrate the glue jobs.
     with StepfunctionsWorkflow(datajob_stack=datajob_stack, name="workflow") as sfn:
-        [task1, task2] >> task3
+        task1 >> task2
+
 ```
 
-The definition of this simple pipeline can be found in `examples/data_pipeline_simple/datajob_stack.py`.
+The definition of this pipeline can be found in [`examples/data_pipeline_with_packaged_project/datajob_stack.py`](./examples/data_pipeline_with_packaged_project/datajob_stack.py).
 
+### Configure CDK
+
+We deploy using CDK, therefore we need to set some environment variables
+and initialize CDK for our AWS account:
+
+```shell script
+export AWS_PROFILE=my-profile # e.g. default
+# use the aws cli to get your account number
+export AWS_ACCOUNT=$(aws sts get-caller-identity --query Account --output text --profile $AWS_PROFILE)
+export AWS_DEFAULT_REGION=your-region # e.g. eu-west-1
+
+cdk bootstrap aws://$AWS_ACCOUNT/$AWS_DEFAULT_REGION
+```
 
 ### Deploy
 
-Set the aws account number and the profile that contains your aws credentials (`~/.aws/credentials`) as environment variables:
-
-```shell script
-export AWS_DEFAULT_ACCOUNT=<12 digit AWS account number>
-export AWS_PROFILE=my-profile # e.g. default
-export AWS_DEFAULT_REGION=your-region # e.g. eu-west-1
-```
 Point to the configuration of the pipeline using `--config` and deploy
 
 ```shell script
-cd examples/data_pipeline_simple
-datajob deploy --config datajob_stack.py
+cd examples/glue_jobs
+datajob deploy --config datajob_stack.py --package setuppy
 ```
 
-After running the `deploy` command, the code of the 3 tasks are deployed to a glue job and the glue jobs are orchestrated using step functions.
+After running the `deploy` command, the code of glue jobs are deployed and orchestrated.
 
 ### Run
 
 ```shell script
-datajob execute --state-machine data-pipeline-simple-dev-workflow
+datajob execute --state-machine data-pipeline-pkg-dev-workflow
 ```
 
 ### Destroy
@@ -105,7 +112,7 @@ As simple as that!
 # Functionality
 
 <details>
-<summary>Combine with cdk stack</summary>
+<summary>Combine with another cdk stack</summary>
 #todo
 </details>
 

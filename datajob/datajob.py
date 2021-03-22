@@ -5,11 +5,11 @@ import subprocess
 from pathlib import Path
 
 import typer
+from stepfunctions.workflow.widgets.utils import create_sfn_execution_url
 
+from datajob import console, DEFAULT_STACK_STAGE
 from datajob.package import wheel
 from datajob.stepfunctions import stepfunctions_execute
-from stepfunctions.workflow.widgets.utils import create_sfn_execution_url
-from datajob import console, DEFAULT_STACK_STAGE
 
 app = typer.Typer()
 filepath = pathlib.Path(__file__).resolve().parent
@@ -41,7 +41,6 @@ def deploy(
     ),
 ):
     if package:
-        # todo - check if we are building in the right directory
         project_root = str(Path(config).parent)
         wheel.create_wheel(project_root=project_root, package=package)
     # create stepfunctions if requested

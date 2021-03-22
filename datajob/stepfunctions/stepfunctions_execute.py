@@ -1,6 +1,8 @@
-from stepfunctions.workflow import Workflow, Execution
-from datajob import logger
 import time
+
+from stepfunctions.workflow import Workflow, Execution
+
+from datajob import logger
 
 
 def _find_state_machine_arn(state_machine: str) -> str:

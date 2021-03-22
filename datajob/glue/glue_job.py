@@ -6,7 +6,7 @@ from aws_cdk import aws_iam as iam
 
 from datajob import logger
 from datajob.datajob_base import DataJobBase
-from datajob.datajob_context import DatajobContext
+from datajob.datajob_context import DataJobContext
 from datajob.stepfunctions import stepfunctions_workflow
 
 
@@ -136,11 +136,11 @@ class GlueJob(DataJobBase):
 
     @staticmethod
     def _create_s3_url_for_job(
-        context: DatajobContext, glue_job_id: str, glue_job_file_name: str
+        context: DataJobContext, glue_job_id: str, glue_job_file_name: str
     ) -> str:
         """
         construct the path to s3 where the code resides of the glue job..
-        :param context: DatajobContext that contains the name of the deployment bucket.
+        :param context: DataJobContext that contains the name of the deployment bucket.
         :param glue_job_id:
         :param glue_job_file_name:
         :return:
@@ -166,7 +166,7 @@ class GlueJob(DataJobBase):
         return glue_job_dir, glue_job_file_name
 
     def _deploy_glue_job_code(
-        self, context: DatajobContext, glue_job_name: str, path_to_glue_job: str
+        self, context: DataJobContext, glue_job_name: str, path_to_glue_job: str
     ) -> str:
         """deploy the code of this glue job to the deployment bucket
         (can be found in the glue context object)"""
@@ -196,7 +196,7 @@ class GlueJob(DataJobBase):
 
     def _create_glue_job(
         self,
-        context: DatajobContext,
+        context: DataJobContext,
         glue_job_name: str,
         s3_url_glue_job: str = None,
         arguments: dict = None,

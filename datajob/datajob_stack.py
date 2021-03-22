@@ -1,10 +1,9 @@
 import os
-import traceback
 
 from aws_cdk import core
 
 from datajob import logger, DEFAULT_STACK_STAGE
-from datajob.datajob_context import DatajobContext
+from datajob.datajob_context import DataJobContext
 
 
 class DataJobStack(core.Stack):
@@ -12,21 +11,21 @@ class DataJobStack(core.Stack):
 
     def __init__(
         self,
-        stack_name: str,
+        scope: core.Construct,
+        id: str,
         stage: str = None,
         project_root: str = None,
         include_folder: str = None,
         account: str = None,
         region: str = None,
-        scope: core.Construct = core.App(),
         **kwargs,
     ) -> None:
         """
         :param scope: aws cdk core construct object.
-        :param stack_name: a name for this stack.
+        :param id: a name for this stack.
         :param stage: the stage name to which we are deploying
         :param project_root: the path to the root of this project
-        :param include_folder:  specify the name of the folder we would like to include in the deployment bucket.
+        :param package:  specify the name of the folder we would like to include in the deployment bucket.
         :param account: AWS account number
         :param region: AWS region where we want to deploy our datajob to
         :param kwargs: any extra kwargs for the core.Construct
@@ -39,7 +38,7 @@ class DataJobStack(core.Stack):
         env = {"region": region, "account": account}
         self.scope = scope
         self.stage = self.get_stage(stage)
-        self.unique_stack_name = self._create_unique_stack_name(stack_name, self.stage)
+        self.unique_stack_name = self._create_unique_stack_name(id, self.stage)
         super().__init__(scope=scope, id=self.unique_stack_name, env=env, **kwargs)
         self.project_root = project_root
         self.include_folder = include_folder
@@ -51,12 +50,7 @@ class DataJobStack(core.Stack):
         As soon as we enter the contextmanager, we create the datajob context.
         :return: datajob stack.
         """
-        self.context = DatajobContext(
-            self,
-            unique_stack_name=self.unique_stack_name,
-            project_root=self.project_root,
-            include_folder=self.include_folder,
-        )
+        self.init_datajob_context()
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
@@ -71,7 +65,6 @@ class DataJobStack(core.Stack):
         """
         logger.debug("creating resources and synthesizing stack.")
         self.create_resources()
-        self.scope.synth()
 
     def add(self, task: str) -> None:
         setattr(self, task.unique_name, task)
@@ -120,3 +113,14 @@ class DataJobStack(core.Stack):
             )
         logger.debug(f"context parameter {name} found.")
         return context_parameter
+
+    def init_datajob_context(self) -> None:
+        """setup a datajob context
+        Returns: None
+        """
+        self.context = DataJobContext(
+            self,
+            unique_stack_name=self.unique_stack_name,
+            project_root=self.project_root,
+            include_folder=self.include_folder,
+        )
