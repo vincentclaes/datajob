@@ -30,15 +30,10 @@ class DataJobStack(core.Stack):
         :param region: AWS region where we want to deploy our datajob to
         :param kwargs: any extra kwargs for the core.Construct
         """
-
-        account = (
-            account if account is not None else os.environ.get("AWS_DEFAULT_ACCOUNT")
-        )
-        region = region if region is not None else os.environ.get("AWS_DEFAULT_REGION")
-        env = {"region": region, "account": account}
         self.scope = scope
         self.stage = self.get_stage(stage)
         self.unique_stack_name = self._create_unique_stack_name(id, self.stage)
+        env = DataJobStack._create_environment_object(account=account, region=region)
         super().__init__(scope=scope, id=self.unique_stack_name, env=env, **kwargs)
         self.project_root = project_root
         self.include_folder = include_folder
@@ -79,6 +74,25 @@ class DataJobStack(core.Stack):
         :return: a unique name.
         """
         return f"{stack_name}-{stage}"
+
+    @staticmethod
+    def _create_environment_object(account, region) -> core.Environment:
+        """
+        create an aws cdk Environment object.
+
+        Args:
+            account: AWS account number: 12 numbers
+            region: AWS region. e.g. eu-west-1
+
+        Returns: AWS cdk Environment object.
+
+        """
+        account = (
+            account if account is not None else os.environ.get("AWS_DEFAULT_ACCOUNT")
+        )
+        region = region if region is not None else os.environ.get("AWS_DEFAULT_REGION")
+        env = core.Environment(account=account, region=region)
+        return env
 
     def create_resources(self):
         """create each of the resources of this stack"""
