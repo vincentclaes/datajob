@@ -80,7 +80,6 @@ cdk deploy --app  "python datajob_stack.py"
 ```
 
 #### using datajob cli
-Point to the configuration of the pipeline using `--config` and deploy.
 
 ```shell script
 cd examples/data_pipeline_simple
@@ -96,9 +95,6 @@ datajob execute --state-machine data-pipeline-simple-dev-workflow
 ```
 
 ### Destroy
-
-Once the pipeline is finished you can pull down the pipeline by using the command:
-
 #### using cdk cli
 ```shell script
 cdk destroy --app  "python datajob_stack.py"
@@ -109,7 +105,7 @@ cdk destroy --app  "python datajob_stack.py"
 datajob destroy --config datajob_stack.py
 ```
 
-As simple as that!
+You will end up with a clean AWS environment, as simple as that!
 
 # Functionality
 
