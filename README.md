@@ -6,10 +6,7 @@
 - Package your project as a wheel and make it available for your glue jobs. This enables you to `import my_project` in your glue job.
 - Orchestrate your pipeline using stepfunctions as simple as `task1 >> [task2,task3] >> task4`
 
-> The main dependencies are [AWS CDK](https://github.com/aws/aws-cdk) and [Step Functions SDK for data science](https://github.com/aws/aws-step-functions-data-science-sdk-python) <br/>
-> Ideas to be implemented can be found [below](#ideas) <br/>
-> [Feedback](https://github.com/vincentclaes/datajob/discussions) is much appreciated!
-
+> Dependencies are [AWS CDK](https://github.com/aws/aws-cdk) and [Step Functions SDK for data science](https://github.com/aws/aws-step-functions-data-science-sdk-python) <br/>
 
 # Installation
 
@@ -157,3 +154,5 @@ These are the ideas, we find interesting to implement;
     - expose sagemaker endpoint to the internet by levering lambda + api gateway
 
 - create a serverless UI that follows up on the different pipelines deployed on possibly different AWS accounts using Datajob
+
+> [Feedback](https://github.com/vincentclaes/datajob/discussions) is much appreciated!
