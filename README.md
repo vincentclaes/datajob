@@ -115,19 +115,31 @@ As simple as that!
 # Functionality
 
 <details>
+<summary>Using Pyspark</summary>
+#todo
+</details>
+
+<details>
 <summary>Package project</summary>
 #todo
 </details>
 
 <details>
-<summary>Using data bucket</summary>
+<summary>Using S3 bucket to dump data</summary>
 #todo
 # create an example that dumps and reads from s3
 </details>
 
 <details>
-<summary>Using Pyspark</summary>
+<summary>Orchestrate Stepfunctions in parallel</summary>
 #todo
+# orchestrate in parallel
+</details>
+
+<details>
+<summary>Orchestrate 1 Stepfunction</summary>
+#todo
+# orchestrate 1 job
 </details>
 
 # Ideas
