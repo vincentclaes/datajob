@@ -24,7 +24,7 @@
 ### Configuration
 
 We have a simple data pipeline composed of 2 glue jobs orchestrated sequentially.
-We add the following code in a file called `datajob_stack.py`
+We add the following code in a file called `datajob_stack.py` in the [root of the project](./examples/data_pipeline_with_packaged_project/)
 
 ```python
 import pathlib
@@ -63,8 +63,6 @@ app.synth()
 
 ```
 
-The definition of this pipeline can be found in [`examples/data_pipeline_with_packaged_project/datajob_stack.py`](./examples/data_pipeline_with_packaged_project/datajob_stack.py).
-
 ### Configure CDK
 
 We deploy using CDK, therefore we need to set some environment variables
@@ -81,10 +79,20 @@ cdk bootstrap aws://$AWS_ACCOUNT/$AWS_DEFAULT_REGION
 
 ### Deploy
 
-Point to the configuration of the pipeline using `--config` and deploy
+#### using cdk cli
 
 ```shell script
-cd examples/glue_jobs
+cd examples/data_pipeline_with_packaged_project
+python setup.py bdist_wheel
+cdk deploy --app  "python datajob_stack.py"
+```
+
+
+#### using datajob cli
+Point to the configuration of the pipeline using `--config` and deploy.
+
+```shell script
+cd examples/data_pipeline_with_packaged_project
 datajob deploy --config datajob_stack.py --package setuppy
 ```
 
@@ -100,26 +108,28 @@ datajob execute --state-machine data-pipeline-pkg-dev-workflow
 
 Once the pipeline is finished you can pull down the pipeline by using the command:
 
+#### using cdk cli
 ```shell script
 datajob destroy --config datajob_stack.py
 ```
 
-As simple as that!
+#### using datajob cli
+```shell script
+cdk destroy --app  "python datajob_stack.py"
+```
 
-> Note: When using datajob cli to deploy a pipeline, we shell out to aws cdk.
-> You can circumvent shelling out to aws cdk by running `cdk` explicitly.
-> datajob cli prints out the commands it uses in the back to build the pipeline.
-> If you want, you can use those.
+As simple as that!
 
 # Functionality
 
 <details>
-<summary>Combine with another cdk stack</summary>
+<summary>Using data bucket</summary>
 #todo
+# create an example that dumps and reads from s3
 </details>
 
 <details>
-<summary>Package your code as a wheel</summary>
+<summary>Using Pyspark</summary>
 #todo
 </details>
 
