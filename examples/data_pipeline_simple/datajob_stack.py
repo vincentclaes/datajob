@@ -6,27 +6,20 @@ from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
 
 app = core.App()
 
-# the datajob_stack is the instance that will result in a cloudformation stack.
-# we inject the datajob_stack object through all the resources that we want to add.
+# The datajob_stack is the instance that will result in a cloudformation stack.
+# We inject the datajob_stack object through all the resources that we want to add.
 with DataJobStack(scope=app, id="data-pipeline-simple") as datajob_stack:
 
-    # here we define 3 glue jobs with the datajob_stack object,
-    # a name and the relative path to the source code.
+    # We define 2 glue jobs with the relative path to the source code.
     task1 = GlueJob(
         datajob_stack=datajob_stack, name="task1", job_path="glue_jobs/task1.py"
     )
     task2 = GlueJob(
         datajob_stack=datajob_stack, name="task2", job_path="glue_jobs/task2.py"
     )
-    task3 = GlueJob(
-        datajob_stack=datajob_stack, name="task3", job_path="glue_jobs/task3.py"
-    )
 
-    # we instantiate a step functions workflow and add the sources
-    # we want to orchestrate. We got the orchestration idea from
-    # airflow where we use a list to run tasks in parallel
-    # and we use bit operator '>>' to chain the tasks in our workflow.
+    # We instantiate a step functions workflow and orchestrate the glue jobs.
     with StepfunctionsWorkflow(datajob_stack=datajob_stack, name="workflow") as sfn:
-        [task1, task2] >> task3
+        task1 >> task2
 
 app.synth()
