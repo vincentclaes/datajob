@@ -70,8 +70,7 @@ cdk bootstrap aws://$AWS_ACCOUNT/$AWS_DEFAULT_REGION
 ```
 
 ### Deploy
-
-#### using cdk cli
+_cdk cli_
 
 ```shell script
 cd examples/data_pipeline_simple
@@ -79,7 +78,7 @@ python setup.py bdist_wheel
 cdk deploy --app  "python datajob_stack.py"
 ```
 
-#### using datajob cli
+_datajob cli_
 
 ```shell script
 cd examples/data_pipeline_simple
@@ -95,12 +94,12 @@ datajob execute --state-machine data-pipeline-simple-dev-workflow
 ```
 
 ### Destroy
-#### using cdk cli
+_cdk cli_
 ```shell script
 cdk destroy --app  "python datajob_stack.py"
 ```
 
-#### using datajob cli
+_datajob cli_
 ```shell script
 datajob destroy --config datajob_stack.py
 ```
