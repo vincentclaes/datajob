@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 import pathlib
 from aws_cdk import core
 
