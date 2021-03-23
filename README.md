@@ -74,17 +74,16 @@ cdk bootstrap aws://$AWS_ACCOUNT/$AWS_DEFAULT_REGION
 #### using cdk cli
 
 ```shell script
-cd examples/data_pipeline_with_packaged_project
+cd examples/data_pipeline_simple
 python setup.py bdist_wheel
 cdk deploy --app  "python datajob_stack.py"
 ```
-
 
 #### using datajob cli
 Point to the configuration of the pipeline using `--config` and deploy.
 
 ```shell script
-cd examples/data_pipeline_with_packaged_project
+cd examples/data_pipeline_simple
 datajob deploy --config datajob_stack.py --package setuppy
 ```
 
@@ -93,7 +92,7 @@ After running the `deploy` command, the code of glue jobs are deployed and orche
 ### Run
 
 ```shell script
-datajob execute --state-machine data-pipeline-pkg-dev-workflow
+datajob execute --state-machine data-pipeline-simple-dev-workflow
 ```
 
 ### Destroy
@@ -102,12 +101,12 @@ Once the pipeline is finished you can pull down the pipeline by using the comman
 
 #### using cdk cli
 ```shell script
-datajob destroy --config datajob_stack.py
+cdk destroy --app  "python datajob_stack.py"
 ```
 
 #### using datajob cli
 ```shell script
-cdk destroy --app  "python datajob_stack.py"
+datajob destroy --config datajob_stack.py
 ```
 
 As simple as that!
