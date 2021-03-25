@@ -21,7 +21,6 @@
 ### Configuration
 
 We have a simple data pipeline composed of 2 glue jobs orchestrated sequentially.
-We add the following code in a file called `datajob_stack.py` in the [root of the project](./examples/data_pipeline_simple/)
 
 ```python
 from aws_cdk import core
@@ -52,10 +51,10 @@ app.synth()
 
 ```
 
-### Configure CDK
+We add the code in a file called `datajob_stack.py` in the [root of the project](./examples/data_pipeline_simple/).
 
-We deploy using CDK, therefore we need to set some environment variables
-and initialize CDK for our AWS account:
+
+### Configure CDK
 
 ```shell script
 export AWS_PROFILE=my-profile # e.g. default
@@ -100,9 +99,6 @@ _datajob cli_
 ```shell script
 datajob destroy --config datajob_stack.py
 ```
-
-You will end up with a clean AWS environment, as simple as that!
-
 
 # Functionality
 
@@ -169,7 +165,7 @@ The following resources are created:
 when __exiting the context manager__ all the resources of our DataJobStack object are created.
 
 <details>
-<summary>We can write the above example more explicitly</summary>
+<summary>We can write the above example more explicitly...</summary>
 
 ```python
 from aws_cdk import core
@@ -193,7 +189,6 @@ datajob_stack.create_resources()
 app.synth()
 ```
 </details>
-
 
 # Ideas
 
