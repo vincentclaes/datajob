@@ -151,10 +151,10 @@ with DataJobStack(scope=app, id="data-pipeline-simple") as datajob_stack:
 When __entering the contextmanager__ of DataJobStack:
 
 A [DataJobContext](./datajob/datajob_stack.py#L48) is initialized
-which provides context in to deploy and run a data pipeline on AWS.
+which provides context in to deploy run a data pipeline on AWS.
 The following resources are created:
 1) "data bucket"
-    - an S3 bucket that you can use to ingest, dump intermediate results and the final ouptut.
+    - an S3 bucket that you can use to dump ingested data, dump intermediate results and the final output.
     - you can access the data bucket as a [Bucket](https://docs.aws.amazon.com/cdk/api/latest/python/aws_cdk.aws_s3/Bucket.html) object via ```datajob_stack.context.data_bucket```
     - you can access the data bucket name via ```datajob_stack.context.data_bucket_name```
 2) "deployment bucket"
