@@ -14,10 +14,15 @@ class DatajobContextWheelError(Exception):
     """any exception occuring when constructing wheel in data job context."""
 
 
-class DatajobContext(core.Construct):
+class DataJobContext(core.Construct):
     """
-    DatajobContext is a class that creates all the services necessary for a datajob to run.
-    You have to instantiate this class once per DatajobStack.
+    DataJobContext is a class that creates context in order to deploy and run our
+    pipeline. You have to instantiate this class once per DatajobStack.
+
+    DataJobContext creates:
+        - data bucket: this is the bucket that you can use to ingest, dump intermediate results and the final ouptut.
+        - deployment bucket: this is the bucket that holds you code ( scripts, wheel, config, ...)
+
     """
 
     def __init__(
@@ -31,10 +36,8 @@ class DatajobContext(core.Construct):
         """
         :param scope: aws cdk core construct object.
         :param unique_stack_name: a unique name for this stack. like this the name of our resources will not collide with other deployments.
-        :param stage: the stage name to which we are deploying
         :param project_root: the path to the root of this project
         :param include_folder: specify the name of the folder we would like to include in the deployment bucket.
-        :param kwargs: any extra kwargs for the core.Construct
         """
         logger.info("creating datajob context.")
         super().__init__(scope, unique_stack_name, **kwargs)
@@ -49,7 +52,7 @@ class DatajobContext(core.Construct):
         )
         self.s3_url_wheel = None
         if self.project_root:
-            self.s3_url_wheel = self._build_and_deploy_wheel(
+            self.s3_url_wheel = self._deploy_wheel(
                 self.unique_stack_name,
                 self.project_root,
                 self.deployment_bucket,
@@ -102,7 +105,7 @@ class DatajobContext(core.Construct):
         )
         return deployment_bucket, deployment_bucket_name
 
-    def _build_and_deploy_wheel(
+    def _deploy_wheel(
         self,
         unique_stack_name: str,
         project_root: str,
@@ -120,7 +123,6 @@ class DatajobContext(core.Construct):
         s3_url_wheel = None
         try:
             wheel_deployment_name = f"{unique_stack_name}-wheel"
-            # todo - we should get this name dynamically
             logger.debug(f"deploying wheel {wheel_deployment_name}")
             aws_s3_deployment.BucketDeployment(
                 self,
@@ -141,8 +143,8 @@ class DatajobContext(core.Construct):
         finally:
             return s3_url_wheel
 
+    @staticmethod
     def _get_wheel_name(
-        self,
         deployment_bucket_name: str,
         wheel_deployment_name: str,
         project_root: str,

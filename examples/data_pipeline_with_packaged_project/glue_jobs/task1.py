@@ -1,4 +1,4 @@
-from data_pipeline_with_packaged_project.glue_helper import some_helper_class
+from glue_jobs.glue_helper import some_helper_class
 
 
 def main():

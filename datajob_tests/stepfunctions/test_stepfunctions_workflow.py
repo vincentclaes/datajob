@@ -1,6 +1,7 @@
 import os
 import unittest
 
+from aws_cdk import core
 from moto import mock_stepfunctions
 from stepfunctions.steps.compute import GlueStartJobRunStep
 from stepfunctions.steps.states import Parallel
@@ -26,6 +27,9 @@ class TestStepfunctionsWorkflow(unittest.TestCase):
         except KeyError:
             os.environ["AWS_DEFAULT_REGION"] = "eu-west-1"
 
+    def setUp(self) -> None:
+        self.app = core.App()
+
     @mock_stepfunctions
     def test_create_tasks_for_orchestration_simple_flow_successfully(self):
         task1 = stepfunctions_workflow.task(SomeMockedClass("task1"))
@@ -33,7 +37,8 @@ class TestStepfunctionsWorkflow(unittest.TestCase):
         task3 = stepfunctions_workflow.task(SomeMockedClass("task3"))
         task4 = stepfunctions_workflow.task(SomeMockedClass("task4"))
         djs = DataJobStack(
-            stack_name="a-unique-name-1",
+            scope=self.app,
+            id="a-unique-name-1",
             stage="stage",
             project_root="sampleproject/",
             region="eu-west-1",
@@ -60,7 +65,8 @@ class TestStepfunctionsWorkflow(unittest.TestCase):
         task2 = stepfunctions_workflow.task(SomeMockedClass("task2"))
         task3 = stepfunctions_workflow.task(SomeMockedClass("task2"))
         djs = DataJobStack(
-            stack_name="a-unique-name-2",
+            scope=self.app,
+            id="a-unique-name-2",
             stage="stage",
             project_root="sampleproject/",
             region="eu-west-1",
