@@ -113,12 +113,12 @@ datajob destroy --config datajob_stack.py
 </details>
 
 <details>
-<summary>Using Pyspark</summary>
+<summary>Package project</summary>
 #todo implemented not documented
 </details>
 
 <details>
-<summary>Package project</summary>
+<summary>Using Pyspark</summary>
 #todo implemented not documented
 </details>
 
