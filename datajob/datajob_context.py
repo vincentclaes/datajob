@@ -16,13 +16,13 @@ class DatajobContextWheelError(Exception):
 
 class DataJobContext(core.Construct):
     """
-    DataJobContext is a class that creates context on order to let our
-    pipeline run. You have to instantiate this class once per DatajobStack.
+    DataJobContext is a class that creates context in order to deploy and run our
+    pipeline. You have to instantiate this class once per DatajobStack.
 
     DataJobContext creates:
         - data bucket: this is the bucket that you can use to ingest, dump intermediate results and the final ouptut.
         - deployment bucket: this is the bucket that holds you code ( scripts, wheel, config, ...)
-        -
+
     """
 
     def __init__(

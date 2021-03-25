@@ -103,21 +103,55 @@ datajob destroy --config datajob_stack.py
 
 You will end up with a clean AWS environment, as simple as that!
 
+# The magic behind datajob
+
+```python
+with DataJobStack(scope=app, id="data-pipeline-simple") as datajob_stack:
+    ...
+```
+
+When __entering the contextmanager__ of DataJobStack:
+
+A [DataJobContext](./datajob/datajob_stack.py#L48) is initialized
+which provides context in to deploy and run a data pipeline on AWS.
+The following resources are created:
+1) "data bucket"
+    - an S3 bucket that you can use to ingest, dump intermediate results and the final ouptut.
+    - you can access the data bucket as a [Bucket](https://docs.aws.amazon.com/cdk/api/latest/python/aws_cdk.aws_s3/Bucket.html) object via ```datajob_stack.context.data_bucket```
+    - you can access the data bucket name via ```datajob_stack.context.data_bucket_name```
+2) "deployment bucket"
+   - an s3 bucket to deploy code, artifacts, scripts, config, files, ...
+   - you can access the deployment bucket as a [Bucket](https://docs.aws.amazon.com/cdk/api/latest/python/aws_cdk.aws_s3/Bucket.html) object via ```datajob_stack.context.deployment_bucket```
+   - you can access the deployment bucket name via ```datajob_stack.context.deployment_bucket_name```
+
+when __exiting the context manager__ all the resources of our DataJobStack object are created.
+
+
 # Functionality
 
 <details>
+<summary>Pass Arguments</summary>
+#todo implemented not documented
+</details>
+
+<details>
+<summary>Deploy files to deployment bucket</summary>
+#todo implemented not documented
+</details>
+
+<details>
 <summary>Using Pyspark</summary>
-#todo
+#todo implemented not documented
 </details>
 
 <details>
 <summary>Package project</summary>
-#todo
+#todo implemented not documented
 </details>
 
 <details>
 <summary>Using S3 bucket to dump data</summary>
-#todo
+#todo implemented not documented
 # create an example that dumps and reads from s3
 </details>
 

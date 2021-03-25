@@ -129,9 +129,7 @@ class DataJobStack(core.Stack):
         return context_parameter
 
     def init_datajob_context(self) -> None:
-        """setup a datajob context
-        Returns: None
-        """
+        """Initializes a datajob context."""
         self.context = DataJobContext(
             self,
             unique_stack_name=self.unique_stack_name,
