@@ -103,34 +103,11 @@ datajob destroy --config datajob_stack.py
 
 You will end up with a clean AWS environment, as simple as that!
 
-# The magic behind datajob
-
-```python
-with DataJobStack(scope=app, id="data-pipeline-simple") as datajob_stack:
-    ...
-```
-
-When __entering the contextmanager__ of DataJobStack:
-
-A [DataJobContext](./datajob/datajob_stack.py#L48) is initialized
-which provides context in to deploy and run a data pipeline on AWS.
-The following resources are created:
-1) "data bucket"
-    - an S3 bucket that you can use to ingest, dump intermediate results and the final ouptut.
-    - you can access the data bucket as a [Bucket](https://docs.aws.amazon.com/cdk/api/latest/python/aws_cdk.aws_s3/Bucket.html) object via ```datajob_stack.context.data_bucket```
-    - you can access the data bucket name via ```datajob_stack.context.data_bucket_name```
-2) "deployment bucket"
-   - an s3 bucket to deploy code, artifacts, scripts, config, files, ...
-   - you can access the deployment bucket as a [Bucket](https://docs.aws.amazon.com/cdk/api/latest/python/aws_cdk.aws_s3/Bucket.html) object via ```datajob_stack.context.deployment_bucket```
-   - you can access the deployment bucket name via ```datajob_stack.context.deployment_bucket_name```
-
-when __exiting the context manager__ all the resources of our DataJobStack object are created.
-
 
 # Functionality
 
 <details>
-<summary>Pass Arguments</summary>
+<summary>Pass arguments to a glue job</summary>
 #todo implemented not documented
 </details>
 
@@ -166,6 +143,57 @@ when __exiting the context manager__ all the resources of our DataJobStack objec
 #todo
 # orchestrate 1 job
 </details>
+
+
+# The magic behind datajob
+
+```python
+with DataJobStack(scope=app, id="data-pipeline-simple") as datajob_stack:
+    ...
+```
+
+When __entering the contextmanager__ of DataJobStack:
+
+A [DataJobContext](./datajob/datajob_stack.py#L48) is initialized
+which provides context in to deploy and run a data pipeline on AWS.
+The following resources are created:
+1) "data bucket"
+    - an S3 bucket that you can use to ingest, dump intermediate results and the final ouptut.
+    - you can access the data bucket as a [Bucket](https://docs.aws.amazon.com/cdk/api/latest/python/aws_cdk.aws_s3/Bucket.html) object via ```datajob_stack.context.data_bucket```
+    - you can access the data bucket name via ```datajob_stack.context.data_bucket_name```
+2) "deployment bucket"
+   - an s3 bucket to deploy code, artifacts, scripts, config, files, ...
+   - you can access the deployment bucket as a [Bucket](https://docs.aws.amazon.com/cdk/api/latest/python/aws_cdk.aws_s3/Bucket.html) object via ```datajob_stack.context.deployment_bucket```
+   - you can access the deployment bucket name via ```datajob_stack.context.deployment_bucket_name```
+
+when __exiting the context manager__ all the resources of our DataJobStack object are created.
+
+<details>
+<summary>We can write the above example more explicitly</summary>
+
+```python
+from aws_cdk import core
+
+from datajob.datajob_stack import DataJobStack
+from datajob.glue.glue_job import GlueJob
+from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
+
+app = core.App()
+
+datajob_stack = DataJobStack(scope=app, id="data-pipeline-simple")
+datajob_stack.init_datajob_context()
+
+task1 = GlueJob(datajob_stack=datajob_stack, name="task1", job_path="glue_jobs/task1.py")
+task2 = GlueJob(datajob_stack=datajob_stack, name="task2", job_path="glue_jobs/task2.py")
+
+with StepfunctionsWorkflow(datajob_stack=datajob_stack, name="workflow") as sfn:
+    task1 >> task2
+
+datajob_stack.create_resources()
+app.synth()
+```
+</details>
+
 
 # Ideas
 
