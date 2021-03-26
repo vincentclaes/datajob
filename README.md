@@ -2,7 +2,7 @@
 
 #### Build and deploy a serverless data pipeline with no effort on AWS.
 
-- Build and deploy your code to a glue job.
+- Build and deploy a glue job.
 - Package your project as a wheel and make it available for your glue jobs. This enables you to `import my_project` in your glue job.
 - Orchestrate your pipeline using stepfunctions as simple as `task1 >> [task2,task3] >> task4`
 
