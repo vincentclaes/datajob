@@ -81,3 +81,20 @@ class TestStepfunctionsWorkflow(unittest.TestCase):
         self.assertTrue(
             isinstance(a_step_functions_workflow.chain_of_tasks[1], GlueStartJobRunStep)
         )
+
+    def test_orchestrate_1_task_successfully(self,):
+        task1 = stepfunctions_workflow.task(SomeMockedClass("task1"))
+        djs = DataJobStack(
+            scope=self.app,
+            id="a-unique-name-2",
+            stage="stage",
+            project_root="sampleproject/",
+            region="eu-west-1",
+            account="3098726354",
+        )
+        with StepfunctionsWorkflow(djs, "some-name") as a_step_functions_workflow:
+            task1 >> ...
+
+        self.assertTrue(
+            isinstance(a_step_functions_workflow.chain_of_tasks[0], GlueStartJobRunStep)
+        )

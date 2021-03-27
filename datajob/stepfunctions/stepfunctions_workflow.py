@@ -176,8 +176,13 @@ def _handle_first(self):
 
 def _connect(job):
     if isinstance(job, list):
+        logger.debug("we have a list, so these are jobs orchestrated in parallel.")
         _connect_parallel_job(job)
+    elif isinstance(job, type(Ellipsis)):
+        logger.debug("we have an ellipsis object, do nothing ...")
+        return
     else:
+        logger.debug("default action is to connect a single job.")
         _connect_single_job(job)
 
 

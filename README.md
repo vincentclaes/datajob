@@ -119,7 +119,24 @@ datajob destroy --config datajob_stack.py
 
 <details>
 <summary>Using Pyspark</summary>
-#todo implemented not documented
+
+```python
+pyspark_job = GlueJob(
+    datajob_stack=datajob_stack,
+    name="pyspark-job",
+    job_path="glue_job/glue_pyspark_example.py",
+    job_type="glueetl",
+    glue_version="2.0",  # we only support glue 2.0
+    python_version="3",
+    worker_type="Standard",  # options are Standard / G.1X / G.2X
+    number_of_workers=1,
+    arguments={
+        "--source": f"s3://{datajob_stack.context.data_bucket_name}/raw/iris_dataset.csv",
+        "--destination": f"s3://{datajob_stack.context.data_bucket_name}/target/pyspark_job/iris_dataset.parquet",
+    }
+)
+```
+full example can be found in [examples/data_pipeline_pyspark](examples/data_pipeline_pyspark]).
 </details>
 
 <details>
@@ -129,15 +146,25 @@ datajob destroy --config datajob_stack.py
 </details>
 
 <details>
-<summary>Orchestrate Stepfunctions in parallel</summary>
-#todo
-# orchestrate in parallel
+<summary>Orchestrate stepfunctions tasks in parallel</summary>
+
+```python
+# task1 and task2 are orchestrated in parallel.
+# task 3 will only start when both task1 and task2 have succeeded.
+[task1, task2] >> task3
+```
+
 </details>
 
 <details>
-<summary>Orchestrate 1 Stepfunction</summary>
-#todo
-# orchestrate 1 job
+<summary>Orchestrate 1 stepfunction task</summary>
+
+Use the [Ellipsis](https://docs.python.org/dev/library/constants.html#Ellipsis) object to be able to orchestrate a job via step functions.
+
+```python
+some_task >> ...
+```
+
 </details>
 
 

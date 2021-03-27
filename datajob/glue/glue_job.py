@@ -32,6 +32,8 @@ class GlueJob(DataJobBase):
         arguments: dict = None,
         python_version: str = "3",
         role: iam.Role = None,
+        worker_type: str = None,
+        number_of_workers: int = None,
         *args,
         **kwargs,
     ):
@@ -45,6 +47,8 @@ class GlueJob(DataJobBase):
         :param arguments: the arguments as a dict for this glue job.
         :param python_version: 3 is the default
         :param role: you can provide a cdk iam role object as arg. if not provided this class will instantiate a role,
+        :param worker_type: you can provide a worker type Standard / G.1X / G.2X
+        :param number_of_workers: for pythonshell is this 0.0625 or 1. for glueetl is this minimum 2.
         :param args: any extra args for the glue.CfnJob
         :param kwargs: any extra kwargs for the glue.CfnJob
         """
@@ -59,6 +63,8 @@ class GlueJob(DataJobBase):
         )
         self.max_capacity = max_capacity
         self.role = self._get_role(role, self.unique_name)
+        self.worker_type = worker_type
+        self.number_of_workers = number_of_workers
         self.args = args
         self.kwargs = kwargs
         logger.info(f"glue job {name} created.")
@@ -78,6 +84,8 @@ class GlueJob(DataJobBase):
             python_version=self.python_version,
             glue_version=self.glue_version,
             max_capacity=self.max_capacity,
+            worker_type=self.worker_type,
+            number_of_workers=self.number_of_workers,
             *self.args,
             **self.kwargs,
         )
@@ -204,6 +212,8 @@ class GlueJob(DataJobBase):
         python_version: str = "3",
         glue_version: str = None,
         max_capacity: int = None,
+        worker_type: str = None,
+        number_of_workers: str = None,
         *args,
         **kwargs,
     ) -> None:
@@ -230,6 +240,8 @@ class GlueJob(DataJobBase):
             glue_version=glue_version,
             max_capacity=max_capacity,
             default_arguments=default_arguments,
+            worker_type=worker_type,
+            number_of_workers=number_of_workers,
             *args,
             **kwargs,
         )
