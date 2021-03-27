@@ -153,8 +153,12 @@ full example can be found in [examples/data_pipeline_pyspark](./examples/data_pi
 
 <details>
 <summary>Orchestrate 1 Stepfunction</summary>
-#todo
-# orchestrate 1 job
+Use the [Ellipsis](https://docs.python.org/dev/library/constants.html#Ellipsis) object to be able to orchestrate a job via step functions.
+
+```python
+some_task >> ...
+```
+
 </details>
 
 
