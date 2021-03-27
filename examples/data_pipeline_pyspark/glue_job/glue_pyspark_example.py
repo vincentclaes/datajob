@@ -12,8 +12,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", type=str, required=True)
     parser.add_argument("--destination", type=str, required=True)
-    # use plain python argparse instead of
-    # the glue lib argument parser.
+
     args, unknown = parser.parse_known_args()
 
     logging.info(f"args parsed : {args}")

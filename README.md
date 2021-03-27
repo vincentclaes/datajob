@@ -147,12 +147,18 @@ full example can be found in [examples/data_pipeline_pyspark](./examples/data_pi
 
 <details>
 <summary>Orchestrate Stepfunctions in parallel</summary>
-#todo
-# orchestrate in parallel
+
+```python
+# task1 and task2 are orchestrated in parallel.
+# task 3 will only start when both task1 and task2 have succeeded.
+[task1, task2] >> task3
+```
+
 </details>
 
 <details>
 <summary>Orchestrate 1 Stepfunction</summary>
+
 Use the [Ellipsis](https://docs.python.org/dev/library/constants.html#Ellipsis) object to be able to orchestrate a job via step functions.
 
 ```python
