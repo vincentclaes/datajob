@@ -15,7 +15,7 @@ using _datajob cli_
 ```shell
 datajob deploy --config datajob_stack.py --stage my-stage --package setuppy
 ```
-_or using cdk_
+_using cdk_
 
 ```shell
 python setup.py bdist_wheel
