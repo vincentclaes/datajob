@@ -136,7 +136,7 @@ pyspark_job = GlueJob(
     }
 )
 ```
-full example can be found in [examples/data_pipeline_pyspark](./examples/data_pipeline_pyspark]).
+full example can be found in [examples/data_pipeline_pyspark](examples/data_pipeline_pyspark]).
 </details>
 
 <details>
