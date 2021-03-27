@@ -146,7 +146,7 @@ full example can be found in [examples/data_pipeline_pyspark](./examples/data_pi
 </details>
 
 <details>
-<summary>Orchestrate Stepfunctions in parallel</summary>
+<summary>Orchestrate stepfunctions tasks in parallel</summary>
 
 ```python
 # task1 and task2 are orchestrated in parallel.
@@ -157,7 +157,7 @@ full example can be found in [examples/data_pipeline_pyspark](./examples/data_pi
 </details>
 
 <details>
-<summary>Orchestrate 1 Stepfunction</summary>
+<summary>Orchestrate 1 stepfunction task</summary>
 
 Use the [Ellipsis](https://docs.python.org/dev/library/constants.html#Ellipsis) object to be able to orchestrate a job via step functions.
 
