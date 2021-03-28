@@ -2,9 +2,9 @@
 
 #### Build and deploy a serverless data pipeline with no effort on AWS.
 
-- Build and deploy a glue job.
-- Package your project as a wheel and make it available for your glue jobs. This enables you to `import my_project` in your glue job.
-- Orchestrate your pipeline using stepfunctions as simple as `task1 >> [task2,task3] >> task4`
+- We support python shell / glue etl pyspark Glue jobs.
+- Orchestrate using stepfunctions as simple as `task1 >> [task2,task3] >> task4`
+- Let us [know](https://github.com/vincentclaes/datajob/discussions) what you want to see next.
 
 > Dependencies are [AWS CDK](https://github.com/aws/aws-cdk) and [Step Functions SDK for data science](https://github.com/aws/aws-step-functions-data-science-sdk-python) <br/>
 
