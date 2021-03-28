@@ -2,7 +2,7 @@
 
 #### Build and deploy a serverless data pipeline with no effort on AWS.
 
-- We support python shell / glue etl pyspark Glue jobs.
+- We support python shell / pyspark Glue jobs.
 - Orchestrate using stepfunctions as simple as `task1 >> [task2,task3] >> task4`
 - Let us [know](https://github.com/vincentclaes/datajob/discussions) what you want to see next.
 
