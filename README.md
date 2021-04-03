@@ -101,7 +101,7 @@ Your glue jobs are deployed and the orchestration is configured.
 
 The step function state machine name is constructed as `<datajob_stack.id>-<stage>-<step_functions_workflow.name>`.
 
-To run it execute:
+To run your data pipeline execute:
 
 ```shell script
 datajob execute --state-machine data-pipeline-pkg-$STAGE-workflow
