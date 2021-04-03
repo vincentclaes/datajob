@@ -35,10 +35,7 @@ current_dir = pathlib.Path(__file__).parent.absolute()
 
 app = core.App()
 
-# the datajob_stack is the instance that will result in a cloudformation stack.
-# the path project_root helps datajob_stack package the project as a wheel
-# by default datajob_stack will provision 2 s3 buckets.
-# one s3 bucket for deploying packages, files, ... and one s3 bucket to be used by the data pipeline.
+
 with DataJobStack(
     scope=app, id="data-pipeline-pkg", project_root=current_dir
 ) as datajob_stack:
@@ -79,20 +76,23 @@ cdk bootstrap aws://$AWS_ACCOUNT/$AWS_DEFAULT_REGION
 
 ### Deploy
 
-We want to create a unique stack containing 2 glue jobs
-with our project and it's depenencies available as a wheel.
+Create a stack containing 2 glue jobs with our packaged project and its dependencies, orchestrated using step functions.
+
+Datajob will create s3 buckets based on the datajob stack id and the stage variable.
+The stage variable will typically be something like "dev", "stg", "prd", ...
+but since S3 buckets need to be globally unique we will use our $AWS_ACCOUNT for the `--stage` parameter.
+
+_datajob cli_
+```shell script
+cd examples/data_pipeline_with_packaged_project
+datajob deploy --config datajob_stack.py --stage $AWS_ACCOUNT --package setuppy
+```
 
 _cdk cli_
 ```shell script
 cd examples/data_pipeline_with_packaged_project
 python setup.py bdist_wheel
-cdk deploy --app  "python datajob_stack.py"
-```
-
-_datajob cli_
-```shell script
-cd examples/data_pipeline_with_packaged_project
-datajob deploy --config datajob_stack.py --package setuppy
+cdk deploy --app  "python datajob_stack.py" -c stage=$AWS_ACCOUNT
 ```
 
 After running the `deploy` command, the glue jobs are deployed and the orchestration is configured.
@@ -100,19 +100,21 @@ After running the `deploy` command, the glue jobs are deployed and the orchestra
 ### Run
 
 ```shell script
-datajob execute --state-machine data-pipeline-pkg-dev-workflow
+datajob execute --state-machine data-pipeline-pkg-$AWS_ACCOUNT-workflow
 ```
 
 ### Destroy
-_cdk cli_
-```shell script
-cdk destroy --app  "python datajob_stack.py"
-```
 
 _datajob cli_
 ```shell script
-datajob destroy --config datajob_stack.py
+datajob destroy --config datajob_stack.py --stage $AWS_ACCOUNT
 ```
+
+_cdk cli_
+```shell script
+cdk destroy --app  "python datajob_stack.py" -c stage=$AWS_ACCOUNT
+```
+
 
 # Functionality
 
@@ -296,10 +298,25 @@ some_task >> ...
 </details>
 
 
-# The magic behind datajob
+# Datajob in depth
+
+The `datajob_stack` is the instance that will result in a cloudformation stack.
+The path in `project_root` helps datajob_stack locate the root of the project where
+the setup.py/poetry pyproject.toml file can be found as well as the `dist/` folder with the wheel of your project .
 
 ```python
-with DataJobStack(scope=app, id="data-pipeline-simple") as datajob_stack:
+import pathlib
+from aws_cdk import core
+
+from datajob.datajob_stack import DataJobStack
+
+current_dir = pathlib.Path(__file__).parent.absolute()
+app = core.App()
+
+with DataJobStack(
+    scope=app, id="data-pipeline-pkg", project_root=current_dir
+) as datajob_stack:
+
     ...
 ```
 
@@ -366,10 +383,8 @@ These are the ideas, we find interesting to implement;
     - processing jobs
     - hyperparameter tuning jobs
     - training jobs
-    - create sagemaker model
-    - create sagemaker endpoint
-    - expose sagemaker endpoint to the internet by levering lambda + api gateway
-
+- implement lambda
+- implement ECS Fargate
 - create a serverless UI that follows up on the different pipelines deployed on possibly different AWS accounts using Datajob
 
 > [Feedback](https://github.com/vincentclaes/datajob/discussions) is much appreciated!
