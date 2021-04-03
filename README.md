@@ -1,6 +1,6 @@
 # Datajob
 
-#### Build and deploy a serverless data pipeline with no effort on AWS.
+#### Build and deploy a serverless data pipeline on AWS with no effort.
 
 - We support python shell / pyspark Glue jobs.
 - Orchestrate using stepfunctions as simple as `task1 >> [task2,task3] >> task4`
@@ -53,7 +53,7 @@ app.synth()
 
 ```
 
-We add the code in a file called `datajob_stack.py` in the [root of the project](./examples/data_pipeline_with_packaged_project/).
+We add the above code in a file called `datajob_stack.py` in the [root of the project](./examples/data_pipeline_with_packaged_project/).
 
 
 ### Configure CDK
