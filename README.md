@@ -74,13 +74,13 @@ cdk bootstrap aws://$AWS_ACCOUNT/$AWS_DEFAULT_REGION
 
 Create a stack containing 2 glue jobs with our packaged project and its dependencies, orchestrated using step functions.
 
-```shell
-export STAGE=$AWS_ACCOUNT
-```
-
 Datajob will create s3 buckets based on the `<datajob stack id>` and the `stage` variable.
 The stage variable will typically be something like "dev", "stg", "prd", ...
 but since S3 buckets need to be globally unique we will use our `$AWS_ACCOUNT` for the `--stage` parameter.
+
+```shell
+export STAGE=$AWS_ACCOUNT
+```
 
 ```shell script
 cd examples/data_pipeline_with_packaged_project
@@ -173,7 +173,7 @@ deploy to stage `my-stage`:
 datajob deploy --config datajob_stack.py --stage my-stage --package setuppy
 ```
 
-`datajob_stack.context.data_bucket_name` will evaluate to `datajob-python-pyspark-my-stage # <datajob-stack-id>-<stage>`
+`datajob_stack.context.data_bucket_name` will evaluate to `datajob-python-pyspark-my-stage
 
 you can find this example [here](./examples/data_pipeline_pyspark/glue_job/glue_pyspark_example.py)
 
