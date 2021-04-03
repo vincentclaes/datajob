@@ -78,6 +78,8 @@ but since S3 buckets need to be globally unique, for this example we will use ou
 export STAGE=$AWS_ACCOUNT
 ```
 
+Navigate to `datajob_stack.py` file and deploy the data pipeline.
+
 ```shell script
 cd examples/data_pipeline_with_packaged_project
 datajob deploy --config datajob_stack.py --stage $STAGE --package setuppy
