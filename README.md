@@ -78,37 +78,44 @@ Datajob will create s3 buckets based on the datajob stack id and the stage varia
 The stage variable will typically be something like "dev", "stg", "prd", ...
 but since S3 buckets need to be globally unique we will use our $AWS_ACCOUNT for the `--stage` parameter.
 
+```shell
+export STAGE=$AWS_ACCOUNT
+```
+
 _datajob cli_
 ```shell script
 cd examples/data_pipeline_with_packaged_project
-datajob deploy --config datajob_stack.py --stage $AWS_ACCOUNT --package setuppy
+datajob deploy --config datajob_stack.py --stage $STAGE --package setuppy
 ```
 
 _cdk cli_
 ```shell script
 cd examples/data_pipeline_with_packaged_project
 python setup.py bdist_wheel
-cdk deploy --app  "python datajob_stack.py" -c stage=$AWS_ACCOUNT
+cdk deploy --app  "python datajob_stack.py" -c stage=$STAGE
 ```
 
 After running the `deploy` command, the glue jobs are deployed and the orchestration is configured.
 
 ### Run
 
+The step function statemachine name is constructed as `<datajob stack id>-<stage>-<step functions workflow name>`
+To run it execute:
+
 ```shell script
-datajob execute --state-machine data-pipeline-pkg-$AWS_ACCOUNT-workflow
+datajob execute --state-machine data-pipeline-pkg-$STAGE-workflow
 ```
 
 ### Destroy
 
 _datajob cli_
 ```shell script
-datajob destroy --config datajob_stack.py --stage $AWS_ACCOUNT
+datajob destroy --config datajob_stack.py --stage $STAGE
 ```
 
 _cdk cli_
 ```shell script
-cdk destroy --app  "python datajob_stack.py" -c stage=$AWS_ACCOUNT
+cdk destroy --app  "python datajob_stack.py" -c stage=$STAGE
 ```
 
 
