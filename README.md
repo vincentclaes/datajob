@@ -23,27 +23,38 @@
 We have a simple data pipeline composed of 2 glue jobs orchestrated sequentially.
 
 ```python
+import pathlib
 from aws_cdk import core
 
 from datajob.datajob_stack import DataJobStack
 from datajob.glue.glue_job import GlueJob
 from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
 
+
+current_dir = pathlib.Path(__file__).parent.absolute()
+
 app = core.App()
 
-# The datajob_stack is the instance that will result in a cloudformation stack.
-# We inject the datajob_stack object through all the resources that we want to add.
-with DataJobStack(scope=app, id="data-pipeline-simple") as datajob_stack:
+# the datajob_stack is the instance that will result in a cloudformation stack.
+# the path project_root helps datajob_stack package the project as a wheel
+# by default datajob_stack will provision 2 s3 buckets.
+# one s3 bucket for deploying packages, files, ... and one s3 bucket to be used by the data pipeline.
+with DataJobStack(
+    scope=app, id="data-pipeline-pkg", project_root=current_dir
+) as datajob_stack:
 
-    # We define 2 glue jobs with the relative path to the source code.
+    # here we define 2 glue jobs with the path to the source code.
+    # we inject the datajob_stack object through all the resources that we want to add.
     task1 = GlueJob(
         datajob_stack=datajob_stack, name="task1", job_path="glue_jobs/task1.py"
     )
+
     task2 = GlueJob(
         datajob_stack=datajob_stack, name="task2", job_path="glue_jobs/task2.py"
     )
 
-    # We instantiate a step functions workflow and orchestrate the glue jobs.
+    # we instantiate a step functions workflow
+    # and orchestrate the glue jobs.
     with StepfunctionsWorkflow(datajob_stack=datajob_stack, name="workflow") as sfn:
         task1 >> task2
 
@@ -51,10 +62,11 @@ app.synth()
 
 ```
 
-We add the code in a file called `datajob_stack.py` in the [root of the project](./examples/data_pipeline_simple/).
+We add the code in a file called `datajob_stack.py` in the [root of the project](./examples/data_pipeline_with_packaged_project/).
 
 
 ### Configure CDK
+Follow the steps [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-config) to configure your credentials.
 
 ```shell script
 export AWS_PROFILE=my-profile # e.g. default
@@ -66,27 +78,29 @@ cdk bootstrap aws://$AWS_ACCOUNT/$AWS_DEFAULT_REGION
 ```
 
 ### Deploy
-_cdk cli_
 
+We want to create a unique stack containing 2 glue jobs
+with our project and it's depenencies available as a wheel.
+
+_cdk cli_
 ```shell script
-cd examples/data_pipeline_simple
+cd examples/data_pipeline_with_packaged_project
 python setup.py bdist_wheel
 cdk deploy --app  "python datajob_stack.py"
 ```
 
 _datajob cli_
-
 ```shell script
-cd examples/data_pipeline_simple
+cd examples/data_pipeline_with_packaged_project
 datajob deploy --config datajob_stack.py --package setuppy
 ```
 
-After running the `deploy` command, the code of glue jobs are deployed and orchestrated.
+After running the `deploy` command, the glue jobs are deployed and the orchestration is configured.
 
 ### Run
 
 ```shell script
-datajob execute --state-machine data-pipeline-simple-dev-workflow
+datajob execute --state-machine data-pipeline-pkg-dev-workflow
 ```
 
 ### Destroy
@@ -103,46 +117,160 @@ datajob destroy --config datajob_stack.py
 # Functionality
 
 <details>
-<summary>Pass arguments to a glue job</summary>
-#todo implemented not documented
+<summary>Using datajob's S3 data bucket to pass arguments to a glue job</summary>
+
+Pass arguments to your Glue job using the `arguments` parameter and
+dynamically reference the `datajob_stack` data bucket name for this `stage` to the arguments.
+
+```python
+import pathlib
+
+from aws_cdk import core
+from datajob.datajob_stack import DataJobStack
+from datajob.glue.glue_job import GlueJob
+from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
+
+current_dir = str(pathlib.Path(__file__).parent.absolute())
+
+app = core.App()
+
+with DataJobStack(
+    scope=app, id="datajob-python-pyspark", project_root=current_dir
+) as datajob_stack:
+
+    pyspark_job = GlueJob(
+        datajob_stack=datajob_stack,
+        name="pyspark-job",
+        job_path="glue_job/glue_pyspark_example.py",
+        job_type="glueetl",
+        glue_version="2.0",  # we only support glue 2.0
+        python_version="3",
+        worker_type="Standard",  # options are Standard / G.1X / G.2X
+        number_of_workers=1,
+        arguments={
+            "--source": f"s3://{datajob_stack.context.data_bucket_name}/raw/iris_dataset.csv",
+            "--destination": f"s3://{datajob_stack.context.data_bucket_name}/target/pyspark_job/iris_dataset.parquet",
+        },
+    )
+
+    with StepfunctionsWorkflow(datajob_stack=datajob_stack, name="workflow") as sfn:
+        pyspark_job >> ...
+
+```
+
+deploy to stage `my-stage`:
+
+```shell
+datajob deploy --config datajob_stack.py --stage my-stage --package setuppy
+```
+
+`datajob_stack.context.data_bucket_name` will evaluate to `datajob-python-pyspark-my-stage # <datajob-stack-id>-<stage>`
+
+you can find this example [here](./examples/data_pipeline_pyspark/glue_job/glue_pyspark_example.py)
+
 </details>
 
 <details>
 <summary>Deploy files to deployment bucket</summary>
-#todo implemented not documented
+
+Specify the path to the folder we would like to include in the deployment bucket.
+
+```python
+
+from aws_cdk import core
+from datajob.datajob_stack import DataJobStack
+
+app = core.App()
+
+with DataJobStack(
+    scope=app, id="some-stack-name", include_folder="path/to/folder/"
+) as datajob_stack:
+
+    ...
+
+```
+
 </details>
 
 <details>
 <summary>Package project</summary>
-#todo implemented not documented
+
+Package you project using [poetry](https://python-poetry.org/)
+
+```shell
+datajob deploy --config datajob_stack.py --package poetry
+```
+Package you project using [setup.py](./examples/data_pipeline_with_packaged_project)
+```shell
+datajob deploy --config datajob_stack.py --package setuppy
+```
 </details>
 
 <details>
 <summary>Using Pyspark</summary>
 
 ```python
-pyspark_job = GlueJob(
-    datajob_stack=datajob_stack,
-    name="pyspark-job",
-    job_path="glue_job/glue_pyspark_example.py",
-    job_type="glueetl",
-    glue_version="2.0",  # we only support glue 2.0
-    python_version="3",
-    worker_type="Standard",  # options are Standard / G.1X / G.2X
-    number_of_workers=1,
-    arguments={
-        "--source": f"s3://{datajob_stack.context.data_bucket_name}/raw/iris_dataset.csv",
-        "--destination": f"s3://{datajob_stack.context.data_bucket_name}/target/pyspark_job/iris_dataset.parquet",
-    }
-)
+import pathlib
+
+from aws_cdk import core
+from datajob.datajob_stack import DataJobStack
+from datajob.glue.glue_job import GlueJob
+from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
+
+current_dir = str(pathlib.Path(__file__).parent.absolute())
+
+app = core.App()
+
+with DataJobStack(
+    scope=app, id="datajob-python-pyspark", project_root=current_dir
+) as datajob_stack:
+
+    pyspark_job = GlueJob(
+        datajob_stack=datajob_stack,
+        name="pyspark-job",
+        job_path="glue_job/glue_pyspark_example.py",
+        job_type="glueetl",
+        glue_version="2.0",  # we only support glue 2.0
+        python_version="3",
+        worker_type="Standard",  # options are Standard / G.1X / G.2X
+        number_of_workers=1,
+        arguments={
+            "--source": f"s3://{datajob_stack.context.data_bucket_name}/raw/iris_dataset.csv",
+            "--destination": f"s3://{datajob_stack.context.data_bucket_name}/target/pyspark_job/iris_dataset.parquet",
+        },
+    )
 ```
 full example can be found in [examples/data_pipeline_pyspark](examples/data_pipeline_pyspark]).
 </details>
 
 <details>
-<summary>Using S3 bucket to dump data</summary>
-#todo implemented not documented
-# create an example that dumps and reads from s3
+<summary>Using datajob's S3 data bucket</summary>
+
+
+```python
+
+with DataJobStack(
+    scope=app, id="datajob-python-pyspark", project_root=current_dir
+) as datajob_stack:
+
+    pyspark_job = GlueJob(
+        datajob_stack=datajob_stack,
+        name="pyspark-job",
+        job_path="glue_job/glue_pyspark_example.py",
+        job_type="glueetl",
+        glue_version="2.0",  # we only support glue 2.0
+        python_version="3",
+        worker_type="Standard",  # options are Standard / G.1X / G.2X
+        number_of_workers=1,
+        arguments={
+            "--source": f"s3://{datajob_stack.context.data_bucket_name}/raw/iris_dataset.csv",
+            "--destination": f"s3://{datajob_stack.context.data_bucket_name}/target/pyspark_job/iris_dataset.parquet",
+        },
+    )
+
+```
+
+
 </details>
 
 <details>
@@ -150,7 +278,7 @@ full example can be found in [examples/data_pipeline_pyspark](examples/data_pipe
 
 ```python
 # task1 and task2 are orchestrated in parallel.
-# task 3 will only start when both task1 and task2 have succeeded.
+# task3 will only start when both task1 and task2 have succeeded.
 [task1, task2] >> task3
 ```
 
@@ -159,7 +287,7 @@ full example can be found in [examples/data_pipeline_pyspark](examples/data_pipe
 <details>
 <summary>Orchestrate 1 stepfunction task</summary>
 
-Use the [Ellipsis](https://docs.python.org/dev/library/constants.html#Ellipsis) object to be able to orchestrate a job via step functions.
+Use the [Ellipsis](https://docs.python.org/dev/library/constants.html#Ellipsis) object to be able to orchestrate 1 job via step functions.
 
 ```python
 some_task >> ...
@@ -195,6 +323,7 @@ when __exiting the context manager__ all the resources of our DataJobStack objec
 <summary>We can write the above example more explicitly...</summary>
 
 ```python
+import pathlib
 from aws_cdk import core
 
 from datajob.datajob_stack import DataJobStack
@@ -203,7 +332,11 @@ from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
 
 app = core.App()
 
-datajob_stack = DataJobStack(scope=app, id="data-pipeline-simple")
+current_dir = pathlib.Path(__file__).parent.absolute()
+
+app = core.App()
+
+datajob_stack = DataJobStack(scope=app, id="data-pipeline-pkg", project_root=current_dir)
 datajob_stack.init_datajob_context()
 
 task1 = GlueJob(datajob_stack=datajob_stack, name="task1", job_path="glue_jobs/task1.py")
