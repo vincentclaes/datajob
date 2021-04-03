@@ -18,7 +18,7 @@
 
 # Quickstart
 
-We have a simple data pipeline composed of [2 glue jobs](./examples/data_pipeline_with_packaged_project/glue_jobs/) orchestrated sequentially.
+We have a simple data pipeline composed of [2 glue jobs](./examples/data_pipeline_with_packaged_project/glue_jobs/) orchestrated sequentially using step functions.
 
 ```python
 import pathlib
@@ -70,11 +70,9 @@ cdk bootstrap aws://$AWS_ACCOUNT/$AWS_DEFAULT_REGION
 
 ### Deploy
 
-Create a stack containing 2 glue jobs with our packaged project and its dependencies, orchestrated using step functions.
-
-Datajob will create s3 buckets based on the `<datajob stack id>` and the `stage` variable.
+Datajob will create s3 buckets based on the `datajob_stack.id` and the `stage` variable.
 The stage variable will typically be something like "dev", "stg", "prd", ...
-but since S3 buckets need to be globally unique we will use our `$AWS_ACCOUNT` for the `--stage` parameter.
+but since S3 buckets need to be globally unique, for this example we will use our `$AWS_ACCOUNT` for the `--stage` parameter.
 
 ```shell
 export STAGE=$AWS_ACCOUNT
