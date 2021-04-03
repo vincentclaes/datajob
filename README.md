@@ -46,7 +46,7 @@ with DataJobStack(
         datajob_stack=datajob_stack, name="task2", job_path="glue_jobs/task2.py"
     )
 
-    with StepfunctionsWorkflow(datajob_stack=datajob_stack, name="workflow") as sfn:
+    with StepfunctionsWorkflow(datajob_stack=datajob_stack, name="workflow") as step_functions_workflow:
         task1 >> task2
 
 app.synth()
@@ -97,7 +97,7 @@ After running the `deploy` command, the glue jobs are deployed and the orchestra
 
 ### Run
 
-The step function statemachine name is constructed as `<datajob stack id>-<stage>-<step functions workflow name>`
+The step function state machine name is constructed as `<datajob_stack.id>-<stage>-<step_functions_workflow.name>`
 To run it execute:
 
 ```shell script
@@ -362,7 +362,7 @@ datajob_stack.init_datajob_context()
 task1 = GlueJob(datajob_stack=datajob_stack, name="task1", job_path="glue_jobs/task1.py")
 task2 = GlueJob(datajob_stack=datajob_stack, name="task2", job_path="glue_jobs/task2.py")
 
-with StepfunctionsWorkflow(datajob_stack=datajob_stack, name="workflow") as sfn:
+with StepfunctionsWorkflow(datajob_stack=datajob_stack, name="workflow") as step_functions_workflow:
     task1 >> task2
 
 datajob_stack.create_resources()
