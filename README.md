@@ -128,8 +128,7 @@ cdk destroy --app  "python datajob_stack.py" -c stage=$STAGE
 <details>
 <summary>Using datajob's S3 data bucket</summary>
 
-Pass arguments to your Glue job using the `arguments` parameter and
-dynamically reference the `datajob_stack` data bucket name for this `stage` to the arguments.
+Dynamically reference the `datajob_stack` data bucket name for this `stage` to the arguments.
 
 ```python
 import pathlib
