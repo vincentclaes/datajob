@@ -14,7 +14,7 @@
  Beware that we depend on [aws cdk cli](https://github.com/aws/aws-cdk)!
 
     pip install datajob
-    npm install -g aws-cdk@1.87.1 # latest version of datajob depends this version
+    npm install -g aws-cdk@1.96.0 # latest version of datajob depends this version
 
 # Quickstart
 
@@ -72,7 +72,7 @@ cdk bootstrap aws://$AWS_ACCOUNT/$AWS_DEFAULT_REGION
 
 Datajob will create s3 buckets based on the `datajob_stack.id` and the `stage` variable.
 The stage variable will typically be something like "dev", "stg", "prd", ...
-but since S3 buckets need to be globally unique, for this example we will use our `$AWS_ACCOUNT` for the `--stage` parameter.
+but since S3 buckets need to be globally unique, for this example we will use our `$AWS_ACCOUNT` as the `--stage` parameter.
 
 ```shell
 export STAGE=$AWS_ACCOUNT
@@ -85,8 +85,11 @@ cd examples/data_pipeline_with_packaged_project
 datajob deploy --config datajob_stack.py --stage $STAGE --package setuppy
 ```
 
+Your glue jobs are deployed and the orchestration is configured.
+
 <details>
 <summary>use cdk cli</summary>
+you can use the following commands to achieve the same goal.
 
 ```shell script
 cd examples/data_pipeline_with_packaged_project
@@ -94,8 +97,6 @@ python setup.py bdist_wheel
 cdk deploy --app  "python datajob_stack.py" -c stage=$STAGE
 ```
 </details>
-
-Your glue jobs are deployed and the orchestration is configured.
 
 ### Run
 
