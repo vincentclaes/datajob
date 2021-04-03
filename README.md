@@ -173,7 +173,7 @@ deploy to stage `my-stage`:
 datajob deploy --config datajob_stack.py --stage my-stage --package setuppy
 ```
 
-`datajob_stack.context.data_bucket_name` will evaluate to `datajob-python-pyspark-my-stage
+`datajob_stack.context.data_bucket_name` will evaluate to `datajob-python-pyspark-my-stage`
 
 you can find this example [here](./examples/data_pipeline_pyspark/glue_job/glue_pyspark_example.py)
 
