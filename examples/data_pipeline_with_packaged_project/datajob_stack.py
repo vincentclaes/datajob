@@ -27,7 +27,9 @@ with DataJobStack(
 
     # we instantiate a step functions workflow
     # and orchestrate the glue jobs.
-    with StepfunctionsWorkflow(datajob_stack=datajob_stack, name="workflow") as sfn:
+    with StepfunctionsWorkflow(
+        datajob_stack=datajob_stack, name="workflow"
+    ) as step_functions_workflow:
         task1 >> task2
 
 app.synth()
