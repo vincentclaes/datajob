@@ -253,36 +253,6 @@ full example can be found in [examples/data_pipeline_pyspark](examples/data_pipe
 </details>
 
 <details>
-<summary>Using datajob's S3 data bucket</summary>
-
-
-```python
-
-with DataJobStack(
-    scope=app, id="datajob-python-pyspark", project_root=current_dir
-) as datajob_stack:
-
-    pyspark_job = GlueJob(
-        datajob_stack=datajob_stack,
-        name="pyspark-job",
-        job_path="glue_job/glue_pyspark_example.py",
-        job_type="glueetl",
-        glue_version="2.0",  # we only support glue 2.0
-        python_version="3",
-        worker_type="Standard",  # options are Standard / G.1X / G.2X
-        number_of_workers=1,
-        arguments={
-            "--source": f"s3://{datajob_stack.context.data_bucket_name}/raw/iris_dataset.csv",
-            "--destination": f"s3://{datajob_stack.context.data_bucket_name}/target/pyspark_job/iris_dataset.parquet",
-        },
-    )
-
-```
-
-
-</details>
-
-<details>
 <summary>Orchestrate stepfunctions tasks in parallel</summary>
 
 ```python
