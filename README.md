@@ -18,9 +18,7 @@
 
 # Quickstart
 
-### Configuration
-
-We have a simple data pipeline composed of 2 glue jobs orchestrated sequentially.
+We have a simple data pipeline composed of [2 glue jobs](./examples/data_pipeline_with_packaged_project/glue_jobs/) orchestrated sequentially.
 
 ```python
 import pathlib
