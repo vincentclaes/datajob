@@ -41,12 +41,12 @@ with DataJobStack(
 ) as datajob_stack:
 
     task1 = GlueJob(
-            datajob_stack=datajob_stack, name="task1", job_path="glue_jobs/task1.py"
-            )
+        datajob_stack=datajob_stack, name="task1", job_path="glue_jobs/task1.py"
+    )
 
     task2 = GlueJob(
-            datajob_stack=datajob_stack, name="task2", job_path="glue_jobs/task2.py"
-            )
+        datajob_stack=datajob_stack, name="task2", job_path="glue_jobs/task2.py"
+    )
 
     with StepfunctionsWorkflow(datajob_stack=datajob_stack, name="workflow") as sfn:
         task1 >> task2
