@@ -74,26 +74,28 @@ cdk bootstrap aws://$AWS_ACCOUNT/$AWS_DEFAULT_REGION
 
 Create a stack containing 2 glue jobs with our packaged project and its dependencies, orchestrated using step functions.
 
-Datajob will create s3 buckets based on the datajob stack id and the stage variable.
-The stage variable will typically be something like "dev", "stg", "prd", ...
-but since S3 buckets need to be globally unique we will use our $AWS_ACCOUNT for the `--stage` parameter.
-
 ```shell
 export STAGE=$AWS_ACCOUNT
 ```
 
-_datajob cli_
+Datajob will create s3 buckets based on the `<datajob stack id>` and the `stage` variable.
+The stage variable will typically be something like "dev", "stg", "prd", ...
+but since S3 buckets need to be globally unique we will use our `$AWS_ACCOUNT` for the `--stage` parameter.
+
 ```shell script
 cd examples/data_pipeline_with_packaged_project
 datajob deploy --config datajob_stack.py --stage $STAGE --package setuppy
 ```
 
-_cdk cli_
+<details>
+<summary>use cdk cli</summary>
+
 ```shell script
 cd examples/data_pipeline_with_packaged_project
 python setup.py bdist_wheel
 cdk deploy --app  "python datajob_stack.py" -c stage=$STAGE
 ```
+</details>
 
 After running the `deploy` command, the glue jobs are deployed and the orchestration is configured.
 
@@ -108,16 +110,18 @@ datajob execute --state-machine data-pipeline-pkg-$STAGE-workflow
 
 ### Destroy
 
-_datajob cli_
 ```shell script
 datajob destroy --config datajob_stack.py --stage $STAGE
 ```
 
-_cdk cli_
+<details>
+<summary>use cdk cli</summary>
 ```shell script
 cdk destroy --app  "python datajob_stack.py" -c stage=$STAGE
 ```
+</details>
 
+> Note: you can use any cdk arguments in the datajob cli
 
 # Functionality
 
