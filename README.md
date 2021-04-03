@@ -278,8 +278,8 @@ some_task >> ...
 # Datajob in depth
 
 The `datajob_stack` is the instance that will result in a cloudformation stack.
-The path in `project_root` helps datajob_stack locate the root of the project where
-the setup.py/poetry pyproject.toml file can be found as well as the `dist/` folder with the wheel of your project .
+The path in `project_root` helps `datajob_stack` locate the root of the project where
+the setup.py/poetry pyproject.toml file can be found, as well as the `dist/` folder with the wheel of your project .
 
 ```python
 import pathlib
