@@ -93,16 +93,18 @@ cdk deploy --app  "python datajob_stack.py" -c stage=$STAGE
 ```
 </details>
 
-After running the `deploy` command, the glue jobs are deployed and the orchestration is configured.
+Your glue jobs are deployed and the orchestration is configured.
 
 ### Run
 
-The step function state machine name is constructed as `<datajob_stack.id>-<stage>-<step_functions_workflow.name>`
+The step function state machine name is constructed as `<datajob_stack.id>-<stage>-<step_functions_workflow.name>`.
+
 To run it execute:
 
 ```shell script
 datajob execute --state-machine data-pipeline-pkg-$STAGE-workflow
 ```
+The terminal will output a link to the step functions page to follow up on your pipeline run.
 
 ### Destroy
 
