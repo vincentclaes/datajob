@@ -34,9 +34,7 @@ current_dir = pathlib.Path(__file__).parent.absolute()
 app = core.App()
 
 
-with DataJobStack(
-    scope=app, id="data-pipeline-pkg", project_root=current_dir
-) as datajob_stack:
+with DataJobStack(scope=app, id="data-pipeline-pkg", project_root=current_dir) as datajob_stack:
 
     task1 = GlueJob(
         datajob_stack=datajob_stack, name="task1", job_path="glue_jobs/task1.py"
