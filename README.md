@@ -344,6 +344,7 @@ app.synth()
 ```
 </details>
 
+
 # Ideas
 
 Any suggestions can be shared by starting a [discussion](https://github.com/vincentclaes/datajob/discussions)
