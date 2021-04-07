@@ -114,6 +114,7 @@ datajob destroy --config datajob_stack.py --stage $STAGE
 
 <details>
 <summary>use cdk cli</summary>
+
 ```shell script
 cdk destroy --app  "python datajob_stack.py" -c stage=$STAGE
 ```
