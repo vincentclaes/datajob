@@ -95,8 +95,8 @@ def destroy(
 
 
 def call_cdk(command: str, args: list = None, extra_args: list = None):
-    args = args if args else []
-    extra_args = extra_args if extra_args else []
+    args = args or []
+    extra_args = extra_args or []
     full_command = " ".join(["cdk", command] + args + extra_args)
     print(f"cdk command:" f" {full_command}")
     subprocess.check_call(shlex.split(full_command))

@@ -37,7 +37,7 @@ class DataJobBase(core.Construct):
         """
         role_name = unique_name + "-role"
         logger.debug(f"creating role {role_name}")
-        glue_job_role = iam.Role(
+        return iam.Role(
             self,
             role_name,
             assumed_by=iam.ServicePrincipal(service_principal),
@@ -45,4 +45,3 @@ class DataJobBase(core.Construct):
                 iam.ManagedPolicy.from_aws_managed_policy_name("AdministratorAccess")
             ],
         )
-        return glue_job_role
