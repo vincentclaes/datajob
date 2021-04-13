@@ -55,7 +55,7 @@ class GlueJob(DataJobBase):
         logger.info(f"creating glue job {name}")
         super().__init__(datajob_stack, name, **kwargs)
         self.job_path = GlueJob._get_job_path(self.project_root, job_path)
-        self.arguments = arguments if arguments else {}
+        self.arguments = arguments or {}
         self.job_type = GlueJob._get_job_type(job_type=job_type)
         self.python_version = python_version
         self.glue_version = GlueJob._get_glue_version(
@@ -123,7 +123,7 @@ class GlueJob(DataJobBase):
         :return: the version of the glue job.
         """
         if glue_version is None:
-            if job_type == "pythonshell" or None:
+            if job_type == "pythonshell":
                 return "1.0"
             elif job_type == "glueetl":
                 return "2.0"
@@ -195,12 +195,11 @@ class GlueJob(DataJobBase):
             destination_key_prefix=glue_job_name,
         )
 
-        s3_url_glue_job = GlueJob._create_s3_url_for_job(
+        return GlueJob._create_s3_url_for_job(
             context=context,
             glue_job_id=glue_job_name,
             glue_job_file_name=glue_job_file_name,
         )
-        return s3_url_glue_job
 
     def _create_glue_job(
         self,

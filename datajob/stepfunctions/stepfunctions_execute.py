@@ -28,12 +28,10 @@ def _get_status(execution: Execution):
     """get the status of a stepfunctions workflow execution."""
     time.sleep(1)
     description = execution.describe()
-    status = description.get("status")
-    return status
+    return description.get("status")
 
 
 def _execute(state_machine_arn: str):
     """execute statemachine based on the name."""
     workflow = Workflow.attach(state_machine_arn)
-    execution = workflow.execute()
-    return execution
+    return workflow.execute()

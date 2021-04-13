@@ -54,11 +54,11 @@ def _execute_packaging_logic(project_root: str, config_file: str, cmd: str) -> N
     """
     config_file_full_path = Path(project_root, config_file)
     logger.info(f"expecting {config_file_full_path}")
-    if config_file_full_path.is_file():
-        logger.debug(f"found a {config_file} file in {project_root}")
-        call_subprocess(cmd=cmd)
-    else:
+    if not config_file_full_path.is_file():
         raise DatajobPackageWheelError(
             f"no {config_file} file detected in project root {project_root}. "
             f"Hence we cannot create a python wheel for this project"
         )
+
+    logger.debug(f"found a {config_file} file in {project_root}")
+    call_subprocess(cmd=cmd)

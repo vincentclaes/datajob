@@ -91,8 +91,7 @@ class DataJobStack(core.Stack):
             account if account is not None else os.environ.get("AWS_DEFAULT_ACCOUNT")
         )
         region = region if region is not None else os.environ.get("AWS_DEFAULT_REGION")
-        env = core.Environment(account=account, region=region)
-        return env
+        return core.Environment(account=account, region=region)
 
     def create_resources(self):
         """create each of the resources of this stack"""
