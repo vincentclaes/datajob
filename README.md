@@ -92,8 +92,6 @@ but since S3 buckets need to be globally unique, for this example we will use ou
 
 The step function state machine name is constructed as `<datajob_stack.id>-<stage>-<step_functions_workflow.name>`.
 
-To run your data pipeline execute:
-
 ```shell script
 datajob execute --state-machine data-pipeline-pkg-$STAGE-workflow
 ```
