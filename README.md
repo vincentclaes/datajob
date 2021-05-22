@@ -58,10 +58,10 @@ We add the above code in a file called `datajob_stack.py` in the [root of the pr
 Follow the steps [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-config) to configure your credentials.
 
 ```shell script
-export AWS_PROFILE=my-profile # e.g. default
+export AWS_PROFILE=default
 # use the aws cli to get your account number
 export AWS_ACCOUNT=$(aws sts get-caller-identity --query Account --output text --profile $AWS_PROFILE)
-export AWS_DEFAULT_REGION=your-region # e.g. eu-west-1
+export AWS_DEFAULT_REGION=us-east-2
 
 cdk bootstrap aws://$AWS_ACCOUNT/$AWS_DEFAULT_REGION
 ```
