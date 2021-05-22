@@ -1,4 +1,4 @@
-# Datajob
+![logo](./assets/logo.png)
 
 <div align="center">
  <b>Build and deploy a serverless data pipeline on AWS with no effort.</b></br>
