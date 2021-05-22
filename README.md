@@ -73,6 +73,9 @@ export STAGE=$AWS_ACCOUNT
 cd examples/data_pipeline_with_packaged_project
 datajob deploy --config datajob_stack.py --stage $STAGE --package setuppy
 ```
+Datajob will create s3 buckets based on the `datajob_stack.id` and the `stage` variable.
+The stage variable will typically be something like "dev", "stg", "prd", ...
+but since S3 buckets need to be globally unique, for this example we will use our `$AWS_ACCOUNT` for the `--stage` parameter.
 
 <details>
 <summary>use cdk cli</summary>
@@ -83,10 +86,6 @@ python setup.py bdist_wheel
 cdk deploy --app  "python datajob_stack.py" -c stage=$STAGE
 ```
 </details>
-
-Datajob will create s3 buckets based on the `datajob_stack.id` and the `stage` variable.
-The stage variable will typically be something like "dev", "stg", "prd", ...
-but since S3 buckets need to be globally unique, for this example we will use our `$AWS_ACCOUNT` for the `--stage` parameter.
 
 ### Run
 
