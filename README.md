@@ -277,10 +277,10 @@ This will create an SNS Topic which will be triggered in case of failure or succ
 The email will subscribe to the topic and receive the notification in its inbox.
 
 ```python
-    with StepfunctionsWorkflow(datajob_stack=datajob_stack,
-                               name="workflow",
-                               notification="email@domain.com") as sfn:
-        task1 >> task2
+with StepfunctionsWorkflow(datajob_stack=datajob_stack,
+                           name="workflow",
+                           notification="email@domain.com") as sfn:
+    task1 >> task2
 ```
 
 You can provide 1 email or a list of emails `["email1@domain.com", "email2@domain.com"]`.
