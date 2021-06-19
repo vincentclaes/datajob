@@ -21,7 +21,7 @@ class TestDatajobStack(unittest.TestCase):
     def test_datajob_stack_with_no_stage(self):
         with DataJobStack(scope=self.app, id="datajob-stack-no-stage") as djs:
             pass
-        self.assertEqual(djs.stage, DEFAULT_STACK_STAGE)
+        self.assertIsNone(djs.stage)
 
     def test_datajob_stack_with_stage_passed_via_cli(self):
         stage_value = "some-value"

@@ -25,7 +25,8 @@
 
 # Quickstart
 
-You can find the full example in [examples/data_pipeline_simple/glue_jobs/](./examples/data_pipeline_simple/glue_jobs/)
+You can find the full example in [examples/data_pipeline_simple/glue_jobs/](./examples/data_pipeline_simple/glue_jobs/).
+
 We have a simple data pipeline composed of [2 glue jobs](./examples/data_pipeline_simple/glue_jobs/) orchestrated sequentially using step functions.
 
 ```python
@@ -76,27 +77,23 @@ cdk bootstrap aws://$AWS_ACCOUNT/$AWS_DEFAULT_REGION
 ### Deploy
 
 ```shell
-export STAGE=$AWS_ACCOUNT
 cd examples/data_pipeline_simple
-cdk deploy --app  "python datajob_stack.py" -c stage=$STAGE
+cdk deploy --app  "python datajob_stack.py"
 ```
-Datajob will create s3 buckets based on the `stage` variable.
-The stage variable will typically be something like "dev", "stg", "prd", ...
-but since S3 buckets need to be globally unique, for this example we will use our `$AWS_ACCOUNT` for the `--stage` parameter.
-
 
 ### Run
 
 ```shell script
-datajob execute --state-machine data-pipeline-pkg-$STAGE-workflow
+datajob execute --state-machine data-pipeline-simple-workflow
 ```
-The step function state machine name is constructed as `<datajob_stack.id>-<stage>-<step_functions_workflow.name>`.
 The terminal will show a link to the step functions page to follow up on your pipeline run.
+
+![sfn](./assets/sfn.png)
 
 ### Destroy
 
 ```shell script
-cdk destroy --app  "python datajob_stack.py" -c stage=$STAGE
+cdk destroy --app  "python datajob_stack.py"
 ```
 
 # Functionality
