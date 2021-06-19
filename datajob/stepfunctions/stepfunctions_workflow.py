@@ -2,12 +2,15 @@ import os
 import tempfile
 import uuid
 from pathlib import Path
+from typing import Union
 
 import boto3
 import contextvars
 from aws_cdk import aws_iam as iam
 from aws_cdk import cloudformation_include as cfn_inc
 from aws_cdk import core
+from stepfunctions.steps import Catch, Pass, Fail
+from stepfunctions.steps.service import SnsPublishStep
 from stepfunctions import steps
 from stepfunctions.steps.compute import GlueStartJobRunStep
 from stepfunctions.steps.states import Parallel
@@ -15,6 +18,7 @@ from stepfunctions.workflow import Workflow
 
 from datajob import logger
 from datajob.datajob_base import DataJobBase
+from datajob.sns.sns import SnsTopic
 
 __workflow = contextvars.ContextVar("workflow")
 
@@ -36,6 +40,7 @@ class StepfunctionsWorkflow(DataJobBase):
         self,
         datajob_stack: core.Construct,
         name: str,
+        notification: Union[str, list] = None,
         role: iam.Role = None,
         region: str = None,
         **kwargs,
@@ -53,6 +58,7 @@ class StepfunctionsWorkflow(DataJobBase):
         self.region = (
             region if region is not None else os.environ.get("AWS_DEFAULT_REGION")
         )
+        self.notification = self._setup_notification(notification)
 
     def add_task(self, task_other):
         """add a task to the workflow we would like to orchestrate."""
@@ -87,6 +93,9 @@ class StepfunctionsWorkflow(DataJobBase):
             f"creating a chain from all the different steps. \n {self.chain_of_tasks}"
         )
         workflow_definition = steps.Chain(self.chain_of_tasks)
+        workflow_definition = self._integrate_notification_in_workflow(
+            workflow_definition=workflow_definition
+        )
         logger.debug(f"creating a workflow with name {self.unique_name}")
         self.client = boto3.client("stepfunctions")
         self.workflow = Workflow(
@@ -103,6 +112,61 @@ class StepfunctionsWorkflow(DataJobBase):
             with open(sfn_cf_file_path, "w") as text_file:
                 text_file.write(self.workflow.get_cloudformation_template())
             cfn_inc.CfnInclude(self, self.unique_name, template_file=sfn_cf_file_path)
+
+    def _setup_notification(
+        self, notification: Union[str, list]
+    ) -> Union[SnsTopic, None]:
+        """Create a SnsTopic if the notification parameter is defined.
+
+        :param notification: email address as string or list of email addresses to be subscribed.
+        :return:
+        """
+        if notification is not None:
+            name = f"{self.name}-notification"
+            return SnsTopic(self.datajob_stack, name, notification)
+
+    def _integrate_notification_in_workflow(
+        self, workflow_definition: steps.Chain
+    ) -> steps.Chain:
+        """If a notification is defined we configure an SNS with email subscription to alert the user
+        if the stepfunctions workflow failed or succeeded.
+
+        :param workflow_definition: the workflow definition that contains all the steps we want to execute.
+        :return: if notification is set, we adapt the workflow to include an SnsPublishStep on failure or on success.
+        If notification is not set, we return the workflow as we received it.
+        """
+        if self.notification:
+            logger.debug(
+                "A notification is configured, "
+                "implementing a notification on Error or when the stepfunctions workflow succeeds."
+            )
+            failure_notification = SnsPublishStep(
+                "FailureNotification",
+                parameters={
+                    "TopicArn": self.notification.get_topic_arn(),
+                    "Message": f"Stepfunctions workflow {self.unique_name} Failed.",
+                },
+            )
+            pass_notification = SnsPublishStep(
+                "SuccessNotification",
+                parameters={
+                    "TopicArn": self.notification.get_topic_arn(),
+                    "Message": f"Stepfunctions workflow {self.unique_name} Succeeded.",
+                },
+            )
+
+            catch_error = Catch(
+                error_equals=["States.ALL"], next_step=failure_notification
+            )
+            workflow_with_notification = Parallel(state_id="notification")
+            workflow_with_notification.add_branch(workflow_definition)
+            workflow_with_notification.add_catch(catch_error)
+            workflow_with_notification.next(pass_notification)
+            return steps.Chain([workflow_with_notification])
+        logger.debug(
+            "No notification is configured, returning the workflow definition."
+        )
+        return workflow_definition
 
     def __enter__(self):
         """first steps we have to do when entering the context manager."""

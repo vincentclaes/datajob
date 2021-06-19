@@ -269,6 +269,23 @@ some_task >> ...
 
 </details>
 
+<details>
+<summary>Notify in case of error/success.</summary>
+
+Provide the parameter `notification` in the constructor of a `StepfunctionsWorkflow` object.
+This will create an SNS Topic which will be triggered in case of failure or success.
+The email will subscribe to the topic and receive the notification in its inbox.
+
+```python
+with StepfunctionsWorkflow(datajob_stack=datajob_stack,
+                           name="workflow",
+                           notification="email@domain.com") as sfn:
+    task1 >> task2
+```
+
+You can provide 1 email or a list of emails `["email1@domain.com", "email2@domain.com"]`.
+
+</details>
 
 # Datajob in depth
 
@@ -348,7 +365,6 @@ These are the ideas, we find interesting to implement;
 - add a time based trigger to the step functions workflow.
 - add an s3 event trigger to the step functions workflow.
 - add a lambda that copies data from one s3 location to another.
-- add an sns that notifies in case of any failure (slack/email)
 - version your data pipeline.
 - cli command to view the logs / glue jobs / s3 bucket
 - implement sagemaker services

@@ -1,6 +1,9 @@
+import json
 import os
 import unittest
+import io
 
+import yaml
 from aws_cdk import core
 from moto import mock_stepfunctions
 from stepfunctions.steps.compute import GlueStartJobRunStep
@@ -82,7 +85,9 @@ class TestStepfunctionsWorkflow(unittest.TestCase):
             isinstance(a_step_functions_workflow.chain_of_tasks[1], GlueStartJobRunStep)
         )
 
-    def test_orchestrate_1_task_successfully(self,):
+    def test_orchestrate_1_task_successfully(
+        self,
+    ):
         task1 = stepfunctions_workflow.task(SomeMockedClass("task1"))
         djs = DataJobStack(
             scope=self.app,
@@ -97,4 +102,45 @@ class TestStepfunctionsWorkflow(unittest.TestCase):
 
         self.assertTrue(
             isinstance(a_step_functions_workflow.chain_of_tasks[0], GlueStartJobRunStep)
+        )
+
+    @mock_stepfunctions
+    def test_create_workflow_with_notification_successfully(self):
+        task1 = stepfunctions_workflow.task(SomeMockedClass("task1"))
+        task2 = stepfunctions_workflow.task(SomeMockedClass("task2"))
+
+        djs = DataJobStack(
+            scope=self.app,
+            id="a-unique-name-3",
+            stage="stage",
+            project_root="sampleproject/",
+            region="eu-west-1",
+            account="3098726354",
+        )
+        with StepfunctionsWorkflow(
+            djs, "some-name", notification="email@domain.com"
+        ) as a_step_functions_workflow:
+            task1 >> task2
+
+        with io.StringIO() as f:
+            f.write(a_step_functions_workflow.workflow.get_cloudformation_template())
+            f.seek(0)
+            cf_template = yaml.load(f, Loader=yaml.FullLoader)
+
+        sfn_workflow = json.loads(
+            cf_template.get("Resources")
+            .get("StateMachineComponent")
+            .get("Properties")
+            .get("DefinitionString")
+        )
+        # we expect two notifications; 1 for success and one for failure
+        self.assertTrue("SuccessNotification" in sfn_workflow.get("States").keys())
+        self.assertTrue("FailureNotification" in sfn_workflow.get("States").keys())
+        # there is a catch statement in the statemachine
+        self.assertTrue(
+            "Catch" in sfn_workflow.get("States").get("notification").keys()
+        )
+        # when implementing a notification we expect a Parallel branch
+        self.assertEqual(
+            sfn_workflow.get("States").get("notification").get("Type"), "Parallel"
         )

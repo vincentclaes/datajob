@@ -33,8 +33,10 @@ class DataJobStack(core.Stack):
         self.scope = scope
         self.stage = self.get_stage(stage)
         self.unique_stack_name = self._create_unique_stack_name(id, self.stage)
-        env = DataJobStack._create_environment_object(account=account, region=region)
-        super().__init__(scope=scope, id=self.unique_stack_name, env=env, **kwargs)
+        self.env = DataJobStack._create_environment_object(
+            account=account, region=region
+        )
+        super().__init__(scope=scope, id=self.unique_stack_name, env=self.env, **kwargs)
         self.project_root = project_root
         self.include_folder = include_folder
         self.resources = []

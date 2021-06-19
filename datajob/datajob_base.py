@@ -13,13 +13,14 @@ class DataJobBase(core.Construct):
         assert isinstance(
             datajob_stack, DataJobStack
         ), f"we expect the scope argument to be of type {DataJobStack}"
+        self.datajob_stack = datajob_stack
         self.name = name
-        self.project_root = datajob_stack.project_root
-        self.stage = datajob_stack.stage
-        self.unique_name = f"{datajob_stack.unique_stack_name}-{self.name}"
-        self.context = datajob_stack.context
+        self.project_root = self.datajob_stack.project_root
+        self.stage = self.datajob_stack.stage
+        self.unique_name = f"{self.datajob_stack.unique_stack_name}-{self.name}"
+        self.context = self.datajob_stack.context
         logger.info(f"adding job {self} to stack workflow resources")
-        datajob_stack.resources.append(self)
+        self.datajob_stack.resources.append(self)
 
     @abstractmethod
     def create(self):
