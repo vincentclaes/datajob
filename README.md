@@ -272,7 +272,7 @@ some_task >> ...
 <details>
 <summary>Notify in case of error/success.</summary>
 
-Provide the parameter `notification` in the constructor of a StepfunctionsWorkflow object.
+Provide the parameter `notification` in the constructor of a `StepfunctionsWorkflow` object.
 This will create an SNS Topic which will be triggered in case of failure or success.
 The email will subscribe to the topic and receive the notification in its inbox.
 
