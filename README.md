@@ -25,33 +25,32 @@
 
 # Quickstart
 
-We have a simple data pipeline composed of [2 glue jobs](./examples/data_pipeline_with_packaged_project/glue_jobs/) orchestrated sequentially using step functions.
+You can find the full example in [examples/data_pipeline_simple/glue_jobs/](./examples/data_pipeline_simple/glue_jobs/)
+We have a simple data pipeline composed of [2 glue jobs](./examples/data_pipeline_simple/glue_jobs/) orchestrated sequentially using step functions.
 
 ```python
-import pathlib
 from aws_cdk import core
 
 from datajob.datajob_stack import DataJobStack
 from datajob.glue.glue_job import GlueJob
 from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
 
-
-current_dir = pathlib.Path(__file__).parent.absolute()
-
 app = core.App()
 
+# The datajob_stack is the instance that will result in a cloudformation stack.
+# We inject the datajob_stack object through all the resources that we want to add.
+with DataJobStack(scope=app, id="data-pipeline-simple") as datajob_stack:
 
-with DataJobStack(scope=app, id="data-pipeline-pkg", project_root=current_dir) as datajob_stack:
-
+    # We define 2 glue jobs with the relative path to the source code.
     task1 = GlueJob(
         datajob_stack=datajob_stack, name="task1", job_path="glue_jobs/task1.py"
     )
-
     task2 = GlueJob(
         datajob_stack=datajob_stack, name="task2", job_path="glue_jobs/task2.py"
     )
 
-    with StepfunctionsWorkflow(datajob_stack=datajob_stack, name="workflow") as step_functions_workflow:
+    # We instantiate a step functions workflow and orchestrate the glue jobs.
+    with StepfunctionsWorkflow(datajob_stack=datajob_stack, name="workflow") as sfn:
         task1 >> task2
 
 app.synth()
@@ -70,6 +69,7 @@ export AWS_PROFILE=default
 export AWS_ACCOUNT=$(aws sts get-caller-identity --query Account --output text --profile $AWS_PROFILE)
 export AWS_DEFAULT_REGION=us-east-2
 
+# init cdk
 cdk bootstrap aws://$AWS_ACCOUNT/$AWS_DEFAULT_REGION
 ```
 
@@ -77,22 +77,13 @@ cdk bootstrap aws://$AWS_ACCOUNT/$AWS_DEFAULT_REGION
 
 ```shell
 export STAGE=$AWS_ACCOUNT
-cd examples/data_pipeline_with_packaged_project
-datajob deploy --config datajob_stack.py --stage $STAGE --package setuppy
+cd examples/data_pipeline_simple
+cdk deploy --app  "python datajob_stack.py" -c stage=$STAGE
 ```
 Datajob will create s3 buckets based on the `stage` variable.
 The stage variable will typically be something like "dev", "stg", "prd", ...
 but since S3 buckets need to be globally unique, for this example we will use our `$AWS_ACCOUNT` for the `--stage` parameter.
 
-<details>
-<summary>use cdk cli</summary>
-
-```shell script
-cd examples/data_pipeline_with_packaged_project
-python setup.py bdist_wheel
-cdk deploy --app  "python datajob_stack.py" -c stage=$STAGE
-```
-</details>
 
 ### Run
 
@@ -105,18 +96,8 @@ The terminal will show a link to the step functions page to follow up on your pi
 ### Destroy
 
 ```shell script
-datajob destroy --config datajob_stack.py --stage $STAGE
-```
-
-<details>
-<summary>use cdk cli</summary>
-
-```shell script
 cdk destroy --app  "python datajob_stack.py" -c stage=$STAGE
 ```
-</details>
-
-> Note: you can use any cdk arguments in the datajob cli
 
 # Functionality
 
