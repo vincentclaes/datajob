@@ -125,7 +125,7 @@ class TestStepfunctionsWorkflow(unittest.TestCase):
         with io.StringIO() as f:
             f.write(a_step_functions_workflow.workflow.get_cloudformation_template())
             f.seek(0)
-            cf_template = yaml.load(f)
+            cf_template = yaml.load(f, Loader=yaml.FullLoader)
 
         sfn_workflow = json.loads(
             cf_template.get("Resources")
