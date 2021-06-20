@@ -247,23 +247,14 @@ def task(self):
     """
 
     def __rshift__(self, other, *args, **kwargs):
-        """called when doing.
+        """called when doing task1 >> task2.
 
-                - task1 >> task2
-        =
+        Syntactic suggar for >>.
         """
-        # _handle_first(self=self)
         _connect(self=self, other=other)
         return other
 
     setattr(self, "__rshift__", __rshift__)
-
-    # def __rrshift__(other, self, *args, **kwargs):
-    #     """Called for [task1, task2] >> task3 because list don't have __rshift__ operators.
-    #     Therefore we reverse the order of the arguments and call __rshift__"""
-    #     __rshift__(self=self, other=other)
-    #
-    # setattr(self, "__rrshift__", __rrshift__)
     return self
 
 
@@ -278,33 +269,6 @@ def _get_workflow():
         return None
 
 
-# def _handle_first(self):
-#     work_flow = _get_workflow()
-#     if not work_flow.chain_of_tasks:
-#         _connect(self)
-
-
 def _connect(self, other):
-    # if isinstance(job, list):
-    #     logger.debug("we have a list, so these are jobs orchestrated in parallel.")
-    #     _connect_parallel_job(job)
-    # elif isinstance(job, type(Ellipsis)):
-    #     logger.debug("we have an ellipsis object, do nothing ...")
-    #     return
-    # else:
-    #     logger.debug("default action is to connect a single job.")
-    #     _connect_single_job(job)
     work_flow = _get_workflow()
     work_flow.directed_graph[other].add(self)
-
-
-def _connect_parallel_job(job):
-    work_flow = _get_workflow()
-    work_flow.add_parallel_tasks(job)
-    return job
-
-
-def _connect_single_job(job):
-    work_flow = _get_workflow()
-    work_flow.add_task(job)
-    return job
