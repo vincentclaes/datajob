@@ -76,6 +76,8 @@ cdk bootstrap aws://$AWS_ACCOUNT/$AWS_DEFAULT_REGION
 
 ### Deploy
 
+Deploy the pipeline using CDK.
+
 ```shell
 cd examples/data_pipeline_simple
 cdk deploy --app  "python datajob_stack.py"
