@@ -72,14 +72,14 @@ class StepfunctionsWorkflow(DataJobBase):
         # we do it like this so that we can use toposort.
         self.directed_graph = defaultdict(set)
 
-    def add_task(self, some_task):
+    def add_task(self, some_task: DataJobBase) -> GlueStartJobRunStep:
         """add a task to the workflow we would like to orchestrate."""
         job_name = some_task.unique_name
         logger.debug(f"adding task with name {job_name}")
         task = StepfunctionsWorkflow._create_glue_start_job_run_step(job_name=job_name)
         return task
 
-    def add_parallel_tasks(self, parallel_tasks) -> Parallel:
+    def add_parallel_tasks(self, parallel_tasks: Iterator[DataJobBase]) -> Parallel:
         """add tasks in parallel (wrapped in a list) to the workflow we would
         like to orchestrate."""
         parallel_pipelines = Parallel(state_id=uuid.uuid4().hex)
@@ -94,7 +94,7 @@ class StepfunctionsWorkflow(DataJobBase):
         return parallel_pipelines
 
     @staticmethod
-    def _create_glue_start_job_run_step(job_name):
+    def _create_glue_start_job_run_step(job_name: str) -> GlueStartJobRunStep:
         logger.debug("creating a step for a glue job.")
         return GlueStartJobRunStep(
             job_name, wait_for_completion=True, parameters={"JobName": job_name}
