@@ -39,6 +39,8 @@ class TestStepfunctionsWorkflow(unittest.TestCase):
         task2 = stepfunctions_workflow.task(SomeMockedClass("task2"))
         task3 = stepfunctions_workflow.task(SomeMockedClass("task3"))
         task4 = stepfunctions_workflow.task(SomeMockedClass("task4"))
+        task5 = stepfunctions_workflow.task(SomeMockedClass("task5"))
+
         djs = DataJobStack(
             scope=self.app,
             id="a-unique-name-1",
@@ -48,16 +50,25 @@ class TestStepfunctionsWorkflow(unittest.TestCase):
             account="3098726354",
         )
         with StepfunctionsWorkflow(djs, "some-name") as a_step_functions_workflow:
-            task1 >> [task2, task3] >> task4
+            task1 >> task2 >> task4
+            task3 >> task2
+            task5 >> task2
 
-        self.assertTrue(
-            isinstance(a_step_functions_workflow.chain_of_tasks[0], GlueStartJobRunStep)
+        parallel_branch = a_step_functions_workflow.chain_of_tasks.steps[0]
+        self.assertEqual(parallel_branch.state_type, "Parallel")
+        self.assertEqual(len(parallel_branch.branches), 3)
+
+        self.assertEqual(
+            a_step_functions_workflow.chain_of_tasks.steps[1].state_type, "Task"
         )
-        self.assertTrue(
-            isinstance(a_step_functions_workflow.chain_of_tasks[1], Parallel)
+        self.assertEqual(
+            a_step_functions_workflow.chain_of_tasks.steps[1].state_id, "task2"
         )
-        self.assertTrue(
-            isinstance(a_step_functions_workflow.chain_of_tasks[2], GlueStartJobRunStep)
+        self.assertEqual(
+            a_step_functions_workflow.chain_of_tasks.steps[2].state_type, "Task"
+        )
+        self.assertEqual(
+            a_step_functions_workflow.chain_of_tasks.steps[2].state_id, "task4"
         )
 
     @mock_stepfunctions
@@ -76,13 +87,16 @@ class TestStepfunctionsWorkflow(unittest.TestCase):
             account="3098726354",
         )
         with StepfunctionsWorkflow(djs, "some-name") as a_step_functions_workflow:
-            [task1, task2] >> task3
+            task1 >> task3
+            task2 >> task3
 
         self.assertTrue(
-            isinstance(a_step_functions_workflow.chain_of_tasks[0], Parallel)
+            isinstance(a_step_functions_workflow.chain_of_tasks.steps[0], Parallel)
         )
         self.assertTrue(
-            isinstance(a_step_functions_workflow.chain_of_tasks[1], GlueStartJobRunStep)
+            isinstance(
+                a_step_functions_workflow.chain_of_tasks.steps[1], GlueStartJobRunStep
+            )
         )
 
     def test_orchestrate_1_task_successfully(
@@ -101,7 +115,9 @@ class TestStepfunctionsWorkflow(unittest.TestCase):
             task1 >> ...
 
         self.assertTrue(
-            isinstance(a_step_functions_workflow.chain_of_tasks[0], GlueStartJobRunStep)
+            isinstance(
+                a_step_functions_workflow.chain_of_tasks.steps[0], GlueStartJobRunStep
+            )
         )
 
     @mock_stepfunctions

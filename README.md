@@ -44,7 +44,7 @@ with DataJobStack(scope=app, id="data-pipeline-simple") as datajob_stack:
 
     # We define 2 glue jobs with the relative path to the source code.
     task1 = GlueJob(
-        datajob_stack=datajob_stack, name="task1", job_path="glue_jobs/task1.py"
+        datajob_stack=datajob_stack, name="task1", job_path="glue_jobs/task.py"
     )
     task2 = GlueJob(
         datajob_stack=datajob_stack, name="task2", job_path="glue_jobs/task2.py"
@@ -76,6 +76,8 @@ cdk bootstrap aws://$AWS_ACCOUNT/$AWS_DEFAULT_REGION
 
 ### Deploy
 
+Deploy the pipeline using CDK.
+
 ```shell
 cd examples/data_pipeline_simple
 cdk deploy --app  "python datajob_stack.py"
@@ -99,6 +101,20 @@ cdk destroy --app  "python datajob_stack.py"
 # Functionality
 
 <details>
+<summary>Deploy to a stage</summary>
+
+Specify a stage to deploy an isolated pipeline.
+
+Typical examples would be `dev` , `prod`, ...
+
+```shell
+cdk deploy --app "python datajob_stack.py" --stage my-stage
+```
+
+</details>
+
+<details>
+
 <summary>Using datajob's S3 data bucket</summary>
 
 Dynamically reference the `datajob_stack` data bucket name to the arguments of your GlueJob by calling
@@ -139,14 +155,6 @@ with DataJobStack(
         pyspark_job >> ...
 
 ```
-
-deploy to stage `my-stage`:
-
-```shell
-datajob deploy --config datajob_stack.py --stage my-stage --package setuppy
-```
-
-`datajob_stack.context.data_bucket_name` will evaluate to `datajob-python-pyspark-my-stage`
 
 you can find this example [here](./examples/data_pipeline_pyspark/glue_job/glue_pyspark_example.py)
 
@@ -229,10 +237,18 @@ full example can be found in [examples/data_pipeline_pyspark](examples/data_pipe
 <summary>Orchestrate stepfunctions tasks in parallel</summary>
 
 ```python
-# task1 and task2 are orchestrated in parallel.
-# task3 will only start when both task1 and task2 have succeeded.
-[task1, task2] >> task3
+# Task2 comes after task1. task4 comes after task3.
+# Task 5 depends on both task2 and task4 to be finished.
+# Therefore task1 and task2 can run in parallel,
+# as well as task3 and task4.
+with StepfunctionsWorkflow(datajob_stack=datajob_stack, name="workflow") as sfn:
+    task1 >> task2
+    task3 >> task4
+    task2 >> task5
+    task4 >> task5
+
 ```
+More can be found in [examples/data_pipeline_parallel](./examples/data_pipeline_parallel)
 
 </details>
 
@@ -323,7 +339,7 @@ app = core.App()
 datajob_stack = DataJobStack(scope=app, id="data-pipeline-pkg", project_root=current_dir)
 datajob_stack.init_datajob_context()
 
-task1 = GlueJob(datajob_stack=datajob_stack, name="task1", job_path="glue_jobs/task1.py")
+task1 = GlueJob(datajob_stack=datajob_stack, name="task1", job_path="glue_jobs/task.py")
 task2 = GlueJob(datajob_stack=datajob_stack, name="task2", job_path="glue_jobs/task2.py")
 
 with StepfunctionsWorkflow(datajob_stack=datajob_stack, name="workflow") as step_functions_workflow:
