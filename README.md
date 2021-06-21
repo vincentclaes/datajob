@@ -25,7 +25,7 @@
 
 # Quickstart
 
-You can find the full example in [examples/data_pipeline_simple/glue_jobs/](./examples/data_pipeline_simple/glue_jobs/).
+You can find the full example in [examples/data_pipeline_simple](./examples/data_pipeline_simple/).
 
 We have a simple data pipeline composed of [2 glue jobs](./examples/data_pipeline_simple/glue_jobs/) orchestrated sequentially using step functions.
 
