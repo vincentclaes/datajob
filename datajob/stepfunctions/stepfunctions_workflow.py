@@ -76,8 +76,7 @@ class StepfunctionsWorkflow(DataJobBase):
         """add a task to the workflow we would like to orchestrate."""
         job_name = some_task.unique_name
         logger.debug(f"adding task with name {job_name}")
-        task = StepfunctionsWorkflow._create_glue_start_job_run_step(job_name=job_name)
-        return task
+        return StepfunctionsWorkflow._create_glue_start_job_run_step(job_name=job_name)
 
     def add_parallel_tasks(self, parallel_tasks: Iterator[DataJobBase]) -> Parallel:
         """add tasks in parallel (wrapped in a list) to the workflow we would
