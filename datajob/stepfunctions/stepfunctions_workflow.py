@@ -2,7 +2,7 @@ import os
 import tempfile
 import uuid
 from pathlib import Path
-from typing import Union
+from typing import Union, Iterator
 
 import boto3
 import contextvars
