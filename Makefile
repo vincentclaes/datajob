@@ -14,12 +14,9 @@ tests:
 	poetry run pytest
 
 run-examples:
-	rm -rf cdk.out/
-	cd "${CURDIR}/examples/data_pipeline_simple" && poetry run datajob synthesize --config datajob_stack.py --stage dev
-	rm -rf cdk.out/
-	cd "${CURDIR}/examples/data_pipeline_with_packaged_project" && poetry run datajob synthesize --config datajob_stack.py --stage dev --package setuppy
-	rm -rf cdk.out/
-	cd "${CURDIR}/examples/data_pipeline_pyspark" && poetry run datajob synthesize --config datajob_stack.py --stage dev --package setuppy
+	cd "${CURDIR}/examples/data_pipeline_simple" && poetry run cdk deploy --app "python datajob_stack.py"
+	cd "${CURDIR}/examples/data_pipeline_with_packaged_project" && poetry run python setup.py bdist_wheel && poetry run cdk deploy --app "python datajob_stack.py"
+	cd "${CURDIR}/examples/data_pipeline_pyspark" && poetry run python setup.py bdist_wheel && poetry run cdk deploy --app "python datajob_stack.py"
 
 gh-actions:
 	make install
