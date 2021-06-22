@@ -215,14 +215,14 @@ class StepfunctionsWorkflow(DataJobBase):
         _set_workflow(self)
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback):
+    def __exit__(self, exc_type, exc_value, traceback) -> None:
         """steps we have to do when exiting the context manager."""
         self._build_workflow()
         _set_workflow(None)
         logger.info(f"step functions workflow {self.unique_name} created")
 
 
-def task(self):
+def task(self: DataJobBase) -> DataJobBase:
     """Task that can configured in the orchestration of a
     StepfunctionsWorkflow. You have to use this as a decorator for any class
     that you want to use in the orchestration.
@@ -242,7 +242,9 @@ def task(self):
     glue_job_1 >>  glue_job_2
     """
 
-    def __rshift__(self, other, *args, **kwargs):
+    def __rshift__(
+        self: DataJobBase, other: DataJobBase, *args, **kwargs
+    ) -> DataJobBase:
         """called when doing task1 >> task2.
 
         Syntactic suggar for >>.
@@ -254,7 +256,7 @@ def task(self):
     return self
 
 
-def _set_workflow(workflow):
+def _set_workflow(workflow: Workflow):
     __workflow.set(workflow)
 
 
@@ -265,6 +267,6 @@ def _get_workflow():
         return None
 
 
-def _connect(self, other):
+def _connect(self, other: DataJobBase) -> None:
     work_flow = _get_workflow()
     work_flow.directed_graph[other].add(self)
