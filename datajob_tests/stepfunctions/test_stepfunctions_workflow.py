@@ -53,7 +53,6 @@ class TestStepfunctionsWorkflow(unittest.TestCase):
             task1 >> task2 >> task4
             task3 >> task2
             task5 >> task2
-        a_step_functions_workflow.create()
 
         parallel_branch = a_step_functions_workflow.chain_of_tasks.steps[0]
         self.assertEqual(parallel_branch.state_type, "Parallel")
