@@ -21,7 +21,7 @@
  Beware that we depend on [aws cdk cli](https://github.com/aws/aws-cdk)!
 
     pip install datajob
-    npm install -g aws-cdk@1.98.0 # latest version of datajob depends this version
+    npm install -g aws-cdk@1.109.0 # latest version of datajob depends this version
 
 # Quickstart
 
