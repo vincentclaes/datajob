@@ -14,7 +14,7 @@ keywords = ["pipelines", "machine learning", "data pipelines", "data science", "
 
 [tool.poetry.dependencies]
 python = "^3.6.2"
-stepfunctions = "^1.1.2"
+stepfunctions = "^2.1.0"
 contextvars = "^2.4"
 typer = "^0.3.2"
 aws-empty-bucket = "^2.4.0"
