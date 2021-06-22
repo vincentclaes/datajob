@@ -14,8 +14,11 @@ tests:
 	poetry run pytest
 
 run-examples:
+	rm -rf cdk.out/
 	cd "${CURDIR}/examples/data_pipeline_simple" && poetry run datajob synthesize --config datajob_stack.py --stage dev
+	rm -rf cdk.out/
 	cd "${CURDIR}/examples/data_pipeline_with_packaged_project" && poetry run datajob synthesize --config datajob_stack.py --stage dev --package setuppy
+	rm -rf cdk.out/
 	cd "${CURDIR}/examples/data_pipeline_pyspark" && poetry run datajob synthesize --config datajob_stack.py --stage dev --package setuppy
 
 gh-actions:
