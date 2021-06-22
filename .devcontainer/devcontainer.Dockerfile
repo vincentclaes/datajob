@@ -109,4 +109,4 @@ RUN /bin/bash -c "source $NVM_DIR/nvm.sh && nvm install $NODE_VERSION && nvm use
 ENV NODE_PATH $NVM_DIR/versions/node/$NODE_VERSION/lib/node_modules
 ENV PATH      $NVM_DIR/versions/node/$NODE_VERSION/bin:$PATH
 ENV AWS_DEFAULT_REGION=eu-west-1
-RUN npm install -g aws-cdk@1.109.0
+RUN npm install -g aws-cdk@latest
