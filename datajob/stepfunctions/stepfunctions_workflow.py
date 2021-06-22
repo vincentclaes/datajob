@@ -1,23 +1,17 @@
 import os
-import tempfile
 import uuid
-from pathlib import Path
+from collections import defaultdict
 from typing import Union, Iterator
 
 import boto3
 import contextvars
 import toposort
-
-from collections import defaultdict
-
-
 from aws_cdk import aws_iam as iam
-from aws_cdk import cloudformation_include as cfn_inc
 from aws_cdk import core
-from stepfunctions.steps import Catch, Pass, Fail
-from stepfunctions.steps.service import SnsPublishStep
-from stepfunctions import steps
+from aws_cdk.aws_stepfunctions import CfnStateMachine
+from stepfunctions.steps import Catch, Chain
 from stepfunctions.steps.compute import GlueStartJobRunStep
+from stepfunctions.steps.service import SnsPublishStep
 from stepfunctions.steps.states import Parallel
 from stepfunctions.workflow import Workflow
 
@@ -99,7 +93,7 @@ class StepfunctionsWorkflow(DataJobBase):
             job_name, wait_for_completion=True, parameters={"JobName": job_name}
         )
 
-    def _construct_toposorted_chain_of_tasks(self) -> steps.Chain:
+    def _construct_toposorted_chain_of_tasks(self) -> Chain:
         """Take the directed graph and toposort so that we can efficiently
         organize our workflow, i.e. parallelize where possible.
 
@@ -109,7 +103,7 @@ class StepfunctionsWorkflow(DataJobBase):
 
         Returns: toposorted chain of tasks
         """
-        self.chain_of_tasks = steps.Chain()
+        self.chain_of_tasks = Chain()
         directed_graph_toposorted = list(toposort.toposort(self.directed_graph))
         # if we have length of 2 and the second is an Ellipsis object we have scheduled 1 task.
         if len(directed_graph_toposorted) == 2 and isinstance(
@@ -150,11 +144,16 @@ class StepfunctionsWorkflow(DataJobBase):
 
     def create(self):
         """create sfn stack."""
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            sfn_cf_file_path = str(Path(tmp_dir, self.unique_name))
-            with open(sfn_cf_file_path, "w") as text_file:
-                text_file.write(self.workflow.get_cloudformation_template())
-            cfn_inc.CfnInclude(self, self.unique_name, template_file=sfn_cf_file_path)
+        import json
+
+        cfn_template = json.dumps(self.workflow.definition.to_dict())
+        CfnStateMachine(
+            scope=self.datajob_stack,
+            id=self.unique_name,
+            state_machine_name=self.unique_name,
+            role_arn=self.role.role_arn,
+            definition_string=cfn_template,
+        )
 
     def _setup_notification(
         self, notification: Union[str, list]
@@ -168,9 +167,7 @@ class StepfunctionsWorkflow(DataJobBase):
             name = f"{self.name}-notification"
             return SnsTopic(self.datajob_stack, name, notification)
 
-    def _integrate_notification_in_workflow(
-        self, chain_of_tasks: steps.Chain
-    ) -> steps.Chain:
+    def _integrate_notification_in_workflow(self, chain_of_tasks: Chain) -> Chain:
         """If a notification is defined we configure an SNS with email
         subscription to alert the user if the stepfunctions workflow failed or
         succeeded.
@@ -206,7 +203,7 @@ class StepfunctionsWorkflow(DataJobBase):
             workflow_with_notification.add_branch(chain_of_tasks)
             workflow_with_notification.add_catch(catch_error)
             workflow_with_notification.next(pass_notification)
-            return steps.Chain([workflow_with_notification])
+            return Chain([workflow_with_notification])
         logger.debug(
             "No notification is configured, returning the workflow definition."
         )
