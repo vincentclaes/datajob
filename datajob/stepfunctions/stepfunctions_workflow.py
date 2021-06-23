@@ -22,7 +22,7 @@ from datajob.sns.sns import SnsTopic
 __workflow = contextvars.ContextVar("workflow")
 
 
-class StepfunctionsWorkflowException(object):
+class StepfunctionsWorkflowException(Exception):
     pass
 
 
