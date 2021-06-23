@@ -10,13 +10,13 @@ current_dir = pathlib.Path(__file__).parent.absolute()
 
 app = core.App()
 
-# the datajob_stack is the instance that will result in a cloudformation stack.
-# we inject the datajob_stack object through all the resources that we want to add.
+# We add the path to the project root in the constructor of DataJobStack.
+# By specifying project_root, datajob will look for a .whl in
+# the dist folder of your project.
 with DataJobStack(
     scope=app, id="data-pipeline-pkg", project_root=current_dir
 ) as datajob_stack:
 
-    # here we define 2 glue jobs with the path to the source code.
     task1 = GlueJob(
         datajob_stack=datajob_stack, name="task1", job_path="glue_jobs/task1.py"
     )
@@ -25,8 +25,6 @@ with DataJobStack(
         datajob_stack=datajob_stack, name="task2", job_path="glue_jobs/task2.py"
     )
 
-    # we instantiate a step functions workflow
-    # and orchestrate the glue jobs.
     with StepfunctionsWorkflow(
         datajob_stack=datajob_stack, name="workflow"
     ) as step_functions_workflow:

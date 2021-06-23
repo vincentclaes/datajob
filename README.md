@@ -185,13 +185,36 @@ with DataJobStack(
 <details>
 <summary>Package project</summary>
 
+You can find the example [here](./examples/data_pipeline_with_packaged_project/)
+
+```python
+# We add the path to the project root in the constructor of DataJobStack.
+# By specifying project_root, datajob will look for a .whl in
+# the dist/ folder in your project_root.
+with DataJobStack(
+    scope=app, id="data-pipeline-pkg", project_root=current_dir
+) as datajob_stack:
+```
+
 Package you project using [poetry](https://python-poetry.org/)
 
 ```shell
-datajob deploy --config datajob_stack.py --package poetry
+poetry build
+cdk deploy --app "python datajob_stack.py"
 ```
+
 Package you project using [setup.py](./examples/data_pipeline_with_packaged_project)
+
 ```shell
+python setup.py bdist_wheel
+cdk deploy --app "python datajob_stack.py"
+```
+you can also use the datajob cli to do the two commands at once:
+```shell
+# for poetry
+datajob deploy --config datajob_stack.py --package poetry
+
+# for setup.py
 datajob deploy --config datajob_stack.py --package setuppy
 ```
 </details>
