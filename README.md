@@ -353,8 +353,6 @@ from datajob.datajob_stack import DataJobStack
 from datajob.glue.glue_job import GlueJob
 from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
 
-app = core.App()
-
 current_dir = pathlib.Path(__file__).parent.absolute()
 
 app = core.App()
