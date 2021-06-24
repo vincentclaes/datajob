@@ -1,14 +1,12 @@
 import datetime
 import pathlib
 import unittest
-from unittest.mock import patch, MagicMock, Mock
+from unittest.mock import patch, Mock
 
 from stepfunctions.workflow import Workflow, Execution, ExecutionStatus
-
 from typer.testing import CliRunner
 
 from datajob import datajob
-from datajob.stepfunctions import stepfunctions_execute
 
 current_dir = str(pathlib.Path(__file__).absolute().parent)
 

@@ -3,7 +3,7 @@ from typing import Union
 
 from aws_cdk import core
 
-from datajob import logger, DEFAULT_STACK_STAGE
+from datajob import logger
 from datajob.datajob_context import DataJobContext
 
 
