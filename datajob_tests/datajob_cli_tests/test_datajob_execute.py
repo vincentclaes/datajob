@@ -1,14 +1,15 @@
 import datetime
 import pathlib
 import unittest
-from unittest.mock import patch, MagicMock, Mock
+from unittest.mock import Mock
+from unittest.mock import patch
 
-from stepfunctions.workflow import Workflow, Execution, ExecutionStatus
-
+from stepfunctions.workflow import Execution
+from stepfunctions.workflow import ExecutionStatus
+from stepfunctions.workflow import Workflow
 from typer.testing import CliRunner
 
 from datajob import datajob
-from datajob.stepfunctions import stepfunctions_execute
 
 current_dir = str(pathlib.Path(__file__).absolute().parent)
 
@@ -28,7 +29,7 @@ class TestDatajobExecute(unittest.TestCase):
         execution.configure_mock(**attrs)
         return execution
 
-    @patch("datajob.stepfunctions.stepfunctions_execute._execute")
+    @patch("datajob.stepfunctions_workflow._execute")
     @patch.object(Workflow, "list_workflows")
     def test_datajob_cli_run_with_no_errors(self, m_list_workflow, m_execute):
         some_state_machine = "some-statemachine-1"

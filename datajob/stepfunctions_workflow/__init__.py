@@ -1,7 +1,9 @@
 import os
+import time
 import uuid
 from collections import defaultdict
-from typing import Union, Iterator
+from typing import Iterator
+from typing import Union
 
 import boto3
 import contextvars
@@ -9,15 +11,19 @@ import toposort
 from aws_cdk import aws_iam as iam
 from aws_cdk import core
 from aws_cdk.aws_stepfunctions import CfnStateMachine
-from stepfunctions.steps import Catch, Chain
+from stepfunctions.steps import Catch
+from stepfunctions.steps import Chain
+from stepfunctions.steps import TrainingStep
 from stepfunctions.steps.compute import GlueStartJobRunStep
 from stepfunctions.steps.service import SnsPublishStep
 from stepfunctions.steps.states import Parallel
+from stepfunctions.workflow import Execution
 from stepfunctions.workflow import Workflow
 
 from datajob import logger
 from datajob.datajob_base import DataJobBase
 from datajob.sns.sns import SnsTopic
+
 
 __workflow = contextvars.ContextVar("workflow")
 
@@ -66,24 +72,30 @@ class StepfunctionsWorkflow(DataJobBase):
         # we do it like this so that we can use toposort.
         self.directed_graph = defaultdict(set)
 
-    def add_task(self, some_task: DataJobBase) -> GlueStartJobRunStep:
-        """add a task to the workflow we would like to orchestrate."""
-        job_name = some_task.unique_name
-        logger.debug(f"adding task with name {job_name}")
-        return StepfunctionsWorkflow._create_glue_start_job_run_step(job_name=job_name)
+    def add_task(self, some_task: object) -> object:
+        """add a task to the workflow we would like to orchestrate.
+
+        Only for Glue we need to instantiate an object. All other types
+        can be returned.
+        """
+        logger.debug(f"adding task {some_task}")
+        from datajob.glue.glue_job import GlueJob
+
+        if isinstance(some_task, GlueJob):
+            job_name = some_task.unique_name
+            return GlueStartJobRunStep(
+                job_name, wait_for_completion=True, parameters={"JobName": job_name}
+            )
+        return some_task
 
     def add_parallel_tasks(self, parallel_tasks: Iterator[DataJobBase]) -> Parallel:
         """add tasks in parallel (wrapped in a list) to the workflow we would
         like to orchestrate."""
         parallel_pipelines = Parallel(state_id=uuid.uuid4().hex)
-        for one_other_task in parallel_tasks:
-            task_unique_name = one_other_task.unique_name
-            logger.debug(f"adding parallel task with name {task_unique_name}")
-            parallel_pipelines.add_branch(
-                StepfunctionsWorkflow._create_glue_start_job_run_step(
-                    job_name=task_unique_name
-                )
-            )
+        for a_task in parallel_tasks:
+            logger.debug(f"adding parallel task {a_task}")
+            sfn_task = self.add_task(a_task)
+            parallel_pipelines.add_branch(sfn_task)
         return parallel_pipelines
 
     @staticmethod
@@ -93,35 +105,46 @@ class StepfunctionsWorkflow(DataJobBase):
             job_name, wait_for_completion=True, parameters={"JobName": job_name}
         )
 
+    def _is_one_task(self, directed_graph_toposorted):
+        """If we have length of 2 and the second is an Ellipsis object we have
+        scheduled 1 task.
+
+        example:
+            some_task >> ...
+
+        :param directed_graph_toposorted: a toposorted graph, a graph with all the sorted tasks
+        :return: boolean
+        """
+        return len(directed_graph_toposorted) == 2 and isinstance(
+            list(directed_graph_toposorted[1])[0], type(Ellipsis)
+        )
+
     def _construct_toposorted_chain_of_tasks(self) -> Chain:
         """Take the directed graph and toposort so that we can efficiently
         organize our workflow, i.e. parallelize where possible.
 
         if we have 2 elements where one of both is an Ellipsis object we need to orchestrate just 1 job.
-        In the other case we will loop over the toposorted dag and assign a stepfunctions task
+        In the other case we will loop over the toposorted dag and assign a stepfunctions_workflow task
         or assign multiple tasks in parallel.
 
         Returns: toposorted chain of tasks
         """
         self.chain_of_tasks = Chain()
         directed_graph_toposorted = list(toposort.toposort(self.directed_graph))
-        # if we have length of 2 and the second is an Ellipsis object we have scheduled 1 task.
-        if len(directed_graph_toposorted) == 2 and isinstance(
-            list(directed_graph_toposorted[1])[0], type(Ellipsis)
-        ):
-            task = self.add_task(next(iter(directed_graph_toposorted[0])))
-            self.chain_of_tasks.append(task)
+        if self._is_one_task(directed_graph_toposorted=directed_graph_toposorted):
+            sfn_task = self.add_task(next(iter(directed_graph_toposorted[0])))
+            self.chain_of_tasks.append(sfn_task)
         else:
             for element in directed_graph_toposorted:
                 if len(element) == 1:
-                    task = self.add_task(next(iter(element)))
+                    sfn_task = self.add_task(next(iter(element)))
                 elif len(element) > 1:
-                    task = self.add_parallel_tasks(element)
+                    sfn_task = self.add_parallel_tasks(element)
                 else:
                     raise StepfunctionsWorkflowException(
                         "cannot have an index in the directed graph with 0 elements"
                     )
-                self.chain_of_tasks.append(task)
+                self.chain_of_tasks.append(sfn_task)
         return self.chain_of_tasks
 
     def _build_workflow(self):
@@ -169,8 +192,8 @@ class StepfunctionsWorkflow(DataJobBase):
 
     def _integrate_notification_in_workflow(self, chain_of_tasks: Chain) -> Chain:
         """If a notification is defined we configure an SNS with email
-        subscription to alert the user if the stepfunctions workflow failed or
-        succeeded.
+        subscription to alert the user if the stepfunctions_workflow workflow
+        failed or succeeded.
 
         :param chain_of_tasks: the workflow definition that contains all the steps we want to execute.
         :return: if notification is set, we adapt the workflow to include an SnsPublishStep on failure or on success.
@@ -179,7 +202,7 @@ class StepfunctionsWorkflow(DataJobBase):
         if self.notification:
             logger.debug(
                 "A notification is configured, "
-                "implementing a notification on Error or when the stepfunctions workflow succeeds."
+                "implementing a notification on Error or when the stepfunctions_workflow workflow succeeds."
             )
             failure_notification = SnsPublishStep(
                 "FailureNotification",
@@ -222,7 +245,23 @@ class StepfunctionsWorkflow(DataJobBase):
         logger.info(f"step functions workflow {self.unique_name} created")
 
 
-def task(self: DataJobBase) -> DataJobBase:
+def _set_workflow(workflow: Workflow):
+    __workflow.set(workflow)
+
+
+def _get_workflow():
+    try:
+        return __workflow.get()
+    except LookupError:
+        return None
+
+
+def _connect(self, other: DataJobBase) -> None:
+    work_flow = _get_workflow()
+    work_flow.directed_graph[other].add(self)
+
+
+def task(self):
     """Task that can configured in the orchestration of a
     StepfunctionsWorkflow. You have to use this as a decorator for any class
     that you want to use in the orchestration.
@@ -256,17 +295,33 @@ def task(self: DataJobBase) -> DataJobBase:
     return self
 
 
-def _set_workflow(workflow: Workflow):
-    __workflow.set(workflow)
+def _find_state_machine_arn(state_machine: str) -> str:
+    """lookup the state machine arn based on the state machine name."""
+    workflows = Workflow.list_workflows()
+    state_machine_object = [
+        workflow for workflow in workflows if workflow.get("name") == state_machine
+    ]
+    if len(state_machine_object) == 1:
+        logger.debug(f"we have found one statemachine {state_machine_object[0]}")
+        return state_machine_object[0].get("stateMachineArn")
+    elif len(state_machine_object) == 0:
+        logger.error(f"statemachine {state_machine} not found.")
+        raise LookupError("no statemachine found.")
+    else:
+        logger.error(f"more than one statemachine found with name {state_machine}.")
+        raise Exception(
+            "more than one statemachine found. Something strange is going on ..."
+        )
 
 
-def _get_workflow():
-    try:
-        return __workflow.get()
-    except LookupError:
-        return None
+def _get_status(execution: Execution):
+    """get the status of a stepfunctions_workflow workflow execution."""
+    time.sleep(1)
+    description = execution.describe()
+    return description.get("status")
 
 
-def _connect(self, other: DataJobBase) -> None:
-    work_flow = _get_workflow()
-    work_flow.directed_graph[other].add(self)
+def _execute(state_machine_arn: str):
+    """execute statemachine based on the name."""
+    workflow = Workflow.attach(state_machine_arn)
+    return workflow.execute()

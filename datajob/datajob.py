@@ -8,8 +8,9 @@ import typer
 from stepfunctions.workflow.widgets.utils import create_sfn_execution_url
 
 from datajob import console
+from datajob import stepfunctions_workflow
 from datajob.package import wheel
-from datajob.stepfunctions import stepfunctions_execute
+
 
 app = typer.Typer()
 filepath = pathlib.Path(__file__).resolve().parent
@@ -43,7 +44,7 @@ def deploy(
     if package:
         project_root = str(Path(config).parent)
         wheel.create_wheel(project_root=project_root, package=package)
-    # create stepfunctions if requested
+    # create stepfunctions_workflow if requested
     # make sure you have quotes around the app arguments
     args = ["--app", f""" "python {config}" """, "-c", f"stage={stage}"]
     extra_args = ctx.args
@@ -108,10 +109,10 @@ def execute(
         ..., help="the full name of the state machine you want to execute."
     )
 ):
-    state_machine_arn = stepfunctions_execute._find_state_machine_arn(state_machine)
+    state_machine_arn = stepfunctions_workflow._find_state_machine_arn(state_machine)
     console.log(f"executing: {state_machine}")
-    execution = stepfunctions_execute._execute(state_machine_arn)
-    status = stepfunctions_execute._get_status(execution)
+    execution = stepfunctions_workflow._execute(state_machine_arn)
+    status = stepfunctions_workflow._get_status(execution)
     console.log(f"status: {status}")
     url = create_sfn_execution_url(execution.execution_arn)
     console.log(f"view the execution on the AWS console:")

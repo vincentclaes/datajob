@@ -34,7 +34,7 @@ from aws_cdk import core
 
 from datajob.datajob_stack import DataJobStack
 from datajob.glue.glue_job import GlueJob
-from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
+from datajob.stepfunctions_workflow import StepfunctionsWorkflow
 
 app = core.App()
 
@@ -126,7 +126,7 @@ import pathlib
 from aws_cdk import core
 from datajob.datajob_stack import DataJobStack
 from datajob.glue.glue_job import GlueJob
-from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
+from datajob.stepfunctions_workflow import StepfunctionsWorkflow
 
 current_dir = str(pathlib.Path(__file__).parent.absolute())
 
@@ -228,7 +228,7 @@ import pathlib
 from aws_cdk import core
 from datajob.datajob_stack import DataJobStack
 from datajob.glue.glue_job import GlueJob
-from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
+from datajob.stepfunctions_workflow.stepfunctions_workflow import StepfunctionsWorkflow
 
 current_dir = str(pathlib.Path(__file__).parent.absolute())
 
@@ -351,7 +351,7 @@ from aws_cdk import core
 
 from datajob.datajob_stack import DataJobStack
 from datajob.glue.glue_job import GlueJob
-from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
+from datajob.stepfunctions_workflow.stepfunctions_workflow import StepfunctionsWorkflow
 
 current_dir = pathlib.Path(__file__).parent.absolute()
 

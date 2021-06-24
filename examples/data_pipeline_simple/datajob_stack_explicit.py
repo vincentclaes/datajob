@@ -1,11 +1,9 @@
-"""
-same as ./datajob_stack.py but more explicit
-"""
+"""same as ./datajob_stack.py but more explicit."""
 from aws_cdk import core
 
 from datajob.datajob_stack import DataJobStack
 from datajob.glue.glue_job import GlueJob
-from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
+from datajob.stepfunctions_workflow import StepfunctionsWorkflow
 
 app = core.App()
 
