@@ -1,8 +1,8 @@
 import unittest
 
-from datajob import DEFAULT_STACK_STAGE
-from datajob.datajob_stack import DataJobStack
 from aws_cdk import core
+
+from datajob.datajob_stack import DataJobStack
 
 
 class TestDatajobStack(unittest.TestCase):

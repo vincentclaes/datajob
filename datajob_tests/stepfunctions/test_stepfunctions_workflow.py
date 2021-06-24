@@ -1,7 +1,7 @@
+import io
 import json
 import os
 import unittest
-import io
 
 import yaml
 from aws_cdk import core
