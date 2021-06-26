@@ -1,7 +1,9 @@
 import unittest
 
-from datajob.datajob_stack import DataJobStack, DataJobContext
 from aws_cdk import core
+
+from datajob.datajob_stack import DataJobContext
+from datajob.datajob_stack import DataJobStack
 
 
 class TestDatajobContext(unittest.TestCase):

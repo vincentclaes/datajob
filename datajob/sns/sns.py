@@ -1,10 +1,12 @@
 from typing import Union
 
-from datajob.datajob_base import DataJobBase
-from aws_cdk import core
 from aws_cdk import aws_sns
 from aws_cdk import aws_sns_subscriptions
-from aws_cdk.core import Arn, ArnComponents
+from aws_cdk import core
+from aws_cdk.core import Arn
+from aws_cdk.core import ArnComponents
+
+from datajob.datajob_base import DataJobBase
 
 
 class SnsTopic(DataJobBase):
@@ -35,8 +37,8 @@ class SnsTopic(DataJobBase):
         self.add_email_subscription()
 
     def add_email_subscription(self) -> None:
-        """
-        Add an email or a list of emails as subscribers to a topic.
+        """Add an email or a list of emails as subscribers to a topic.
+
         :param sns_topic: an SNS Topic instance of aws cdk
         :param notification: email address as string or list of email addresses to be subscribed.
         :return: None
@@ -52,9 +54,9 @@ class SnsTopic(DataJobBase):
             )
 
     def get_topic_arn(self) -> str:
-        """
-        The ARN will be formatted as follows:
-            arn:{partition}:{service}:{region}:{account}:{resource}{sep}{resource-name}
+        """The ARN will be formatted as follows:
+
+        arn:{partition}:{service}:{region}:{account}:{resource}{sep}{resource-name}
         :return: return a well formatted arn string
         """
         arn_components = ArnComponents(

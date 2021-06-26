@@ -13,7 +13,6 @@ from aws_cdk import core
 from aws_cdk.aws_stepfunctions import CfnStateMachine
 from stepfunctions.steps import Catch
 from stepfunctions.steps import Chain
-from stepfunctions.steps import TrainingStep
 from stepfunctions.steps.compute import GlueStartJobRunStep
 from stepfunctions.steps.service import SnsPublishStep
 from stepfunctions.steps.states import Parallel
@@ -23,7 +22,6 @@ from stepfunctions.workflow import Workflow
 from datajob import logger
 from datajob.datajob_base import DataJobBase
 from datajob.sns.sns import SnsTopic
-
 
 __workflow = contextvars.ContextVar("workflow")
 
@@ -124,7 +122,7 @@ class StepfunctionsWorkflow(DataJobBase):
         organize our workflow, i.e. parallelize where possible.
 
         if we have 2 elements where one of both is an Ellipsis object we need to orchestrate just 1 job.
-        In the other case we will loop over the toposorted dag and assign a stepfunctions_workflow task
+        In the other case we will loop over the toposorted dag and assign a stepfunctions task
         or assign multiple tasks in parallel.
 
         Returns: toposorted chain of tasks
@@ -192,8 +190,8 @@ class StepfunctionsWorkflow(DataJobBase):
 
     def _integrate_notification_in_workflow(self, chain_of_tasks: Chain) -> Chain:
         """If a notification is defined we configure an SNS with email
-        subscription to alert the user if the stepfunctions_workflow workflow
-        failed or succeeded.
+        subscription to alert the user if the stepfunctions workflow failed or
+        succeeded.
 
         :param chain_of_tasks: the workflow definition that contains all the steps we want to execute.
         :return: if notification is set, we adapt the workflow to include an SnsPublishStep on failure or on success.
@@ -202,7 +200,7 @@ class StepfunctionsWorkflow(DataJobBase):
         if self.notification:
             logger.debug(
                 "A notification is configured, "
-                "implementing a notification on Error or when the stepfunctions_workflow workflow succeeds."
+                "implementing a notification on Error or when the stepfunctions workflow succeeds."
             )
             failure_notification = SnsPublishStep(
                 "FailureNotification",
@@ -268,7 +266,7 @@ def task(self):
 
     example:
 
-        @stepfunctions_workflow.task
+        @stepfunctions.task
         class GlueJob(core.Construct):
             pass
 
@@ -315,7 +313,7 @@ def _find_state_machine_arn(state_machine: str) -> str:
 
 
 def _get_status(execution: Execution):
-    """get the status of a stepfunctions_workflow workflow execution."""
+    """get the status of a stepfunctions workflow execution."""
     time.sleep(1)
     description = execution.describe()
     return description.get("status")

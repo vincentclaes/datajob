@@ -6,17 +6,16 @@ import unittest
 import yaml
 from aws_cdk import core
 from moto import mock_stepfunctions
-from stepfunctions.steps.compute import GlueStartJobRunStep
 from stepfunctions.steps.states import Parallel
 from stepfunctions.steps.states import Task
 
-import datajob.stepfunctions_workflow
-from datajob import stepfunctions_workflow
+import datajob.stepfunctions
+from datajob import stepfunctions
 from datajob.datajob_stack import DataJobStack
-from datajob.stepfunctions_workflow import StepfunctionsWorkflow
+from datajob.stepfunctions import StepfunctionsWorkflow
 
 
-@stepfunctions_workflow.task
+@stepfunctions.task
 class SomeMockedClass(Task):
     def __init__(self, unique_name, *args, **kwargs):
         super(SomeMockedClass, self).__init__(state_id=unique_name, *args, **kwargs)
@@ -29,8 +28,8 @@ class SomeMockedClass(Task):
 class TestStepfunctionsWorkflow(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        # we need a AWS region else these tests will fail with boto3 stepfunctions_workflow.
-        # (even when using moto to mock stepfunctions_workflow!)
+        # we need a AWS region else these tests will fail with boto3 stepfunctions.
+        # (even when using moto to mock stepfunctions!)
         try:
             os.environ["AWS_DEFAULT_REGION"]
         except KeyError:
@@ -41,11 +40,11 @@ class TestStepfunctionsWorkflow(unittest.TestCase):
 
     @mock_stepfunctions
     def test_create_tasks_for_orchestration_simple_flow_successfully(self):
-        task1 = datajob.stepfunctions_workflow.task(SomeMockedClass("task1"))
-        task2 = datajob.stepfunctions_workflow.task(SomeMockedClass("task2"))
-        task3 = datajob.stepfunctions_workflow.task(SomeMockedClass("task3"))
-        task4 = datajob.stepfunctions_workflow.task(SomeMockedClass("task4"))
-        task5 = datajob.stepfunctions_workflow.task(SomeMockedClass("task5"))
+        task1 = datajob.stepfunctions.task(SomeMockedClass("task1"))
+        task2 = datajob.stepfunctions.task(SomeMockedClass("task2"))
+        task3 = datajob.stepfunctions.task(SomeMockedClass("task3"))
+        task4 = datajob.stepfunctions.task(SomeMockedClass("task4"))
+        task5 = datajob.stepfunctions.task(SomeMockedClass("task5"))
 
         djs = DataJobStack(
             scope=self.app,
@@ -81,9 +80,9 @@ class TestStepfunctionsWorkflow(unittest.TestCase):
     def test_create_tasks_for_orchestration_starts_with_parallel_flow_successfully(
         self,
     ):
-        task1 = datajob.stepfunctions_workflow.task(SomeMockedClass("task1"))
-        task2 = datajob.stepfunctions_workflow.task(SomeMockedClass("task2"))
-        task3 = datajob.stepfunctions_workflow.task(SomeMockedClass("task2"))
+        task1 = datajob.stepfunctions.task(SomeMockedClass("task1"))
+        task2 = datajob.stepfunctions.task(SomeMockedClass("task2"))
+        task3 = datajob.stepfunctions.task(SomeMockedClass("task2"))
         djs = DataJobStack(
             scope=self.app,
             id="a-unique-name-2",
@@ -109,7 +108,7 @@ class TestStepfunctionsWorkflow(unittest.TestCase):
     def test_orchestrate_1_task_successfully(
         self,
     ):
-        task1 = datajob.stepfunctions_workflow.task(SomeMockedClass("task1"))
+        task1 = datajob.stepfunctions.task(SomeMockedClass("task1"))
         djs = DataJobStack(
             scope=self.app,
             id="a-unique-name-2",
@@ -129,8 +128,8 @@ class TestStepfunctionsWorkflow(unittest.TestCase):
 
     @mock_stepfunctions
     def test_create_workflow_with_notification_successfully(self):
-        task1 = datajob.stepfunctions_workflow.task(SomeMockedClass("task1"))
-        task2 = datajob.stepfunctions_workflow.task(SomeMockedClass("task2"))
+        task1 = datajob.stepfunctions.task(SomeMockedClass("task1"))
+        task2 = datajob.stepfunctions.task(SomeMockedClass("task2"))
 
         djs = DataJobStack(
             scope=self.app,
