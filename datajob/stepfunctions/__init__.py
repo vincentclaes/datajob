@@ -1,3 +1,4 @@
+import contextvars
 import os
 import time
 import uuid
@@ -6,7 +7,6 @@ from typing import Iterator
 from typing import Union
 
 import boto3
-import contextvars
 import toposort
 from aws_cdk import aws_iam as iam
 from aws_cdk import core
@@ -55,12 +55,10 @@ class StepfunctionsWorkflow(DataJobBase):
         super().__init__(datajob_stack, name, **kwargs)
         self.workflow = None
         self.chain_of_tasks = None
-        self.role = (
-            self.get_role(
-                unique_name=self.unique_name, service_principal="states.amazonaws.com"
-            )
-            if role is None
-            else role
+        self.role = self.get_role(
+            role=role,
+            unique_name=self.unique_name,
+            service_principal="states.amazonaws.com",
         )
         self.region = (
             region if region is not None else os.environ.get("AWS_DEFAULT_REGION")

@@ -56,6 +56,11 @@ class GlueJob(DataJobBase):
         """
         logger.info(f"creating glue job {name}")
         super().__init__(datajob_stack, name, **kwargs)
+        self.role = self.get_role(
+            role=role,
+            unique_name=self.unique_name,
+            service_principal="glue.amazonaws.com",
+        )
         self.job_path = GlueJob._get_job_path(self.project_root, job_path)
         self.arguments = arguments or {}
         self.job_type = GlueJob._get_job_type(job_type=job_type)
@@ -64,7 +69,6 @@ class GlueJob(DataJobBase):
             glue_version=glue_version, job_type=job_type
         )
         self.max_capacity = max_capacity
-        self.role = self._get_role(role, self.unique_name)
         self.worker_type = worker_type
         self.number_of_workers = number_of_workers
         self.args = args
@@ -130,19 +134,6 @@ class GlueJob(DataJobBase):
             elif job_type == "glueetl":
                 return "2.0"
         return glue_version
-
-    def _get_role(self, role: iam.Role, unique_name: str) -> iam.Role:
-        """If a role is not defined we get the default role for a glue job.
-
-        :param role: role object that can be passed via init.
-        :param unique_name: a unique name for our glue job.
-        :return:
-        """
-        if role is None:
-            return self.get_role(
-                unique_name=unique_name, service_principal="glue.amazonaws.com"
-            )
-        return role
 
     @staticmethod
     def _create_s3_url_for_job(

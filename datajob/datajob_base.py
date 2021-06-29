@@ -24,17 +24,17 @@ class DataJobBase(core.Construct):
 
     @abstractmethod
     def create(self):
-        """create datajob"""
+        """create datajob."""
 
-    def get_role(self, unique_name: str, service_principal: str) -> iam.Role:
-        """
-        Get the default role for the datajob. We use administrator access
-        as the policy for our default role.
-        # todo - we probably want to refine the policies for this role
-        :param unique_name: a unique name we can give to our role.
-        :param service_principal: what is the service principal for our service.
-        for example: glue.amazonaws.com
-        :return: iam role object.
+    def get_default_role(self, unique_name: str, service_principal: str) -> iam.Role:
+        """Get the default role for the datajob. We use administrator access as
+        the policy for our default role.
+
+        Args:
+            unique_name: a unique name we can give to our role.
+            service_principal: what is the service principal for our service.
+
+        Returns: iam role object.
         """
         role_name = unique_name + "-role"
         logger.debug(f"creating role {role_name}")
@@ -46,3 +46,22 @@ class DataJobBase(core.Construct):
                 iam.ManagedPolicy.from_aws_managed_policy_name("AdministratorAccess")
             ],
         )
+
+    def get_role(
+        self, role: iam.Role, unique_name: str, service_principal: str
+    ) -> iam.Role:
+        """If role is None, return a default one.
+
+        :param unique_name: a unique name we can give to our role.
+        :param service_principal: what is the service principal for our service.
+        for example: glue.amazonaws.com
+        :return: iam role object.
+        """
+        if role is None:
+            logger.warning(
+                "No role is provided, taking the default role with AdministratorAccess!"
+            )
+            return self.get_default_role(
+                unique_name=unique_name, service_principal=service_principal
+            )
+        return role
