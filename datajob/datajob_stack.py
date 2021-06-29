@@ -99,7 +99,10 @@ class DataJobStack(core.Stack):
 
     def create_resources(self):
         """create each of the resources of this stack."""
-        [resource.create() for resource in self.resources]
+        if self.resources:
+            logger.debug("creating resources.")
+            return [resource.create() for resource in self.resources]
+        logger.debug("no resources available to create.")
 
     def get_stage(self, stage):
         """get the stage parameter and return a default if not found."""
