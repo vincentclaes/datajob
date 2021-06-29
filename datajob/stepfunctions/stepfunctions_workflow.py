@@ -31,11 +31,8 @@ class StepfunctionsWorkflow(DataJobBase):
     using the step functions sdk.
 
     example:
-
         with StepfunctionsWorkflow("techskills-parser") as tech_skills_parser_orchestration:
-
             some-glue-job-1 >> [some-glue-job-2,some-glue-job-3] >> some-glue-job-4
-
         tech_skills_parser_orchestration.execute()
     """
 
@@ -66,24 +63,30 @@ class StepfunctionsWorkflow(DataJobBase):
         # we do it like this so that we can use toposort.
         self.directed_graph = defaultdict(set)
 
-    def add_task(self, some_task: DataJobBase) -> GlueStartJobRunStep:
-        """add a task to the workflow we would like to orchestrate."""
-        job_name = some_task.unique_name
-        logger.debug(f"adding task with name {job_name}")
-        return StepfunctionsWorkflow._create_glue_start_job_run_step(job_name=job_name)
+    def add_task(self, some_task: object) -> object:
+        """add a task to the workflow we would like to orchestrate.
+
+        Only for Glue we need to instantiate an object. All other types
+        can be returned.
+        """
+        logger.debug(f"adding task {some_task}")
+        from datajob.glue.glue_job import GlueJob
+
+        if isinstance(some_task, GlueJob):
+            job_name = some_task.unique_name
+            return GlueStartJobRunStep(
+                job_name, wait_for_completion=True, parameters={"JobName": job_name}
+            )
+        return some_task
 
     def add_parallel_tasks(self, parallel_tasks: Iterator[DataJobBase]) -> Parallel:
         """add tasks in parallel (wrapped in a list) to the workflow we would
         like to orchestrate."""
         parallel_pipelines = Parallel(state_id=uuid.uuid4().hex)
-        for one_other_task in parallel_tasks:
-            task_unique_name = one_other_task.unique_name
-            logger.debug(f"adding parallel task with name {task_unique_name}")
-            parallel_pipelines.add_branch(
-                StepfunctionsWorkflow._create_glue_start_job_run_step(
-                    job_name=task_unique_name
-                )
-            )
+        for a_task in parallel_tasks:
+            logger.debug(f"adding parallel task {a_task}")
+            sfn_task = self.add_task(a_task)
+            parallel_pipelines.add_branch(sfn_task)
         return parallel_pipelines
 
     @staticmethod
@@ -93,6 +96,18 @@ class StepfunctionsWorkflow(DataJobBase):
             job_name, wait_for_completion=True, parameters={"JobName": job_name}
         )
 
+    def _is_one_task(self, directed_graph_toposorted):
+        """If we have length of 2 and the second is an Ellipsis object we have
+        scheduled 1 task.
+        example:
+            some_task >> ...
+        :param directed_graph_toposorted: a toposorted graph, a graph with all the sorted tasks
+        :return: boolean
+        """
+        return len(directed_graph_toposorted) == 2 and isinstance(
+            list(directed_graph_toposorted[1])[0], type(Ellipsis)
+        )
+
     def _construct_toposorted_chain_of_tasks(self) -> Chain:
         """Take the directed graph and toposort so that we can efficiently
         organize our workflow, i.e. parallelize where possible.
@@ -100,28 +115,24 @@ class StepfunctionsWorkflow(DataJobBase):
         if we have 2 elements where one of both is an Ellipsis object we need to orchestrate just 1 job.
         In the other case we will loop over the toposorted dag and assign a stepfunctions task
         or assign multiple tasks in parallel.
-
         Returns: toposorted chain of tasks
         """
         self.chain_of_tasks = Chain()
         directed_graph_toposorted = list(toposort.toposort(self.directed_graph))
-        # if we have length of 2 and the second is an Ellipsis object we have scheduled 1 task.
-        if len(directed_graph_toposorted) == 2 and isinstance(
-            list(directed_graph_toposorted[1])[0], type(Ellipsis)
-        ):
-            task = self.add_task(next(iter(directed_graph_toposorted[0])))
-            self.chain_of_tasks.append(task)
+        if self._is_one_task(directed_graph_toposorted=directed_graph_toposorted):
+            sfn_task = self.add_task(next(iter(directed_graph_toposorted[0])))
+            self.chain_of_tasks.append(sfn_task)
         else:
             for element in directed_graph_toposorted:
                 if len(element) == 1:
-                    task = self.add_task(next(iter(element)))
+                    sfn_task = self.add_task(next(iter(element)))
                 elif len(element) > 1:
-                    task = self.add_parallel_tasks(element)
+                    sfn_task = self.add_parallel_tasks(element)
                 else:
                     raise StepfunctionsWorkflowException(
                         "cannot have an index in the directed graph with 0 elements"
                     )
-                self.chain_of_tasks.append(task)
+                self.chain_of_tasks.append(sfn_task)
         return self.chain_of_tasks
 
     def _build_workflow(self):

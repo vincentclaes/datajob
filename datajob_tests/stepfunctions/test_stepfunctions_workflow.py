@@ -6,21 +6,26 @@ import unittest
 import yaml
 from aws_cdk import core
 from moto import mock_stepfunctions
-from stepfunctions.steps.compute import GlueStartJobRunStep
 from stepfunctions.steps.states import Parallel
+from stepfunctions.steps.states import Task
 
-from datajob.datajob_stack import DataJobStack
 from datajob.stepfunctions import stepfunctions_workflow
+from datajob import stepfunctions
+from datajob.datajob_stack import DataJobStack
 from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
 
 
 @stepfunctions_workflow.task
-class SomeMockedClass(object):
-    def __init__(self, unique_name):
+class SomeMockedClass(Task):
+    def __init__(self, unique_name, *args, **kwargs):
+        super(SomeMockedClass, self).__init__(state_id=unique_name, *args, **kwargs)
         self.unique_name = unique_name
 
+    def accept(self, visitor):
+        pass
 
-class TestStepfunctionsWorkflow(unittest.TestCase):
+
+class TestStepfunctions(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         # we need a AWS region else these tests will fail with boto3 stepfunctions.
@@ -95,10 +100,11 @@ class TestStepfunctionsWorkflow(unittest.TestCase):
         )
         self.assertTrue(
             isinstance(
-                a_step_functions_workflow.chain_of_tasks.steps[1], GlueStartJobRunStep
+                a_step_functions_workflow.chain_of_tasks.steps[1], SomeMockedClass
             )
         )
 
+    @mock_stepfunctions
     def test_orchestrate_1_task_successfully(
         self,
     ):
@@ -116,7 +122,7 @@ class TestStepfunctionsWorkflow(unittest.TestCase):
 
         self.assertTrue(
             isinstance(
-                a_step_functions_workflow.chain_of_tasks.steps[0], GlueStartJobRunStep
+                a_step_functions_workflow.chain_of_tasks.steps[0], SomeMockedClass
             )
         )
 
