@@ -6,10 +6,10 @@ from aws_cdk import aws_iam as iam
 from aws_cdk import aws_s3_deployment
 from aws_cdk import core
 
-import datajob.stepfunctions
 from datajob import logger
 from datajob.datajob_base import DataJobBase
 from datajob.datajob_context import DataJobContext
+from datajob.stepfunctions import stepfunctions_workflow
 
 
 class GlueJobType(Enum):
@@ -21,7 +21,7 @@ class GlueJobType(Enum):
         return [e.value for e in GlueJobType]
 
 
-@datajob.stepfunctions.task
+@stepfunctions_workflow.task
 class GlueJob(DataJobBase):
     def __init__(
         self,

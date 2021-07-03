@@ -34,7 +34,7 @@ from aws_cdk import core
 
 from datajob.datajob_stack import DataJobStack
 from datajob.glue.glue_job import GlueJob
-from datajob.stepfunctions import StepfunctionsWorkflow
+from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
 
 app = core.App()
 

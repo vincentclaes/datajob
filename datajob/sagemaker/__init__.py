@@ -8,8 +8,10 @@ from stepfunctions.steps.sagemaker import TuningStep
 
 from datajob import logger
 from datajob.datajob_base import DataJobBase
+from datajob.stepfunctions import stepfunctions_workflow
 
 
+@stepfunctions_workflow.task
 class DatajobSagemakerBase(DataJobBase):
     def create(self):
         logger.debug(
@@ -18,29 +20,29 @@ class DatajobSagemakerBase(DataJobBase):
         )
 
 
-class TrainingStep(TrainingStep, DatajobSagemakerBase):
+class TrainingStep(DatajobSagemakerBase, TrainingStep):
     pass
 
 
-class TransformStep(TransformStep, DatajobSagemakerBase):
+class TransformStep(DatajobSagemakerBase, TransformStep):
     pass
 
 
-class ProcessingStep(ProcessingStep, DatajobSagemakerBase):
+class ProcessingStep(DatajobSagemakerBase, ProcessingStep):
     pass
 
 
-class TuningStep(TuningStep, DatajobSagemakerBase):
+class TuningStep(DatajobSagemakerBase, TuningStep):
     pass
 
 
-class ModelStep(ModelStep, DataJobBase):
+class ModelStep(DatajobSagemakerBase, ModelStep):
     pass
 
 
-class EndpointStep(EndpointStep, DataJobBase):
+class EndpointStep(DatajobSagemakerBase, EndpointStep):
     pass
 
 
-class EndpointConfigStep(EndpointConfigStep, DataJobBase):
+class EndpointConfigStep(DatajobSagemakerBase, EndpointConfigStep):
     pass

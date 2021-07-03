@@ -9,13 +9,12 @@ from moto import mock_stepfunctions
 from stepfunctions.steps.states import Parallel
 from stepfunctions.steps.states import Task
 
-import datajob.stepfunctions
-from datajob import stepfunctions
 from datajob.datajob_stack import DataJobStack
-from datajob.stepfunctions import StepfunctionsWorkflow
+from datajob.stepfunctions import stepfunctions_workflow
+from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
 
 
-@stepfunctions.task
+@stepfunctions_workflow.task
 class SomeMockedClass(Task):
     def __init__(self, unique_name, *args, **kwargs):
         super(SomeMockedClass, self).__init__(state_id=unique_name, *args, **kwargs)
@@ -40,11 +39,11 @@ class TestStepfunctions(unittest.TestCase):
 
     @mock_stepfunctions
     def test_create_tasks_for_orchestration_simple_flow_successfully(self):
-        task1 = datajob.stepfunctions.task(SomeMockedClass("task1"))
-        task2 = datajob.stepfunctions.task(SomeMockedClass("task2"))
-        task3 = datajob.stepfunctions.task(SomeMockedClass("task3"))
-        task4 = datajob.stepfunctions.task(SomeMockedClass("task4"))
-        task5 = datajob.stepfunctions.task(SomeMockedClass("task5"))
+        task1 = stepfunctions_workflow.task(SomeMockedClass("task1"))
+        task2 = stepfunctions_workflow.task(SomeMockedClass("task2"))
+        task3 = stepfunctions_workflow.task(SomeMockedClass("task3"))
+        task4 = stepfunctions_workflow.task(SomeMockedClass("task4"))
+        task5 = stepfunctions_workflow.task(SomeMockedClass("task5"))
 
         djs = DataJobStack(
             scope=self.app,
@@ -80,9 +79,9 @@ class TestStepfunctions(unittest.TestCase):
     def test_create_tasks_for_orchestration_starts_with_parallel_flow_successfully(
         self,
     ):
-        task1 = datajob.stepfunctions.task(SomeMockedClass("task1"))
-        task2 = datajob.stepfunctions.task(SomeMockedClass("task2"))
-        task3 = datajob.stepfunctions.task(SomeMockedClass("task2"))
+        task1 = stepfunctions_workflow.task(SomeMockedClass("task1"))
+        task2 = stepfunctions_workflow.task(SomeMockedClass("task2"))
+        task3 = stepfunctions_workflow.task(SomeMockedClass("task2"))
         djs = DataJobStack(
             scope=self.app,
             id="a-unique-name-2",
@@ -108,7 +107,7 @@ class TestStepfunctions(unittest.TestCase):
     def test_orchestrate_1_task_successfully(
         self,
     ):
-        task1 = datajob.stepfunctions.task(SomeMockedClass("task1"))
+        task1 = stepfunctions_workflow.task(SomeMockedClass("task1"))
         djs = DataJobStack(
             scope=self.app,
             id="a-unique-name-2",
@@ -128,8 +127,8 @@ class TestStepfunctions(unittest.TestCase):
 
     @mock_stepfunctions
     def test_create_workflow_with_notification_successfully(self):
-        task1 = datajob.stepfunctions.task(SomeMockedClass("task1"))
-        task2 = datajob.stepfunctions.task(SomeMockedClass("task2"))
+        task1 = stepfunctions_workflow.task(SomeMockedClass("task1"))
+        task2 = stepfunctions_workflow.task(SomeMockedClass("task2"))
 
         djs = DataJobStack(
             scope=self.app,

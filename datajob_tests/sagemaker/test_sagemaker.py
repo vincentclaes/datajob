@@ -1,15 +1,13 @@
 import unittest
 
-import sagemaker
 from aws_cdk import core
 from sagemaker import LocalSession
 from sagemaker.sklearn import SKLearnProcessor
 from sagemaker.sklearn.estimator import SKLearn
-from stepfunctions.steps.sagemaker import ProcessingStep
-from stepfunctions.steps.sagemaker import TrainingStep
 
 from datajob.datajob_stack import DataJobStack
-from datajob.stepfunctions import StepfunctionsWorkflow
+from datajob.sagemaker import ProcessingStep
+from datajob.sagemaker import TrainingStep
 
 
 class TestSagemaker(unittest.TestCase):
