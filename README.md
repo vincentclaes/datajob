@@ -8,12 +8,17 @@
  </br>
 </div>
 
+ </br>
 
-- We support creating and deploying code to python shell / pyspark AWS Glue jobs.
-- Orchestrate the glue jobs using AWS Stepfunctions as simple as `task1 >> task2 >> task3`
-- Let us [know](https://github.com/vincentclaes/datajob/discussions) what you want to see next.
+- We support creating and deploying code to python shell / pyspark **AWS Glue jobs**.
+- Orchestrate the glue jobs using **AWS Stepfunctions** as simple as `task1 >> task2 >> task3`
+- Let us [know](https://github.com/vincentclaes/datajob/discussions) **what you want to see next**.
+ 
+ </br>
 
 > Dependencies are [AWS CDK](https://github.com/aws/aws-cdk) and [Step Functions SDK for data science](https://github.com/aws/aws-step-functions-data-science-sdk-python) <br/>
+
+ </br>
 
 # Installation
 
