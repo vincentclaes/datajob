@@ -8,6 +8,7 @@ from sagemaker.sklearn.estimator import SKLearn
 from datajob.datajob_stack import DataJobStack
 from datajob.sagemaker import ProcessingStep
 from datajob.sagemaker import TrainingStep
+from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
 
 
 class TestSagemaker(unittest.TestCase):
@@ -29,9 +30,9 @@ class TestSagemaker(unittest.TestCase):
             )
 
             processing_step = ProcessingStep(
-                state_id="processing-job",
+                datajob_stack=djs,
+                name="processing-job",
                 processor=processor,
-                job_name="processing-job",
             )
 
             estimator = SKLearn(
@@ -43,10 +44,12 @@ class TestSagemaker(unittest.TestCase):
             )
 
             training_step = TrainingStep(
-                state_id="training-job", estimator=estimator, job_name="training-job"
+                datajob_stack=djs,
+                name="training-job",
+                estimator=estimator,
             )
 
-            with StepfunctionsWorkflow(djs, "some-name") as a_step_functions_workflow:
+            with StepfunctionsWorkflow(djs, "some-name") as sfn_workflow:
                 processing_step >> training_step
 
 

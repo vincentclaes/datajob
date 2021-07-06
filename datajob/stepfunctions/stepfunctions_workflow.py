@@ -80,7 +80,7 @@ class StepfunctionsWorkflow(DataJobBase):
             return GlueStartJobRunStep(
                 job_name, wait_for_completion=True, parameters={"JobName": job_name}
             )
-        return some_task
+        return some_task.sfn_task
 
     def add_parallel_tasks(self, parallel_tasks: Iterator[DataJobBase]) -> Parallel:
         """add tasks in parallel (wrapped in a list) to the workflow we would
@@ -91,13 +91,6 @@ class StepfunctionsWorkflow(DataJobBase):
             sfn_task = self.add_task(a_task)
             parallel_pipelines.add_branch(sfn_task)
         return parallel_pipelines
-
-    @staticmethod
-    def _create_glue_start_job_run_step(job_name: str) -> GlueStartJobRunStep:
-        logger.debug("creating a step for a glue job.")
-        return GlueStartJobRunStep(
-            job_name, wait_for_completion=True, parameters={"JobName": job_name}
-        )
 
     def _is_one_task(self, directed_graph_toposorted):
         """If we have length of 2 and the second is an Ellipsis object we have
@@ -144,19 +137,17 @@ class StepfunctionsWorkflow(DataJobBase):
     def _build_workflow(self):
         """create a step functions workflow from the chain_of_tasks."""
         self.chain_of_tasks = self._construct_toposorted_chain_of_tasks()
-        logger.debug(
-            f"creating a chain from all the different steps. \n {self.chain_of_tasks}"
-        )
+        logger.debug("creating a chain from all the different steps.")
         self.chain_of_tasks = self._integrate_notification_in_workflow(
             chain_of_tasks=self.chain_of_tasks
         )
         logger.debug(f"creating a workflow with name {self.unique_name}")
-        self.client = boto3.client("stepfunctions")
+        sfn_client = boto3.client("stepfunctions")
         self.workflow = Workflow(
             name=self.unique_name,
             definition=self.chain_of_tasks,
             role=self.role.role_arn,
-            client=self.client,
+            client=sfn_client,
         )
 
     def create(self):
