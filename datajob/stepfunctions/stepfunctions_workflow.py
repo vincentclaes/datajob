@@ -66,13 +66,13 @@ class StepfunctionsWorkflow(DataJobBase):
         # we do it like this so that we can use toposort.
         self.directed_graph = defaultdict(set)
 
-    def add_task(self, some_task: object) -> object:
+    def add_task(self, some_task: DataJobBase) -> object:
         """add a task to the workflow we would like to orchestrate.
 
         Only for Glue we need to instantiate an object. All other types
         can be returned.
         """
-        logger.debug(f"adding task {some_task}")
+        # logger.debug(f"adding task {some_task}")
         from datajob.glue.glue_job import GlueJob
 
         if isinstance(some_task, GlueJob):

@@ -40,7 +40,7 @@ class DatajobSagemakerBase(DataJobBase):
         )
 
 
-class TrainingStep(DatajobSagemakerBase, SagemakerTrainingStep):
+class TrainingStep(DatajobSagemakerBase):
     def __init__(
         self,
         datajob_stack: DataJobStack,
@@ -75,7 +75,7 @@ class TrainingStep(DatajobSagemakerBase, SagemakerTrainingStep):
         )
 
 
-class ProcessingStep(DatajobSagemakerBase, SagemakerProcessingStep):
+class ProcessingStep(DatajobSagemakerBase):
     def __init__(
         self,
         datajob_stack: DataJobStack,
@@ -113,21 +113,21 @@ class ProcessingStep(DatajobSagemakerBase, SagemakerProcessingStep):
         )
 
 
-class TransformStep(DatajobSagemakerBase, SagemakerTransformStep):
+class TransformStep(SagemakerTransformStep, DatajobSagemakerBase):
     pass
 
 
-class TuningStep(DatajobSagemakerBase, SagemakerTuningStep):
+class TuningStep(SagemakerTuningStep, DatajobSagemakerBase):
     pass
 
 
-class ModelStep(DatajobSagemakerBase, SagemakerModelStep):
+class ModelStep(SagemakerModelStep, DatajobSagemakerBase):
     pass
 
 
-class EndpointStep(DatajobSagemakerBase, SagemakerEndpointStep):
+class EndpointStep(SagemakerEndpointStep, DatajobSagemakerBase):
     pass
 
 
-class EndpointConfigStep(DatajobSagemakerBase, SagemakerEndpointConfigStep):
+class EndpointConfigStep(SagemakerEndpointConfigStep, DatajobSagemakerBase):
     pass

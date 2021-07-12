@@ -1,9 +1,16 @@
+"""https://github.com/aws/amazon-sagemaker-examples/blob/master/step-functions-
+data-science-sdk/step_functions_mlworkflow_processing/step_functions_mlworkflow
+_scikit_learn_data_processing_and_model_evaluation.ipynb."""
+import pathlib
+
+import boto3
 import sagemaker
 from aws_cdk import core
 from sagemaker.processing import ProcessingInput
 from sagemaker.processing import ProcessingOutput
 from sagemaker.sklearn import SKLearnProcessor
 from sagemaker.sklearn.estimator import SKLearn
+from stepfunctions.inputs import ExecutionInput
 
 from datajob.datajob_stack import DataJobStack
 from datajob.sagemaker import ProcessingStep
@@ -13,27 +20,28 @@ from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
 role = "arn:aws:iam::077590795309:role/service-role/AmazonSageMaker-ExecutionRole-20191008T190827"
 app = core.App()
 
-with DataJobStack(scope=app, id="datajob-ml-pipeline") as djs:
-    PREPROCESSING_SCRIPT_LOCATION = "resources/preprocessing.py"
 
-    sagemaker_session = sagemaker.Session()
-    region = "eu-west-1"
+with DataJobStack(scope=app, id="datajob-ml-pipeline-scikitlearn") as djs:
 
-    input_data = (
-        "s3://sagemaker-sample-data-{}/processing/census/census-income.csv".format(
-            region
-        )
+    boto_session = boto3.session.Session(region_name=djs.env.region)
+    sagemaker_session = sagemaker.Session(boto_session=boto_session)
+    s3_bucket_base_uri = "{}{}".format("s3://", sagemaker_session.default_bucket())
+    output_data = "{}/{}".format(s3_bucket_base_uri, "data/sklearn_processing/output")
+
+    execution_input = ExecutionInput(
+        schema={
+            "PreprocessingJobName": str,
+            "TrainingJobName": str,
+        }
     )
 
+    input_data = f"s3://sagemaker-sample-data-{djs.env.region}/processing/census/census-income.csv"
+
     input_code = sagemaker_session.upload_data(
-        PREPROCESSING_SCRIPT_LOCATION,
+        "resources/preprocessing.py",
         bucket=sagemaker_session.default_bucket(),
         key_prefix="data/sklearn_processing/code",
     )
-
-    s3_bucket_base_uri = "{}{}".format("s3://", sagemaker_session.default_bucket())
-    output_data = "{}/{}".format(s3_bucket_base_uri, "data/sklearn_processing/output")
-    preprocessed_training_data = "{}/{}".format(output_data, "train_data")
 
     inputs = [
         ProcessingInput(
@@ -62,7 +70,7 @@ with DataJobStack(scope=app, id="datajob-ml-pipeline") as djs:
     ]
 
     processor = SKLearnProcessor(
-        framework_version="0.23-1",
+        framework_version="0.20.0",
         role=role,
         instance_type="ml.m5.xlarge",
         instance_count=1,
@@ -71,6 +79,7 @@ with DataJobStack(scope=app, id="datajob-ml-pipeline") as djs:
     processing_step = ProcessingStep(
         datajob_stack=djs,
         name="processing-job",
+        job_name=execution_input["PreprocessingJobName"],
         processor=processor,
         inputs=inputs,
         outputs=outputs,
@@ -81,10 +90,17 @@ with DataJobStack(scope=app, id="datajob-ml-pipeline") as djs:
         ],
     )
 
+    preprocessed_training_data = "{}/{}".format(output_data, "train_data")
+
+    sklearn_image = sagemaker.image_uris.retrieve(
+        framework="sklearn", region=djs.env.region, version="0.20.0", py_version="py3"
+    )
+
     estimator = SKLearn(
         entry_point="resources/train.py",
         train_instance_type="ml.m5.xlarge",
         role=role,
+        image_uri=sklearn_image,
         framework_version="0.20.0",
         py_version="py3",
     )
@@ -92,6 +108,7 @@ with DataJobStack(scope=app, id="datajob-ml-pipeline") as djs:
     training_step = TrainingStep(
         datajob_stack=djs,
         name="training-job",
+        job_name=execution_input["TrainingJobName"],
         estimator=estimator,
         data={
             "train": sagemaker.TrainingInput(
@@ -101,7 +118,7 @@ with DataJobStack(scope=app, id="datajob-ml-pipeline") as djs:
         wait_for_completion=True,
     )
 
-    with StepfunctionsWorkflow(djs, "some-name") as sfn_workflow:
+    with StepfunctionsWorkflow(djs, "workflow") as sfn_workflow:
         processing_step >> training_step
 
 app.synth()

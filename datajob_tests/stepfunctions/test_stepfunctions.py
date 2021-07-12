@@ -15,13 +15,10 @@ from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
 
 
 @stepfunctions_workflow.task
-class SomeMockedClass(Task):
-    def __init__(self, unique_name, *args, **kwargs):
-        super(SomeMockedClass, self).__init__(state_id=unique_name, *args, **kwargs)
+class SomeMockedClass(object):
+    def __init__(self, unique_name):
         self.unique_name = unique_name
-
-    def accept(self, visitor):
-        pass
+        self.sfn_task = Task(state_id=unique_name)
 
 
 class TestStepfunctions(unittest.TestCase):
@@ -98,9 +95,7 @@ class TestStepfunctions(unittest.TestCase):
             isinstance(a_step_functions_workflow.chain_of_tasks.steps[0], Parallel)
         )
         self.assertTrue(
-            isinstance(
-                a_step_functions_workflow.chain_of_tasks.steps[1], SomeMockedClass
-            )
+            isinstance(a_step_functions_workflow.chain_of_tasks.steps[1], Task)
         )
 
     @mock_stepfunctions
@@ -120,9 +115,7 @@ class TestStepfunctions(unittest.TestCase):
             task1 >> ...
 
         self.assertTrue(
-            isinstance(
-                a_step_functions_workflow.chain_of_tasks.steps[0], SomeMockedClass
-            )
+            isinstance(a_step_functions_workflow.chain_of_tasks.steps[0], Task)
         )
 
     @mock_stepfunctions

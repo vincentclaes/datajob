@@ -1,3 +1,4 @@
+import pathlib
 import unittest
 
 from aws_cdk import core
@@ -9,6 +10,8 @@ from datajob.datajob_stack import DataJobStack
 from datajob.sagemaker import ProcessingStep
 from datajob.sagemaker import TrainingStep
 from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
+
+current_dir = pathlib.Path(__file__).parent.absolute()
 
 
 class TestSagemaker(unittest.TestCase):
@@ -36,7 +39,7 @@ class TestSagemaker(unittest.TestCase):
             )
 
             estimator = SKLearn(
-                entry_point="resources/train.py",
+                entry_point=str(pathlib.Path(current_dir, "resources", "train.py")),
                 train_instance_type="ml.m5.xlarge",
                 role=role,
                 framework_version="0.20.0",
