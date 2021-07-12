@@ -29,16 +29,6 @@ class DatajobSagemakerBase(DataJobBase):
         name = name + "-sagemaker"
         return self._get_default_role(name, "sagemaker.amazonaws.com")
 
-    def __repr__(self):
-        return "{}".format(
-            self.__class__.__name__,
-        )
-
-    def __str__(self):
-        return "{}".format(
-            self.__class__.__name__,
-        )
-
 
 class TrainingStep(DatajobSagemakerBase):
     def __init__(
