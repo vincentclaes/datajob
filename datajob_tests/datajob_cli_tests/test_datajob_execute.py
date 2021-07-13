@@ -1,9 +1,12 @@
 import datetime
 import pathlib
 import unittest
-from unittest.mock import patch, Mock
+from unittest.mock import Mock
+from unittest.mock import patch
 
-from stepfunctions.workflow import Workflow, Execution, ExecutionStatus
+from stepfunctions.workflow import Execution
+from stepfunctions.workflow import ExecutionStatus
+from stepfunctions.workflow import Workflow
 from typer.testing import CliRunner
 
 from datajob import datajob

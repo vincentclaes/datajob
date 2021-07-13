@@ -1,7 +1,8 @@
 import os
 import uuid
 from collections import defaultdict
-from typing import Union, Iterator
+from typing import Iterator
+from typing import Union
 
 import boto3
 import contextvars
@@ -9,7 +10,8 @@ import toposort
 from aws_cdk import aws_iam as iam
 from aws_cdk import core
 from aws_cdk.aws_stepfunctions import CfnStateMachine
-from stepfunctions.steps import Catch, Chain
+from stepfunctions.steps import Catch
+from stepfunctions.steps import Chain
 from stepfunctions.steps.compute import GlueStartJobRunStep
 from stepfunctions.steps.service import SnsPublishStep
 from stepfunctions.steps.states import Parallel
@@ -31,8 +33,11 @@ class StepfunctionsWorkflow(DataJobBase):
     using the step functions sdk.
 
     example:
+
         with StepfunctionsWorkflow("techskills-parser") as tech_skills_parser_orchestration:
+
             some-glue-job-1 >> [some-glue-job-2,some-glue-job-3] >> some-glue-job-4
+
         tech_skills_parser_orchestration.execute()
     """
 
@@ -48,12 +53,10 @@ class StepfunctionsWorkflow(DataJobBase):
         super().__init__(datajob_stack, name, **kwargs)
         self.workflow = None
         self.chain_of_tasks = None
-        self.role = (
-            self.get_role(
-                unique_name=self.unique_name, service_principal="states.amazonaws.com"
-            )
-            if role is None
-            else role
+        self.role = self.get_role(
+            role=role,
+            unique_name=self.unique_name,
+            service_principal="states.amazonaws.com",
         )
         self.region = (
             region if region is not None else os.environ.get("AWS_DEFAULT_REGION")
@@ -63,13 +66,13 @@ class StepfunctionsWorkflow(DataJobBase):
         # we do it like this so that we can use toposort.
         self.directed_graph = defaultdict(set)
 
-    def add_task(self, some_task: object) -> object:
+    def add_task(self, some_task: DataJobBase) -> object:
         """add a task to the workflow we would like to orchestrate.
 
         Only for Glue we need to instantiate an object. All other types
         can be returned.
         """
-        logger.debug(f"adding task {some_task}")
+        # logger.debug(f"adding task {some_task}")
         from datajob.glue.glue_job import GlueJob
 
         if isinstance(some_task, GlueJob):
@@ -77,7 +80,7 @@ class StepfunctionsWorkflow(DataJobBase):
             return GlueStartJobRunStep(
                 job_name, wait_for_completion=True, parameters={"JobName": job_name}
             )
-        return some_task
+        return some_task.sfn_task
 
     def add_parallel_tasks(self, parallel_tasks: Iterator[DataJobBase]) -> Parallel:
         """add tasks in parallel (wrapped in a list) to the workflow we would
@@ -89,18 +92,13 @@ class StepfunctionsWorkflow(DataJobBase):
             parallel_pipelines.add_branch(sfn_task)
         return parallel_pipelines
 
-    @staticmethod
-    def _create_glue_start_job_run_step(job_name: str) -> GlueStartJobRunStep:
-        logger.debug("creating a step for a glue job.")
-        return GlueStartJobRunStep(
-            job_name, wait_for_completion=True, parameters={"JobName": job_name}
-        )
-
     def _is_one_task(self, directed_graph_toposorted):
         """If we have length of 2 and the second is an Ellipsis object we have
         scheduled 1 task.
+
         example:
             some_task >> ...
+
         :param directed_graph_toposorted: a toposorted graph, a graph with all the sorted tasks
         :return: boolean
         """
@@ -115,6 +113,7 @@ class StepfunctionsWorkflow(DataJobBase):
         if we have 2 elements where one of both is an Ellipsis object we need to orchestrate just 1 job.
         In the other case we will loop over the toposorted dag and assign a stepfunctions task
         or assign multiple tasks in parallel.
+
         Returns: toposorted chain of tasks
         """
         self.chain_of_tasks = Chain()
@@ -138,19 +137,17 @@ class StepfunctionsWorkflow(DataJobBase):
     def _build_workflow(self):
         """create a step functions workflow from the chain_of_tasks."""
         self.chain_of_tasks = self._construct_toposorted_chain_of_tasks()
-        logger.debug(
-            f"creating a chain from all the different steps. \n {self.chain_of_tasks}"
-        )
+        logger.debug("creating a chain from all the different steps.")
         self.chain_of_tasks = self._integrate_notification_in_workflow(
             chain_of_tasks=self.chain_of_tasks
         )
         logger.debug(f"creating a workflow with name {self.unique_name}")
-        self.client = boto3.client("stepfunctions")
+        sfn_client = boto3.client("stepfunctions")
         self.workflow = Workflow(
             name=self.unique_name,
             definition=self.chain_of_tasks,
             role=self.role.role_arn,
-            client=self.client,
+            client=sfn_client,
         )
 
     def create(self):
@@ -233,14 +230,14 @@ class StepfunctionsWorkflow(DataJobBase):
         logger.info(f"step functions workflow {self.unique_name} created")
 
 
-def task(self: DataJobBase) -> DataJobBase:
+def task(self):
     """Task that can configured in the orchestration of a
     StepfunctionsWorkflow. You have to use this as a decorator for any class
     that you want to use in the orchestration.
 
     example:
 
-        @stepfunctions_workflow.task
+        @stepfunctions.task
         class GlueJob(core.Construct):
             pass
 

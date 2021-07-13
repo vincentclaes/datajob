@@ -8,6 +8,7 @@ import typer
 from stepfunctions.workflow.widgets.utils import create_sfn_execution_url
 
 from datajob import console
+from datajob import stepfunctions
 from datajob.package import wheel
 from datajob.stepfunctions import stepfunctions_execute
 

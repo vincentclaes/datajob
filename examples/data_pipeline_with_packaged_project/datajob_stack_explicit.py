@@ -1,7 +1,6 @@
-"""
-same as ./datajob_stack.py but more explicit
-"""
+"""same as ./datajob_stack.py but more explicit."""
 import pathlib
+
 from aws_cdk import core
 
 from datajob.datajob_stack import DataJobStack

@@ -46,7 +46,6 @@ app = core.App()
 # The datajob_stack is the instance that will result in a cloudformation stack.
 # We inject the datajob_stack object through all the resources that we want to add.
 with DataJobStack(scope=app, id="data-pipeline-simple") as datajob_stack:
-
     # We define 2 glue jobs with the relative path to the source code.
     task1 = GlueJob(
         datajob_stack=datajob_stack, name="task1", job_path="glue_jobs/task.py"
@@ -138,9 +137,8 @@ current_dir = str(pathlib.Path(__file__).parent.absolute())
 app = core.App()
 
 with DataJobStack(
-    scope=app, id="datajob-python-pyspark", project_root=current_dir
+        scope=app, id="datajob-python-pyspark", project_root=current_dir
 ) as datajob_stack:
-
     pyspark_job = GlueJob(
         datajob_stack=datajob_stack,
         name="pyspark-job",
@@ -240,9 +238,8 @@ current_dir = str(pathlib.Path(__file__).parent.absolute())
 app = core.App()
 
 with DataJobStack(
-    scope=app, id="datajob-python-pyspark", project_root=current_dir
+        scope=app, id="datajob-python-pyspark", project_root=current_dir
 ) as datajob_stack:
-
     pyspark_job = GlueJob(
         datajob_stack=datajob_stack,
         name="pyspark-job",

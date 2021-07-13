@@ -3,7 +3,8 @@ from typing import Union
 from aws_cdk import aws_sns
 from aws_cdk import aws_sns_subscriptions
 from aws_cdk import core
-from aws_cdk.core import Arn, ArnComponents
+from aws_cdk.core import Arn
+from aws_cdk.core import ArnComponents
 
 from datajob.datajob_base import DataJobBase
 

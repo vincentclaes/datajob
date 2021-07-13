@@ -1,8 +1,10 @@
 from enum import Enum
 from pathlib import Path
 
-from aws_cdk import aws_glue as glue, core, aws_s3_deployment
+from aws_cdk import aws_glue as glue
 from aws_cdk import aws_iam as iam
+from aws_cdk import aws_s3_deployment
+from aws_cdk import core
 
 from datajob import logger
 from datajob.datajob_base import DataJobBase
@@ -54,6 +56,11 @@ class GlueJob(DataJobBase):
         """
         logger.info(f"creating glue job {name}")
         super().__init__(datajob_stack, name, **kwargs)
+        self.role = self.get_role(
+            role=role,
+            unique_name=self.unique_name,
+            service_principal="glue.amazonaws.com",
+        )
         self.job_path = GlueJob._get_job_path(self.project_root, job_path)
         self.arguments = arguments or {}
         self.job_type = GlueJob._get_job_type(job_type=job_type)
@@ -62,7 +69,6 @@ class GlueJob(DataJobBase):
             glue_version=glue_version, job_type=job_type
         )
         self.max_capacity = max_capacity
-        self.role = self._get_role(role, self.unique_name)
         self.worker_type = worker_type
         self.number_of_workers = number_of_workers
         self.args = args
@@ -92,8 +98,8 @@ class GlueJob(DataJobBase):
 
     @staticmethod
     def _get_job_path(project_root: str, job_path: str) -> str:
-        """
-        get the full path to a script that we want to run as a glue job.
+        """get the full path to a script that we want to run as a glue job.
+
         :param project_root: path to the root of a project.
         :param job_path: relative path to the script.
         :return: full path to the script
@@ -104,8 +110,8 @@ class GlueJob(DataJobBase):
 
     @staticmethod
     def _get_job_type(job_type: str) -> str:
-        """
-        assert if the glue job type is a valid value.
+        """assert if the glue job type is a valid value.
+
         :param job_type: the name of the type of glue job
         :return: the name of the glue job type
         """
@@ -116,8 +122,8 @@ class GlueJob(DataJobBase):
 
     @staticmethod
     def _get_glue_version(glue_version: str, job_type: str) -> str:
-        """
-        Specify a default glue version, when none is given.
+        """Specify a default glue version, when none is given.
+
         :param glue_version: the version of the glue job. At the time of writing these are the possibilities: 0.9, 1.0, 2.0.
         :param job_type: the name of the type of glue job.
         :return: the version of the glue job.
@@ -129,25 +135,12 @@ class GlueJob(DataJobBase):
                 return "2.0"
         return glue_version
 
-    def _get_role(self, role: iam.Role, unique_name: str) -> iam.Role:
-        """
-        If a role is not defined we get the default role for a glue job.
-        :param role: role object that can be passed via init.
-        :param unique_name: a unique name for our glue job.
-        :return:
-        """
-        if role is None:
-            return self.get_role(
-                unique_name=unique_name, service_principal="glue.amazonaws.com"
-            )
-        return role
-
     @staticmethod
     def _create_s3_url_for_job(
         context: DataJobContext, glue_job_id: str, glue_job_file_name: str
     ) -> str:
-        """
-        construct the path to s3 where the code resides of the glue job..
+        """construct the path to s3 where the code resides of the glue job..
+
         :param context: DataJobContext that contains the name of the deployment bucket.
         :param glue_job_id:
         :param glue_job_file_name:
@@ -161,8 +154,8 @@ class GlueJob(DataJobBase):
 
     @staticmethod
     def _get_glue_job_dir_and_file_name(path_to_glue_job: str) -> tuple:
-        """
-        Split the full path in a dir and filename.
+        """Split the full path in a dir and filename.
+
         :param path_to_glue_job: full path to the script
         :return: full path to the dir, name of the script.
         """
@@ -176,8 +169,8 @@ class GlueJob(DataJobBase):
     def _deploy_glue_job_code(
         self, context: DataJobContext, glue_job_name: str, path_to_glue_job: str
     ) -> str:
-        """deploy the code of this glue job to the deployment bucket
-        (can be found in the glue context object)"""
+        """deploy the code of this glue job to the deployment bucket (can be
+        found in the glue context object)"""
         glue_job_dir, glue_job_file_name = GlueJob._get_glue_job_dir_and_file_name(
             path_to_glue_job=path_to_glue_job
         )
@@ -216,8 +209,8 @@ class GlueJob(DataJobBase):
         *args,
         **kwargs,
     ) -> None:
-        """Create a glue job with the necessary configuration like,
-        paths to wheel and business logic and arguments"""
+        """Create a glue job with the necessary configuration like, paths to
+        wheel and business logic and arguments."""
         logger.debug(f"creating Glue Job {glue_job_name}")
         default_arguments = None
         if context.s3_url_wheel:

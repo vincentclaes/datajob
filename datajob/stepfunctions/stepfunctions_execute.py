@@ -1,12 +1,13 @@
 import time
 
-from stepfunctions.workflow import Workflow, Execution
+from stepfunctions.workflow import Execution
+from stepfunctions.workflow import Workflow
 
 from datajob import logger
 
 
 def _find_state_machine_arn(state_machine: str) -> str:
-    """lookup the state machine arn based on the state machine name"""
+    """lookup the state machine arn based on the state machine name."""
     workflows = Workflow.list_workflows()
     state_machine_object = [
         workflow for workflow in workflows if workflow.get("name") == state_machine
