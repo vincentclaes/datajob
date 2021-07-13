@@ -30,6 +30,7 @@ class TestSagemaker(unittest.TestCase):
                 role=role,
                 instance_type="local",
                 instance_count=1,
+                sagemaker_session=sagemaker_session,
             )
 
             processing_step = ProcessingStep(
@@ -44,6 +45,7 @@ class TestSagemaker(unittest.TestCase):
                 role=role,
                 framework_version="0.20.0",
                 py_version="py3",
+                sagemaker_session=sagemaker_session,
             )
 
             training_step = TrainingStep(
