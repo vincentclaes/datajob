@@ -26,7 +26,7 @@ class DatajobSagemakerBase(DataJobBase):
         )
 
     def get_default_role(self, name: str) -> iam.Role:
-        name = name + "-sagemaker"
+        name += "-sagemaker"
         return self._get_default_role(name, "sagemaker.amazonaws.com")
 
 
