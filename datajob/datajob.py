@@ -7,10 +7,10 @@ from pathlib import Path
 import typer
 from stepfunctions.workflow.widgets.utils import create_sfn_execution_url
 
-import datajob.stepfunctions.stepfunctions_execute
 from datajob import console
 from datajob import stepfunctions
 from datajob.package import wheel
+from datajob.stepfunctions import stepfunctions_execute
 
 app = typer.Typer()
 filepath = pathlib.Path(__file__).resolve().parent
@@ -109,14 +109,10 @@ def execute(
         ..., help="the full name of the state machine you want to execute."
     )
 ):
-    state_machine_arn = (
-        datajob.stepfunctions.stepfunctions_execute._find_state_machine_arn(
-            state_machine
-        )
-    )
+    state_machine_arn = stepfunctions_execute._find_state_machine_arn(state_machine)
     console.log(f"executing: {state_machine}")
-    execution = datajob.stepfunctions.stepfunctions_execute._execute(state_machine_arn)
-    status = datajob.stepfunctions.stepfunctions_execute._get_status(execution)
+    execution = stepfunctions_execute._execute(state_machine_arn)
+    status = stepfunctions_execute._get_status(execution)
     console.log(f"status: {status}")
     url = create_sfn_execution_url(execution.execution_arn)
     console.log(f"view the execution on the AWS console:")

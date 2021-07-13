@@ -44,9 +44,9 @@
 	// Comment out to connect as root instead.
 	"remoteUser": "vscode",
 
-	// "mounts": [
-	// 	 "source=${localEnv:HOME}/.aws,target=/home/vscode/.aws,type=bind,consistency=cached",
-	// 	 "source=${localEnv:HOME}/.config,target=/home/vscode/.config,type=bind,consistency=cached",
-	// 	 "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached"
-	//   ]
+	"mounts": [
+		 "source=${localEnv:HOME}/.aws,target=/home/vscode/.aws,type=bind,consistency=cached",
+		 "source=${localEnv:HOME}/.config,target=/home/vscode/.config,type=bind,consistency=cached",
+		 "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached"
+	  ]
 }
