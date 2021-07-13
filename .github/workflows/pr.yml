@@ -19,4 +19,7 @@ jobs:
          cat .devcontainer/devcontainer.Dockerfile | docker build -t $IMAGE_TAG -
 
     - name: Test
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: docker run -v $PWD:/workspace/vscode -w /workspace/vscode $IMAGE_TAG make gh-actions
