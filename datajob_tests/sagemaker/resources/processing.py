@@ -31,7 +31,7 @@ def main():
             data = file.read()
             words = len(data.split())
             print("Detected {} words in {} file".format(words, input_file))
-            total_words = total_words + words
+            total_words += words
 
         print(
             "Total words in {} files detected: {}".format(len(input_files), total_words)
@@ -44,10 +44,8 @@ def main():
         "total_words_" + datetime.now().strftime("%d%m%Y_%H_%M_%S") + ".txt",
     )
     print("Writing output file: {}".format(output_file))
-    f = open(output_file, "a")
-    f.write("Total Words: {}".format(total_words))
-    f.close()
-
+    with open(output_file, "a") as f:
+        f.write("Total Words: {}".format(total_words))
     output_files = [
         file for file in os.listdir(processed_data_path) if file.endswith("." + "txt")
     ]
