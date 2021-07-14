@@ -112,7 +112,7 @@ Specify a stage to deploy an isolated pipeline.
 Typical examples would be `dev` , `prod`, ...
 
 ```shell
-cdk deploy --app "python datajob_stack.py" --stage my-stage
+cdk deploy --app "python datajob_stack.py" --context stage=my-stage
 ```
 
 </details>
