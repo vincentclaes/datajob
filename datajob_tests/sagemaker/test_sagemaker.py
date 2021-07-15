@@ -1,5 +1,6 @@
 import pathlib
 import unittest
+from datetime import datetime
 
 from aws_cdk import core
 from sagemaker import LocalSession
@@ -7,6 +8,7 @@ from sagemaker.sklearn import SKLearnProcessor
 from sagemaker.sklearn.estimator import SKLearn
 
 from datajob.datajob_stack import DataJobStack
+from datajob.sagemaker import DatajobSagemakerBase
 from datajob.sagemaker import ProcessingStep
 from datajob.sagemaker import TrainingStep
 from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
@@ -54,8 +56,25 @@ class TestSagemaker(unittest.TestCase):
                 estimator=estimator,
             )
 
-            with StepfunctionsWorkflow(djs, "some-name") as sfn_workflow:
+            with StepfunctionsWorkflow(djs, "sequential") as sfn_workflow:
                 processing_step >> training_step
+
+            with StepfunctionsWorkflow(djs, "parallel") as sfn_workflow:
+                processing_step >> processing_step
+                training_step >> training_step
+
+    def test_generate_unique_name(self):
+        # freeze time
+        DatajobSagemakerBase.current_date = datetime(2021, 1, 1, 12, 0, 1)
+        # test with a long string and check that the result will be max allowed characters
+        unique_name = DatajobSagemakerBase.generate_unique_name(
+            name="a" * DatajobSagemakerBase.MAX_CHARS
+        )
+        self.assertEqual(len(unique_name), DatajobSagemakerBase.MAX_CHARS)
+
+        # test with a short string and check that the datetime will be appended
+        unique_name = DatajobSagemakerBase.generate_unique_name(name="a" * 1)
+        self.assertEqual(unique_name, "a-20210101T120001")
 
 
 if __name__ == "__main__":

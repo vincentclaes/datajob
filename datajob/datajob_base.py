@@ -70,4 +70,4 @@ class DataJobBase(core.Construct):
         return f"{self}"
 
     def __str__(self):
-        return f"{self}"
+        return f"type: {type(self)} with name : {self.name}"

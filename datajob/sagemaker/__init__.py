@@ -1,6 +1,9 @@
+from datetime import datetime
+
 from aws_cdk import aws_iam as iam
 from sagemaker import estimator
 from sagemaker import processing
+from stepfunctions.inputs import Placeholder
 from stepfunctions.steps.sagemaker import (
     EndpointConfigStep as SagemakerEndpointConfigStep,
 )
@@ -19,6 +22,52 @@ from datajob.stepfunctions import stepfunctions_workflow
 
 @stepfunctions_workflow.task
 class DatajobSagemakerBase(DataJobBase):
+    current_date = datetime.utcnow()
+    MAX_CHARS = 63
+    execution_input = {}
+
+    @staticmethod
+    def generate_unique_name(
+        name: str, max_chars: int = MAX_CHARS, datetime_format: str = "%Y%m%dT%H%M%S"
+    ):
+        if not isinstance(name, Placeholder):
+            current_date_as_string = DatajobSagemakerBase.current_date.strftime(
+                datetime_format
+            )
+            total_length = len(current_date_as_string) + len(name)
+            difference = max_chars - total_length
+            if difference < 0:
+                logger.debug(
+                    f"the length of the unique name is {total_length}. Max chars is {max_chars}. Removing last {difference} chars from name"
+                )
+                name = name[: difference - 1]
+            unique_name = f"{name}-{current_date_as_string}"
+            logger.debug(f"generated unique name is {unique_name}")
+            return unique_name
+        logger.debug("name is a stepfunctions placeholder value, returning")
+
+    def handle_job_name(self, job_name):
+        """
+
+        Args:
+            job_name:
+
+        Returns:
+
+        """
+        if job_name is None:
+            logger.debug(
+                f"job name not provided, we will return the unique name {self.unique_name}"
+            )
+            return self.generate_unique_name(self.unique_name)
+        elif isinstance(job_name, Placeholder):
+            logger.debug(
+                f"job_name is an isntance of stepfunctions placeholder, we will return the placeholder"
+            )
+            return job_name
+        else:
+            return job_name
+
     def create(self):
         logger.debug(
             "sagemaker does not implement the create "
@@ -45,7 +94,7 @@ class TrainingStep(DatajobSagemakerBase):
         wait_for_completion=True,
         tags=None,
         output_data_config_path=None,
-        **kwargs
+        **kwargs,
     ):
         DatajobSagemakerBase.__init__(
             self=self, datajob_stack=datajob_stack, name=name, **kwargs
@@ -53,7 +102,7 @@ class TrainingStep(DatajobSagemakerBase):
         self.sfn_task = SagemakerTrainingStep(
             state_id=self.unique_name if state_id is None else state_id,
             estimator=estimator,
-            job_name=self.unique_name if job_name is None else job_name,
+            job_name=self.handle_job_name(job_name),
             data=data,
             hyperparameters=hyperparameters,
             mini_batch_size=mini_batch_size,
@@ -61,7 +110,7 @@ class TrainingStep(DatajobSagemakerBase):
             wait_for_completion=wait_for_completion,
             tags=tags,
             output_data_config_path=output_data_config_path,
-            **kwargs
+            **kwargs,
         )
 
 
@@ -81,7 +130,7 @@ class ProcessingStep(DatajobSagemakerBase):
         kms_key_id=None,
         wait_for_completion=True,
         tags=None,
-        **kwargs
+        **kwargs,
     ):
         DatajobSagemakerBase.__init__(
             self=self, datajob_stack=datajob_stack, name=name, **kwargs
@@ -90,7 +139,7 @@ class ProcessingStep(DatajobSagemakerBase):
         self.sfn_task = SagemakerProcessingStep(
             state_id=self.unique_name if state_id is None else state_id,
             processor=processor,
-            job_name=self.unique_name if job_name is None else job_name,
+            job_name=self.handle_job_name(job_name),
             inputs=inputs,
             outputs=outputs,
             experiment_config=experiment_config,
@@ -99,7 +148,7 @@ class ProcessingStep(DatajobSagemakerBase):
             kms_key_id=kms_key_id,
             wait_for_completion=wait_for_completion,
             tags=tags,
-            **kwargs
+            **kwargs,
         )
 
 
