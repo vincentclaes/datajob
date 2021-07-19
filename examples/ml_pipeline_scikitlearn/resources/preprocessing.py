@@ -8,7 +8,6 @@ from sklearn.compose import make_column_transformer
 from sklearn.exceptions import DataConversionWarning
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import KBinsDiscretizer
-from sklearn.preprocessing import LabelBinarizer
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import StandardScaler
 

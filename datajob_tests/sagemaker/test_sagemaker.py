@@ -8,9 +8,9 @@ from sagemaker.sklearn import SKLearnProcessor
 from sagemaker.sklearn.estimator import SKLearn
 
 from datajob.datajob_stack import DataJobStack
-from datajob.sagemaker import DatajobSagemakerBase
-from datajob.sagemaker import ProcessingStep
-from datajob.sagemaker import TrainingStep
+from datajob.sagemaker import DataJobSagemakerBase
+from datajob.sagemaker.sagemaker_job import ProcessingStep
+from datajob.sagemaker.sagemaker_job import TrainingStep
 from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
 
 current_dir = pathlib.Path(__file__).parent.absolute()
@@ -65,15 +65,15 @@ class TestSagemaker(unittest.TestCase):
 
     def test_generate_unique_name(self):
         # freeze time
-        DatajobSagemakerBase.current_date = datetime(2021, 1, 1, 12, 0, 1)
+        DataJobSagemakerBase.current_date = datetime(2021, 1, 1, 12, 0, 1)
         # test with a long string and check that the result will be max allowed characters
-        unique_name = DatajobSagemakerBase.generate_unique_name(
-            name="a" * DatajobSagemakerBase.MAX_CHARS
+        unique_name = DataJobSagemakerBase.generate_unique_name(
+            name="a" * DataJobSagemakerBase.MAX_CHARS
         )
-        self.assertEqual(len(unique_name), DatajobSagemakerBase.MAX_CHARS)
+        self.assertEqual(len(unique_name), DataJobSagemakerBase.MAX_CHARS)
 
         # test with a short string and check that the datetime will be appended
-        unique_name = DatajobSagemakerBase.generate_unique_name(name="a" * 1)
+        unique_name = DataJobSagemakerBase.generate_unique_name(name="a" * 1)
         self.assertEqual(unique_name, "a-20210101T120001")
 
 

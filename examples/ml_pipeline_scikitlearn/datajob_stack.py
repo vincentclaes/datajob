@@ -1,8 +1,6 @@
 """https://github.com/aws/amazon-sagemaker-examples/blob/master/step-functions-
 data-science-sdk/step_functions_mlworkflow_processing/step_functions_mlworkflow
 _scikit_learn_data_processing_and_model_evaluation.ipynb."""
-import pathlib
-
 import boto3
 import sagemaker
 from aws_cdk import core
@@ -10,11 +8,10 @@ from sagemaker.processing import ProcessingInput
 from sagemaker.processing import ProcessingOutput
 from sagemaker.sklearn import SKLearnProcessor
 from sagemaker.sklearn.estimator import SKLearn
-from stepfunctions.inputs import ExecutionInput
 
 from datajob.datajob_stack import DataJobStack
-from datajob.sagemaker import ProcessingStep
-from datajob.sagemaker import TrainingStep
+from datajob.sagemaker.sagemaker_job import ProcessingStep
+from datajob.sagemaker.sagemaker_job import TrainingStep
 from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
 
 role = "arn:aws:iam::077590795309:role/service-role/AmazonSageMaker-ExecutionRole-20191008T190827"
@@ -23,17 +20,11 @@ app = core.App()
 
 with DataJobStack(scope=app, id="datajob-ml-pipeline-scikitlearn") as djs:
 
-    boto_session = boto3.session.Session(region_name=djs.env.region)
-    sagemaker_session = sagemaker.Session(boto_session=boto_session)
+    sagemaker_session = sagemaker.Session(
+        boto_session=boto3.session.Session(region_name=djs.env.region)
+    )
     s3_bucket_base_uri = "{}{}".format("s3://", sagemaker_session.default_bucket())
     output_data = "{}/{}".format(s3_bucket_base_uri, "data/sklearn_processing/output")
-
-    execution_input = ExecutionInput(
-        schema={
-            "PreprocessingJobName": str,
-            "TrainingJobName": str,
-        }
-    )
 
     input_data = f"s3://sagemaker-sample-data-{djs.env.region}/processing/census/census-income.csv"
 
@@ -79,7 +70,6 @@ with DataJobStack(scope=app, id="datajob-ml-pipeline-scikitlearn") as djs:
     processing_step = ProcessingStep(
         datajob_stack=djs,
         name="processing-job",
-        job_name=execution_input["PreprocessingJobName"],
         processor=processor,
         inputs=inputs,
         outputs=outputs,
@@ -108,7 +98,6 @@ with DataJobStack(scope=app, id="datajob-ml-pipeline-scikitlearn") as djs:
     training_step = TrainingStep(
         datajob_stack=djs,
         name="training-job",
-        job_name=execution_input["TrainingJobName"],
         estimator=estimator,
         data={
             "train": sagemaker.TrainingInput(
