@@ -36,21 +36,21 @@ class DataJobSagemakerBase(DataJobBase):
         return unique_name
 
     def handle_job_name(self, job_name):
-        if job_name is None:
-            logger.debug(
-                f"job name not provided, we will return the unique name {self.unique_name}"
-            )
-            if self.unique_name in DataJobSagemakerBase.execution_input_schema:
-                raise DataJobSagemakerException(
-                    f"The entry {self.unique_name} already exists in the execution input."
-                )
-            DataJobSagemakerBase.execution_input_schema[self.unique_name] = str
-            DataJobSagemakerBase.execution_input = ExecutionInput(
-                schema=DataJobSagemakerBase.execution_input_schema
-            )
-            return DataJobSagemakerBase.execution_input[self.unique_name]
-        else:
+        if job_name is not None:
             return job_name
+
+        logger.debug(
+            f"job name not provided, we will return the unique name {self.unique_name}"
+        )
+        if self.unique_name in DataJobSagemakerBase.execution_input_schema:
+            raise DataJobSagemakerException(
+                f"The entry {self.unique_name} already exists in the execution input."
+            )
+        DataJobSagemakerBase.execution_input_schema[self.unique_name] = str
+        DataJobSagemakerBase.execution_input = ExecutionInput(
+            schema=DataJobSagemakerBase.execution_input_schema
+        )
+        return DataJobSagemakerBase.execution_input[self.unique_name]
 
     def create(self):
         logger.debug(
