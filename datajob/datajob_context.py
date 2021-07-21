@@ -1,17 +1,19 @@
 import uuid
 from pathlib import Path
 
-from aws_cdk import core, aws_s3_deployment, aws_s3
+from aws_cdk import aws_s3
+from aws_cdk import aws_s3_deployment
+from aws_cdk import core
 from aws_empty_bucket.empty_s3_bucket import EmptyS3Bucket
 
 from datajob import logger
 
 
-class DatajobContextError(Exception):
+class DataJobContextError(Exception):
     """any exception occuring when constructing data job context."""
 
 
-class DatajobContextWheelError(Exception):
+class DataJobContextWheelError(Exception):
     """any exception occuring when constructing wheel in data job context."""
 
 
@@ -152,7 +154,7 @@ class DataJobContext(core.Construct):
                 deployment_bucket_name, wheel_deployment_name, project_root
             )
             logger.debug(f"wheel will be located at {s3_url_wheel}")
-        except DatajobContextWheelError as e:
+        except DataJobContextWheelError as e:
             logger.warning("something went wrong while creating a wheel." f"{e}")
             s3_url_wheel = None
         finally:
@@ -175,7 +177,7 @@ class DataJobContext(core.Construct):
         """
         dist_file_names = list(Path(project_root, dist_folder).glob("*.whl"))
         if len(dist_file_names) != 1:
-            raise DatajobContextError(f"we expected 1 wheel: {dist_file_names}")
+            raise DataJobContextError(f"we expected 1 wheel: {dist_file_names}")
         # todo - improve creation of s3 urls
         return f"s3://{deployment_bucket_name}/{wheel_deployment_name}/{dist_file_names[0].name}"
 
