@@ -3,7 +3,6 @@ from datetime import datetime
 from typing import Union
 
 from aws_cdk import aws_iam as iam
-from aws_cdk.core import CfnOutput
 from stepfunctions.inputs import ExecutionInput
 
 from datajob import logger
