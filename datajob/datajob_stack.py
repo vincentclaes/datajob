@@ -2,6 +2,7 @@ import os
 from typing import Union
 
 from aws_cdk import core
+from aws_cdk.core import CfnOutput
 
 from datajob import logger
 from datajob.datajob_context import DataJobContext
@@ -41,6 +42,7 @@ class DataJobStack(core.Stack):
         self.project_root = project_root
         self.include_folder = include_folder
         self.resources = []
+        self.outputs = {}
         self.context = None
 
     def __enter__(self):
@@ -56,7 +58,8 @@ class DataJobStack(core.Stack):
         """steps we have to do when exiting the context manager.
 
         - we will create the resources we have defined.
-        - we will synthesize our stack so that we have everything to deploy.
+        - we will create cloudformation stack outputs, if present.
+
         :param exc_type:
         :param exc_value:
         :param traceback:
@@ -64,10 +67,18 @@ class DataJobStack(core.Stack):
         """
         logger.debug("creating resources and synthesizing stack.")
         self.create_resources()
+        self.create_cloudformation_outputs()
 
     def add(self, task: str) -> None:
         setattr(self, task.unique_name, task)
         task.create()
+
+    def update_datajob_stack_output(self, key: str, value: str) -> None:
+        """Add a key and value to datajob_stack
+        Returns:
+
+        """
+        self.outputs[key] = value
 
     @staticmethod
     def _create_unique_stack_name(stack_name: str, stage: Union[str, None]) -> str:
@@ -82,7 +93,7 @@ class DataJobStack(core.Stack):
         return stack_name
 
     @staticmethod
-    def _create_environment_object(account, region) -> core.Environment:
+    def _create_environment_object(account: str, region: str) -> core.Environment:
         """create an aws cdk Environment object.
 
         Args:
@@ -97,14 +108,25 @@ class DataJobStack(core.Stack):
         region = region if region is not None else os.environ.get("AWS_DEFAULT_REGION")
         return core.Environment(account=account, region=region)
 
-    def create_resources(self):
+    def create_cloudformation_outputs(self) -> None:
+        """if the outputs dictionary has key value pairs, create these for the
+        cloudformation stack outputs.
+
+        Returns:  None
+        """
+        if self.outputs:
+            for key, value in self.outputs.items():
+                logger.debug(f"adding key {key} and value {value} to the stack output.")
+                CfnOutput(scope=self, id=key, value=value)
+
+    def create_resources(self) -> None:
         """create each of the resources of this stack."""
         if self.resources:
             logger.debug("creating resources.")
             return [resource.create() for resource in self.resources]
         logger.debug("no resources available to create.")
 
-    def get_stage(self, stage):
+    def get_stage(self, stage: str) -> Union[str, None]:
         """get the stage parameter and return a default if not found."""
         if stage:
             logger.debug(

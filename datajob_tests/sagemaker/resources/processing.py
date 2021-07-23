@@ -13,7 +13,7 @@ def main():
     args_iter = iter(sys.argv[1:])
     args = dict(zip(args_iter, args_iter))
 
-    print("Received arguments {}".format(args))
+    print("Received argument {}".format(args))
     print("Reading input data from {}".format(input_data_path))
 
     print("Got Args: {}".format(args))

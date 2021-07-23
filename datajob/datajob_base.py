@@ -9,8 +9,8 @@ from datajob.datajob_stack import DataJobStack
 
 
 class DataJobBase(core.Construct):
-    def __init__(self, datajob_stack, name, **kwargs):
-        super().__init__(datajob_stack, name, **kwargs)
+    def __init__(self, datajob_stack, name):
+        super().__init__(datajob_stack, name)
         assert isinstance(
             datajob_stack, DataJobStack
         ), f"we expect the scope argument to be of type {DataJobStack}"

@@ -46,7 +46,7 @@ class GlueJob(DataJobBase):
         :param job_type: choose pythonshell for plain python / glueetl for a spark cluster. pythonshell is the default.
         :param glue_version: at the time of writing choose 1.0 for pythonshell / 2.0 for spark.
         :param max_capacity: max nodes we want to run.
-        :param arguments: the arguments as a dict for this glue job.
+        :param arguments: the argument as a dict for this glue job.
         :param python_version: 3 is the default
         :param role: you can provide a cdk iam role object as arg. if not provided this class will instantiate a role,
         :param worker_type: you can provide a worker type Standard / G.1X / G.2X
@@ -55,7 +55,7 @@ class GlueJob(DataJobBase):
         :param kwargs: any extra kwargs for the glue.CfnJob
         """
         logger.info(f"creating glue job {name}")
-        super().__init__(datajob_stack, name, **kwargs)
+        super().__init__(datajob_stack, name)
         self.role = self.get_role(
             role=role,
             unique_name=self.unique_name,
@@ -210,7 +210,7 @@ class GlueJob(DataJobBase):
         **kwargs,
     ) -> None:
         """Create a glue job with the necessary configuration like, paths to
-        wheel and business logic and arguments."""
+        wheel and business logic and argument."""
         logger.debug(f"creating Glue Job {glue_job_name}")
         default_arguments = None
         if context.s3_url_wheel:

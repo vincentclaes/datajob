@@ -44,7 +44,7 @@ def deploy(
         project_root = str(Path(config).parent)
         wheel.create_wheel(project_root=project_root, package=package)
     # create stepfunctions if requested
-    # make sure you have quotes around the app arguments
+    # make sure you have quotes around the app argument
     args = ["--app", f""" "python {config}" """, "-c", f"stage={stage}"]
     extra_args = ctx.args
     call_cdk(command="deploy", args=args, extra_args=extra_args)
