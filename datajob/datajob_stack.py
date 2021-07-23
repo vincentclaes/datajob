@@ -73,7 +73,7 @@ class DataJobStack(core.Stack):
         setattr(self, task.unique_name, task)
         task.create()
 
-    def update_datajob_stack_output(self, key: str, value: str) -> None:
+    def update_datajob_stack_outputs(self, key: str, value: str) -> None:
         """Add a key and value to datajob_stack output variable
         Returns:  None
 

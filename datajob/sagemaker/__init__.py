@@ -84,7 +84,7 @@ class DataJobSagemakerBase(DataJobBase):
         execution_input_schema_keys = json.dumps(
             list(DataJobSagemakerBase.execution_input_schema.keys())
         )
-        datajob_stack.update_datajob_stack_output(
+        datajob_stack.update_datajob_stack_outputs(
             key=DataJobSagemakerBase.DATAJOB_EXECUTION_INPUT,
             value=execution_input_schema_keys,
         )
