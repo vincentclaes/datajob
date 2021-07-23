@@ -19,8 +19,7 @@ class DataJobBase(core.Construct):
         self.stage = self.datajob_stack.stage
         self.unique_name = f"{self.datajob_stack.unique_stack_name}-{self.name}"
         self.context = self.datajob_stack.context
-        logger.info(f"adding job {self.unique_name} to stack workflow resources")
-        self.datajob_stack.resources.append(self)
+        self.datajob_stack.update_datajob_stack_resources(resource=self)
 
     @abstractmethod
     def create(self):

@@ -74,11 +74,23 @@ class DataJobStack(core.Stack):
         task.create()
 
     def update_datajob_stack_output(self, key: str, value: str) -> None:
-        """Add a key and value to datajob_stack
-        Returns:
+        """Add a key and value to datajob_stack output variable
+        Returns:  None
 
         """
         self.outputs[key] = value
+
+    def update_datajob_stack_resources(self, resource: object) -> None:
+        """add  a DataJob resource to the DataJob stack resources variable.
+
+        Args:
+            resource: A DataJobBase implementation. we cannot reference it here explicitly
+            in the typing, because then we  have a circular dependency conflict.
+
+        Returns: None
+        """
+        logger.info(f"adding job {self} to stack workflow resources")
+        self.resources.append(resource)
 
     @staticmethod
     def _create_unique_stack_name(stack_name: str, stage: Union[str, None]) -> str:
