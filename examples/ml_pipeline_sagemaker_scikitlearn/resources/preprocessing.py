@@ -42,7 +42,7 @@ if __name__ == "__main__":
     parser.add_argument("--train-test-split-ratio", type=float, default=0.3)
     args, _ = parser.parse_known_args()
 
-    print("Received argument {}".format(args))
+    print("Received arguments {}".format(args))
 
     input_data_path = os.path.join("/opt/ml/processing/input", "census-income.csv")
 
