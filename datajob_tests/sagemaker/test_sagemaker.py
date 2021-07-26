@@ -63,7 +63,7 @@ class TestSagemaker(unittest.TestCase):
                 processing_step >> processing_step
                 training_step >> training_step
 
-    def test_generate_unique_name(self):
+    def test_generate_unique_name_successfully(self):
         # freeze time
         DataJobSagemakerBase.current_date = datetime(2021, 1, 1, 12, 0, 1)
         # test with a long string and check that the result will be max allowed characters
@@ -75,6 +75,54 @@ class TestSagemaker(unittest.TestCase):
         # test with a short string and check that the datetime will be appended
         unique_name = DataJobSagemakerBase.generate_unique_name(name="a" * 1)
         self.assertEqual(unique_name, "a-20210101T120001")
+
+    def test_handle_argument_for_execution_input_successfully(self):
+        role = "arn:aws:iam::111111111111:role/service-role/AmazonSageMaker-ExecutionRole-20200101T000001"
+        sagemaker_session = LocalSession()
+        sagemaker_session.config = {"local": {"local_code": True}}
+
+        with DataJobStack(scope=self.app, id="some-stack", stage="stg") as djs:
+            processor = SKLearnProcessor(
+                framework_version="0.23-1",
+                role=role,
+                instance_type="local",
+                instance_count=1,
+                sagemaker_session=sagemaker_session,
+            )
+
+            ProcessingStep(
+                datajob_stack=djs,
+                name="processing-job",
+                processor=processor,
+            )
+
+            estimator = SKLearn(
+                entry_point=str(pathlib.Path(current_dir, "resources", "train.py")),
+                train_instance_type="ml.m5.xlarge",
+                role=role,
+                framework_version="0.20.0",
+                py_version="py3",
+                sagemaker_session=sagemaker_session,
+            )
+
+            TrainingStep(
+                datajob_stack=djs,
+                name="training-job",
+                estimator=estimator,
+            )
+
+        # check if we have the expected value for the execution input
+        self.assertDictEqual(
+            DataJobSagemakerBase.execution_input_schema,
+            {"some-stack-stg-processing-job": str, "some-stack-stg-training-job": str},
+        )
+        # execution input is added to cloudformation output
+        self.assertDictEqual(
+            djs.outputs,
+            {
+                "DatajobExecutionInput": '["some-stack-stg-processing-job", "some-stack-stg-training-job"]'
+            },
+        )
 
 
 if __name__ == "__main__":
