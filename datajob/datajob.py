@@ -109,8 +109,13 @@ def execute(
     )
 ):
     state_machine_arn = stepfunctions_execute._find_state_machine_arn(state_machine)
+    execution_input = stepfunctions_execute.get_execution_input(
+        sfn_arn=state_machine_arn
+    )
     console.log(f"executing: {state_machine}")
-    execution = stepfunctions_execute._execute(state_machine_arn)
+    execution = stepfunctions_execute._execute(
+        state_machine_arn, execution_input=execution_input
+    )
     status = stepfunctions_execute._get_status(execution)
     console.log(f"status: {status}")
     url = create_sfn_execution_url(execution.execution_arn)
