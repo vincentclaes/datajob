@@ -108,10 +108,15 @@ def execute(
         ..., help="the full name of the state machine you want to execute."
     )
 ):
-    state_machine_arn = stepfunctions_execute._find_state_machine_arn(state_machine)
+    state_machine_arn = stepfunctions_execute.find_state_machine_arn(state_machine)
+    execution_input = stepfunctions_execute.get_execution_input(
+        sfn_arn=state_machine_arn
+    )
     console.log(f"executing: {state_machine}")
-    execution = stepfunctions_execute._execute(state_machine_arn)
-    status = stepfunctions_execute._get_status(execution)
+    execution = stepfunctions_execute.execute(
+        state_machine_arn, execution_input=execution_input
+    )
+    status = stepfunctions_execute.get_status(execution)
     console.log(f"status: {status}")
     url = create_sfn_execution_url(execution.execution_arn)
     console.log(f"view the execution on the AWS console:")
