@@ -79,11 +79,13 @@ def _get_execution_input_from_stack(stack_name: str) -> Union[dict, None]:
             if output.get("OutputKey") == DataJobSagemakerBase.DATAJOB_EXECUTION_INPUT:
                 execution_inputs = json.loads(output.get("OutputValue"))
 
-                return_value = {}
-                for execution_input in execution_inputs:
-                    return_value[
+                return_value = {
+                    execution_input: DataJobSagemakerBase.generate_unique_name(
                         execution_input
-                    ] = DataJobSagemakerBase.generate_unique_name(execution_input)
+                    )
+                    for execution_input in execution_inputs
+                }
+
                 console.log("execution input found: \n" f"{return_value}")
                 return return_value
     logger.debug("no execution input found.")
@@ -101,8 +103,7 @@ def get_execution_input(sfn_arn: str) -> Union[dict, None]:
     Returns: ExecutionInput or None
     """
     stack_name = _find_cloudformation_stack_name_for_sfn_workflow(sfn_arn=sfn_arn)
-    execution_input = _get_execution_input_from_stack(stack_name=stack_name)
-    return execution_input
+    return _get_execution_input_from_stack(stack_name=stack_name)
 
 
 def get_status(execution: Execution):
