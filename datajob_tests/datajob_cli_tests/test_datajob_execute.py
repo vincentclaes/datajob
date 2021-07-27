@@ -21,7 +21,7 @@ class TestDatajobExecute(unittest.TestCase):
 
     @patch("datajob.stepfunctions.stepfunctions_execute._describe_stacks")
     @patch("datajob.stepfunctions.stepfunctions_execute._describe_stack_resources")
-    @patch("datajob.stepfunctions.stepfunctions_execute._execute")
+    @patch("datajob.stepfunctions.stepfunctions_execute.execute")
     @patch.object(Workflow, "list_workflows")
     def test_datajob_cli_execute_with_no_errors(
         self, m_list_workflow, m_execute, m_describe_resources, m_describe_stack
