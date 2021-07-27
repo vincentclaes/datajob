@@ -1,6 +1,7 @@
 from pathlib import Path
 
-from datajob import logger, call_subprocess
+from datajob import call_subprocess
+from datajob import logger
 
 
 class DatajobPackageWheelError(Exception):
@@ -8,9 +9,11 @@ class DatajobPackageWheelError(Exception):
 
 
 def create_wheel(project_root: str, package: str) -> None:
-    """
-    Select the function to build a wheel based on the argument provided with --package.
-    At the time of writing the arguments can be setuppy or poetry.
+    """Select the function to build a wheel based on the argument provided
+    with.
+
+    --package. At the time of writing the argument can be setuppy or poetry.
+
     :param project_root: the path to the root of your project.
     :param package: the tool you want to use to build your wheel using (setuppy, poetry, ...)
     :return: None
@@ -20,8 +23,8 @@ def create_wheel(project_root: str, package: str) -> None:
 
 
 def _setuppy_wheel(project_root: str) -> None:
-    """
-    build a wheel for your project using poetry.
+    """build a wheel for your project using poetry.
+
     :param project_root: the path to the root of your project.
     :return: None
     """
@@ -33,8 +36,8 @@ def _setuppy_wheel(project_root: str) -> None:
 
 
 def _poetry_wheel(project_root: str) -> None:
-    """
-    build a wheel for your project using poetry.
+    """build a wheel for your project using poetry.
+
     :param project_root: the path to the root of your project.
     :return: None
     """
@@ -44,9 +47,9 @@ def _poetry_wheel(project_root: str) -> None:
 
 
 def _execute_packaging_logic(project_root: str, config_file: str, cmd: str) -> None:
-    """
-    check if the config file exists in the project root and execute the command to
-    create a wheel.
+    """check if the config file exists in the project root and execute the
+    command to create a wheel.
+
     :param project_root: the path to the root of your project.
     :param config_file: the confgi file to package the project as a wheel (setup.py or pyproject.toml)
     :param cmd: the command to execute to create a wheel.

@@ -63,7 +63,20 @@ class TestSagemaker(unittest.TestCase):
                 processing_step >> processing_step
                 training_step >> training_step
 
-    def test_generate_unique_name(self):
+        # check if we have the expected value for the execution input
+        self.assertDictEqual(
+            DataJobSagemakerBase.execution_input_schema,
+            {"some-stack-stg-processing-job": str, "some-stack-stg-training-job": str},
+        )
+        # execution input is added to cloudformation output
+        self.assertDictEqual(
+            djs.outputs,
+            {
+                "DatajobExecutionInput": '["some-stack-stg-processing-job", "some-stack-stg-training-job"]'
+            },
+        )
+
+    def test_generate_unique_name_successfully(self):
         # freeze time
         DataJobSagemakerBase.current_date = datetime(2021, 1, 1, 12, 0, 1)
         # test with a long string and check that the result will be max allowed characters

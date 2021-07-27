@@ -37,7 +37,9 @@ class TrainingStep(DataJobSagemakerBase):
         self.sfn_task = SagemakerTrainingStep(
             state_id=self.unique_name if state_id is None else state_id,
             estimator=estimator,
-            job_name=self.handle_job_name(job_name),
+            job_name=self.handle_argument_for_execution_input(
+                datajob_stack=datajob_stack, argument=job_name
+            ),
             data=data,
             hyperparameters=hyperparameters,
             mini_batch_size=mini_batch_size,
@@ -75,7 +77,9 @@ class ProcessingStep(DataJobSagemakerBase):
         self.sfn_task = SagemakerProcessingStep(
             state_id=self.unique_name if state_id is None else state_id,
             processor=processor,
-            job_name=self.handle_job_name(job_name),
+            job_name=self.handle_argument_for_execution_input(
+                datajob_stack=datajob_stack, argument=job_name
+            ),
             inputs=inputs,
             outputs=outputs,
             experiment_config=experiment_config,

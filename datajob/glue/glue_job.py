@@ -55,7 +55,7 @@ class GlueJob(DataJobBase):
         :param kwargs: any extra kwargs for the glue.CfnJob
         """
         logger.info(f"creating glue job {name}")
-        super().__init__(datajob_stack, name, **kwargs)
+        super().__init__(datajob_stack, name)
         self.role = self.get_role(
             role=role,
             unique_name=self.unique_name,

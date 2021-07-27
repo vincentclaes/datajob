@@ -19,7 +19,6 @@ from stepfunctions.workflow import Workflow
 
 from datajob import logger
 from datajob.datajob_base import DataJobBase
-from datajob.sagemaker import DataJobSagemakerBase
 from datajob.sns.sns import SnsTopic
 
 __workflow = contextvars.ContextVar("workflow")
