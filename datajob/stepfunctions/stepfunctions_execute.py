@@ -11,7 +11,7 @@ from datajob import logger
 from datajob.sagemaker.sagemaker_job import DataJobSagemakerBase
 
 
-def _find_state_machine_arn(state_machine: str) -> str:
+def find_state_machine_arn(state_machine: str) -> str:
     """lookup the state machine arn based on the state machine name."""
     workflows = Workflow.list_workflows()
     state_machine_object = [
@@ -105,14 +105,14 @@ def get_execution_input(sfn_arn: str) -> Union[dict, None]:
     return execution_input
 
 
-def _get_status(execution: Execution):
+def get_status(execution: Execution):
     """get the status of a stepfunctions workflow execution."""
     time.sleep(1)
     description = execution.describe()
     return description.get("status")
 
 
-def _execute(state_machine_arn: str, execution_input: Union[dict, None]):
+def execute(state_machine_arn: str, execution_input: Union[dict, None]):
     """execute statemachine based on the name."""
     workflow = Workflow.attach(state_machine_arn)
     return workflow.execute(inputs=execution_input)
