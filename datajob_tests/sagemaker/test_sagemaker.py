@@ -1,16 +1,21 @@
 import pathlib
 import unittest
 from datetime import datetime
+from unittest import mock
 
 from aws_cdk import core
+from moto import mock_s3
+from moto import mock_sagemaker
 from sagemaker import LocalSession
 from sagemaker.sklearn import SKLearnProcessor
 from sagemaker.sklearn.estimator import SKLearn
+from sagemaker.transformer import Transformer
 
 from datajob.datajob_stack import DataJobStack
 from datajob.sagemaker import DataJobSagemakerBase
 from datajob.sagemaker.sagemaker_job import ProcessingStep
 from datajob.sagemaker.sagemaker_job import TrainingStep
+from datajob.sagemaker.sagemaker_job import TransformStep
 from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
 
 current_dir = pathlib.Path(__file__).parent.absolute()
@@ -20,6 +25,7 @@ class TestSagemaker(unittest.TestCase):
     def setUp(self) -> None:
         self.app = core.App()
 
+    @mock.patch("sagemaker.session.Session.default_bucket")
     def test_sagemaker_services_successfully(self):
         role = "arn:aws:iam::111111111111:role/service-role/AmazonSageMaker-ExecutionRole-20200101T000001"
         sagemaker_session = LocalSession()
@@ -56,8 +62,20 @@ class TestSagemaker(unittest.TestCase):
                 estimator=estimator,
             )
 
+            transformer = Transformer(
+                model_name=training_step.sfn_task.get_expected_model(),
+                instance_count=1,
+                instance_type="ml.t2.medium",
+                sagemaker_session=sagemaker_session,
+            )
+            transform_step = TransformStep(
+                datajob_stack=djs,
+                name="transform-job",
+                transformer=transformer,
+                data="s3://some-bucket/some-data.csv",
+            )
             with StepfunctionsWorkflow(djs, "sequential") as sfn_workflow:
-                processing_step >> training_step
+                processing_step >> training_step >> transform_step
 
             with StepfunctionsWorkflow(djs, "parallel") as sfn_workflow:
                 processing_step >> processing_step
