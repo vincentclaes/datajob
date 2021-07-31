@@ -35,12 +35,23 @@ class TrainingStep(DataJobSagemakerBase):
         DataJobSagemakerBase.__init__(
             self=self, datajob_stack=datajob_stack, name=name, **kwargs
         )
+
+        self.state_id = self.unique_name if state_id is None else state_id
+        self.estimator = estimator
+        self.job_name = self.handle_argument_for_execution_input(
+            datajob_stack=datajob_stack, argument=job_name
+        )
+        self.data = data
+        self.hyperparameters = hyperparameters
+        self.mini_batch_size = mini_batch_size
+        self.experiment_config = experiment_config
+        self.wait_for_completion = wait_for_completion
+        self.tags = tags
+
         self.sfn_task = SagemakerTrainingStep(
-            state_id=self.unique_name if state_id is None else state_id,
-            estimator=estimator,
-            job_name=self.handle_argument_for_execution_input(
-                datajob_stack=datajob_stack, argument=job_name
-            ),
+            state_id=self.state_id,
+            estimator=self.estimator,
+            job_name=self.job_name,
             data=data,
             hyperparameters=hyperparameters,
             mini_batch_size=mini_batch_size,
@@ -74,20 +85,32 @@ class ProcessingStep(DataJobSagemakerBase):
             self=self, datajob_stack=datajob_stack, name=name, **kwargs
         )
 
+        self.state_id = self.unique_name if state_id is None else state_id
+        self.processor = processor
+        self.job_name = self.handle_argument_for_execution_input(
+            datajob_stack=datajob_stack, argument=job_name
+        )
+        self.inputs = inputs
+        self.outputs = outputs
+        self.experiment_config = experiment_config
+        self.container_arguments = container_arguments
+        self.container_entrypoint = container_entrypoint
+        self.kms_key_id = kms_key_id
+        self.wait_for_completion = wait_for_completion
+        self.tags = tags
+
         self.sfn_task = SagemakerProcessingStep(
-            state_id=self.unique_name if state_id is None else state_id,
-            processor=processor,
-            job_name=self.handle_argument_for_execution_input(
-                datajob_stack=datajob_stack, argument=job_name
-            ),
-            inputs=inputs,
-            outputs=outputs,
-            experiment_config=experiment_config,
-            container_arguments=container_arguments,
-            container_entrypoint=container_entrypoint,
-            kms_key_id=kms_key_id,
-            wait_for_completion=wait_for_completion,
-            tags=tags,
+            state_id=self.state_id,
+            processor=self.processor,
+            job_name=self.job_name,
+            inputs=self.inputs,
+            outputs=self.outputs,
+            experiment_config=self.experiment_config,
+            container_arguments=self.container_arguments,
+            container_entrypoint=self.container_entrypoint,
+            kms_key_id=self.kms_key_id,
+            wait_for_completion=self.wait_for_completion,
+            tags=self.tags,
             **kwargs,
         )
 
@@ -118,24 +141,41 @@ class TransformStep(DataJobSagemakerBase):
         DataJobSagemakerBase.__init__(
             self=self, datajob_stack=datajob_stack, name=name, **kwargs
         )
+
+        self.state_id = self.unique_name if state_id is None else state_id
+        self.transformer = transformer
+        self.job_name = self.handle_argument_for_execution_input(
+            datajob_stack=datajob_stack, argument=job_name
+        )
+        self.model_name = transformer.model_name if model_name is None else model_name
+        self.data = data
+        self.data_type = data_type
+        self.content_type = content_type
+        self.compression_type = compression_type
+        self.split_type = split_type
+        self.experiment_config = experiment_config
+        self.wait_for_completion = wait_for_completion
+        self.tags = tags
+        self.input_filter = input_filter
+        self.output_filter = output_filter
+        self.join_source = join_source
+
         self.sfn_task = SagemakerTransformStep(
-            state_id=self.unique_name if state_id is None else state_id,
-            transformer=transformer,
-            job_name=self.handle_argument_for_execution_input(
-                datajob_stack=datajob_stack, argument=job_name
-            ),
-            model_name=transformer.model_name if model_name is None else model_name,
-            data=data,
-            data_type=data_type,
-            content_type=content_type,
-            compression_type=compression_type,
-            split_type=split_type,
-            experiment_config=experiment_config,
-            wait_for_completion=wait_for_completion,
-            tags=tags,
-            input_filter=input_filter,
-            output_filter=output_filter,
-            join_source=join_source,
+            state_id=self.state_id,
+            transformer=self.transformer,
+            job_name=self.job_name,
+            model_name=self.model_name,
+            data=self.data,
+            data_type=self.data_type,
+            content_type=self.content_type,
+            compression_type=self.compression_type,
+            split_type=self.split_type,
+            experiment_config=self.experiment_config,
+            wait_for_completion=self.wait_for_completion,
+            tags=self.tags,
+            input_filter=self.input_filter,
+            output_filter=self.output_filter,
+            join_source=self.join_source,
             **kwargs,
         )
 
@@ -147,8 +187,8 @@ class TuningStep(DataJobSagemakerBase):
         datajob_stack: DataJobStack,
         name: str,
         tuner: HyperparameterTuner,
-        job_name: any,
         data: any,
+        job_name: any = None,
         state_id: str = None,
         wait_for_completion=True,
         tags=None,
@@ -157,15 +197,21 @@ class TuningStep(DataJobSagemakerBase):
         DataJobSagemakerBase.__init__(
             self=self, datajob_stack=datajob_stack, name=name, **kwargs
         )
+        self.state_id = self.unique_name if state_id is None else state_id
+        self.tuner = tuner
+        self.job_name = self.handle_argument_for_execution_input(
+            datajob_stack=datajob_stack, argument=job_name
+        )
+        self.data = data
+        self.wait_for_completion = wait_for_completion
+        self.tags = tags
         self.sfn_task = SagemakerTuningStep(
-            state_id=self.unique_name if state_id is None else state_id,
-            tuner=tuner,
-            job_name=self.handle_argument_for_execution_input(
-                datajob_stack=datajob_stack, argument=job_name
-            ),
-            data=data,
-            wait_for_completion=wait_for_completion,
-            tags=tags,
+            state_id=self.state_id,
+            tuner=self.tuner,
+            job_name=self.job_name,
+            data=self.data,
+            wait_for_completion=self.wait_for_completion,
+            tags=self.tags,
             **kwargs,
         )
 
@@ -186,44 +232,19 @@ class ModelStep(DataJobSagemakerBase):
         DataJobSagemakerBase.__init__(
             self=self, datajob_stack=datajob_stack, name=name, **kwargs
         )
-
+        self.state_id = self.unique_name if state_id is None else state_id
+        self.model = model
+        self.model_name = self.handle_argument_for_execution_input(
+            datajob_stack=datajob_stack, argument=model_name
+        )
+        self.instance_type = instance_type
+        self.tags = tags
         self.sfn_task = SagemakerModelStep(
-            state_id=self.unique_name if state_id is None else state_id,
-            model=model,
-            model_name=self.handle_argument_for_execution_input(
-                datajob_stack=datajob_stack, argument=model_name
-            ),
-            instance_type=instance_type,
-            tags=tags,
-            **kwargs,
-        )
-
-
-@stepfunctions_workflow.task
-class EndpointStep(DataJobSagemakerBase):
-    def __init__(
-        self,
-        datajob_stack: DataJobStack,
-        name: str,
-        endpoint_config_name: str,
-        state_id=None,
-        endpoint_name=None,
-        tags=None,
-        update=False,
-        **kwargs,
-    ):
-        DataJobSagemakerBase.__init__(
-            self=self, datajob_stack=datajob_stack, name=name, **kwargs
-        )
-
-        self.sfn_task = SagemakerEndpointStep(
-            state_id=self.unique_name if state_id is None else state_id,
-            endpoint_name=self.handle_argument_for_execution_input(
-                datajob_stack=datajob_stack, argument=endpoint_name
-            ),
-            endpoint_config_name=endpoint_config_name,
-            tags=tags,
-            update=update,
+            state_id=self.state_id,
+            model=self.model,
+            model_name=self.model_name,
+            instance_type=self.instance_type,
+            tags=self.tags,
             **kwargs,
         )
 
@@ -247,17 +268,57 @@ class EndpointConfigStep(DataJobSagemakerBase):
         DataJobSagemakerBase.__init__(
             self=self, datajob_stack=datajob_stack, name=name, **kwargs
         )
-
+        self.state_id = state_id
+        self.endpoint_config_name = self.handle_argument_for_execution_input(
+            datajob_stack=datajob_stack, argument=endpoint_config_name
+        )
+        self.model_name = model_name
+        self.initial_instance_count = initial_instance_count
+        self.instance_type = instance_type
+        self.variant_name = variant_name
+        self.data_capture_config = data_capture_config
+        self.tags = tags
         self.sfn_task = SagemakerEndpointConfigStep(
-            state_id=state_id,
-            endpoint_config_name=self.handle_argument_for_execution_input(
-                datajob_stack=datajob_stack, argument=endpoint_config_name
-            ),
-            model_name=model_name,
-            initial_instance_count=initial_instance_count,
-            instance_type=instance_type,
-            variant_name=variant_name,
-            data_capture_config=data_capture_config,
-            tags=tags,
+            state_id=self.state_id,
+            endpoint_config_name=self.endpoint_config_name,
+            model_name=self.model_name,
+            initial_instance_count=self.initial_instance_count,
+            instance_type=self.instance_type,
+            variant_name=self.variant_name,
+            data_capture_config=self.data_capture_config,
+            tags=self.tags,
+            **kwargs,
+        )
+
+
+@stepfunctions_workflow.task
+class EndpointStep(DataJobSagemakerBase):
+    def __init__(
+        self,
+        datajob_stack: DataJobStack,
+        name: str,
+        endpoint_config_name: str,
+        state_id=None,
+        endpoint_name=None,
+        tags=None,
+        update=False,
+        **kwargs,
+    ):
+        DataJobSagemakerBase.__init__(
+            self=self, datajob_stack=datajob_stack, name=name, **kwargs
+        )
+        self.state_id = self.unique_name if state_id is None else state_id
+        self.endpoint_name = self.handle_argument_for_execution_input(
+            datajob_stack=datajob_stack, argument=endpoint_name
+        )
+        self.endpoint_config_name = endpoint_config_name
+        self.tags = tags
+        self.update = update
+        self.sfn_task = SagemakerEndpointStep(
+            state_id=self.state_id,
+            endpoint_name=self.endpoint_name,
+            endpoint_config_name=self.endpoint_config_name,
+            tags=self.tags,
+            update=self.update,
             **kwargs,
         )
