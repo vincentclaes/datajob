@@ -10,10 +10,11 @@
 
  </br>
 
-- We support creating and deploying code to python shell / pyspark **AWS Glue jobs**.
-- Orchestrate the glue jobs using **AWS Stepfunctions** as simple as `task1 >> task2 >> task3`
+- Create and deploying code to python shell / pyspark **AWS Glue jobs**.
+- Create, orchestrate and trigger **Sagemaker Traning Jobs and Processing Jobs**.
+- Orchestrate the above jobs using **AWS Stepfunctions** as simple as `task1 >> task2`
 - Let us [know](https://github.com/vincentclaes/datajob/discussions) **what you want to see next**.
- 
+
  </br>
 
 > Dependencies are [AWS CDK](https://github.com/aws/aws-cdk) and [Step Functions SDK for data science](https://github.com/aws/aws-step-functions-data-science-sdk-python) <br/>
@@ -164,7 +165,7 @@ you can find this example [here](./examples/data_pipeline_pyspark/glue_job/glue_
 </details>
 
 <details>
-<summary>Deploy files to deployment bucket</summary>
+<summary>Deploy files to the datajob's deployment bucket</summary>
 
 Specify the path to the folder we would like to include in the deployment bucket.
 
@@ -186,7 +187,7 @@ with DataJobStack(
 </details>
 
 <details>
-<summary>Package project</summary>
+<summary>Package your project as a wheel and ship it to AWS</summary>
 
 You can find the example [here](./examples/data_pipeline_with_packaged_project/)
 
@@ -223,7 +224,7 @@ datajob deploy --config datajob_stack.py --package setuppy
 </details>
 
 <details>
-<summary>Using Pyspark</summary>
+<summary>Processing big data using a Glue Pyspark job</summary>
 
 ```python
 import pathlib
@@ -231,7 +232,6 @@ import pathlib
 from aws_cdk import core
 from datajob.datajob_stack import DataJobStack
 from datajob.glue.glue_job import GlueJob
-from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
 
 current_dir = str(pathlib.Path(__file__).parent.absolute())
 
@@ -289,7 +289,7 @@ some_task >> ...
 </details>
 
 <details>
-<summary>Notify in case of error/success.</summary>
+<summary>Notify in case of error/success</summary>
 
 Provide the parameter `notification` in the constructor of a `StepfunctionsWorkflow` object.
 This will create an SNS Topic which will be triggered in case of failure or success.
