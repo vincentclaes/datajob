@@ -268,7 +268,7 @@ class EndpointConfigStep(DataJobSagemakerBase):
         DataJobSagemakerBase.__init__(
             self=self, datajob_stack=datajob_stack, name=name, **kwargs
         )
-        self.state_id = state_id
+        self.state_id = self.unique_name if state_id is None else state_id
         self.endpoint_config_name = self.handle_argument_for_execution_input(
             datajob_stack=datajob_stack, argument=endpoint_config_name
         )

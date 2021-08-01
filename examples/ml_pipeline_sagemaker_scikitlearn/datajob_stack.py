@@ -10,6 +10,9 @@ from sagemaker.sklearn import SKLearnProcessor
 from sagemaker.sklearn.estimator import SKLearn
 
 from datajob.datajob_stack import DataJobStack
+from datajob.sagemaker.sagemaker_job import EndpointConfigStep
+from datajob.sagemaker.sagemaker_job import EndpointStep
+from datajob.sagemaker.sagemaker_job import ModelStep
 from datajob.sagemaker.sagemaker_job import ProcessingStep
 from datajob.sagemaker.sagemaker_job import TrainingStep
 from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
@@ -107,7 +110,31 @@ with DataJobStack(scope=app, id="datajob-ml-pipeline-scikitlearn") as djs:
         wait_for_completion=True,
     )
 
+    model_step = ModelStep(
+        datajob_stack=djs,
+        name="create-model",
+        model=training_step.sfn_task.get_expected_model(),
+    )
+
+    endpoint_config_step = EndpointConfigStep(
+        datajob_stack=djs,
+        name="create-endpoint-config",
+        model_name=model_step.model_name,
+    )
+
+    endpoint_step = EndpointStep(
+        datajob_stack=djs,
+        name="create-endpoint",
+        endpoint_config_name=endpoint_config_step.endpoint_config_name,
+    )
+
     with StepfunctionsWorkflow(djs, "workflow") as sfn_workflow:
-        processing_step >> training_step
+        (
+            processing_step
+            >> training_step
+            >> model_step
+            >> endpoint_config_step
+            >> endpoint_step
+        )
 
 app.synth()
