@@ -1,16 +1,18 @@
 # ML Pipeline Scikitlearn
 
+> This example is an implementation of datajob of [an official aws sagemaker example.](https://github.com/aws/amazon-sagemaker-examples/blob/master/step-functions-data-science-sdk/machine_learning_workflow_abalone/machine_learning_workflow_abalone.ipynb)
+
 We want to predict the age of abalone (sea snails) from their physical measurements using XG Boost algorithm.
 
 We will setup an ML pipeline that prepares the abalone datatset, launches a training step and deploys the model behind a sagemaker endpoint.
 
-we have 5 steps in our ML pipeline
+we have 5 steps in our ML pipeline:
 
-- prepare_dataset_step: this task is a glue job that splits a dataset into train, validation, and test datasets. It then uploads the datasets to the sagemaker default bucket.
-- training_step: train a ml model using XG Boost.
-- model_step: get the model from the training step and create a sagemaker model.
-- endpoint_config_step: create a configuration for deploying the sagemaker model behind an endpoint.
-- endpoint_step: create a sagemaker endpoint using the endpoint_config_step
+- **prepare_dataset_step**: this task is a glue job that splits a dataset into train, validation, and test datasets. It then uploads the datasets to the sagemaker default bucket.
+- **training_step**: train a ml model using XG Boost.
+- **model_step**: get the model from the training step and create a sagemaker model.
+- **endpoint_config_step**: create a configuration for deploying the sagemaker model behind an endpoint.
+- **endpoint_step**: create a sagemaker endpoint using the endpoint_config_step
 
 
 ## Deploy
