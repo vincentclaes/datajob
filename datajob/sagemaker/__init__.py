@@ -14,6 +14,15 @@ class DataJobSagemakerException(Exception):
     """"""
 
 
+def get_default_sagemaker_role(
+    datajob_stack: DataJobStack, name: str = None
+) -> iam.Role:
+    name = name if name is not None else datajob_stack.unique_stack_name + "-sagemaker"
+    return DataJobSagemakerBase.get_default_admin_role(
+        datajob_stack, name, "sagemaker.amazonaws.com"
+    )
+
+
 class DataJobSagemakerBase(DataJobBase):
     DATAJOB_EXECUTION_INPUT = "DatajobExecutionInput"
     current_date = datetime.utcnow()
@@ -94,7 +103,3 @@ class DataJobSagemakerBase(DataJobBase):
             "sagemaker does not implement the create "
             "function because it's not necessary/not supported to add these services to the stack."
         )
-
-    def get_default_role(self, name: str) -> iam.Role:
-        name += "-sagemaker"
-        return self._get_default_role(name, "sagemaker.amazonaws.com")

@@ -55,6 +55,7 @@ class StepfunctionsWorkflow(DataJobBase):
         self.chain_of_tasks = None
         self.role = self.get_role(
             role=role,
+            datajob_stack=datajob_stack,
             unique_name=self.unique_name,
             service_principal="states.amazonaws.com",
         )
