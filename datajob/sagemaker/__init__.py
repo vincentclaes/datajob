@@ -37,6 +37,15 @@ class DataJobSagemakerBase(DataJobBase):
     def generate_unique_name(
         name: str, max_chars: int = MAX_CHARS, datetime_format: str = "%Y%m%dT%H%M%S"
     ):
+        """Generate a unique name by adding a datetime behind the name.
+
+        Args:
+            name: the name we want to make unique
+            max_chars: the maximum number of characters a unique name can have.
+            datetime_format: the format of the datetime that gets appended to the name,
+
+        Returns: the name as the unique name.
+        """
         current_date_as_string = DataJobSagemakerBase.current_date.strftime(
             datetime_format
         )
@@ -54,14 +63,17 @@ class DataJobSagemakerBase(DataJobBase):
     def handle_argument_for_execution_input(
         self, datajob_stack, argument
     ) -> Union[str, ExecutionInput]:
-        """if the argument is None, hence not provided by the user, we will
-        create a unique name and apply a stepfunctions ExecutionInput.
+        """If the user provided an argument we will return it as is. If the
+        argument is None, hence not provided by the user, we will add it as a
+        stepfunctions.ExecutionInput.
+
+        more info here: https://aws-step-functions-data-science-sdk.readthedocs.io/en/stable/placeholders.html
 
         Args:
             datajob_stack: DataJob Stack instance
             argument: an argument passed to the sagemaker task by the user.
 
-        Returns: the argument value or
+        Returns: the argument value or the execution input.
         """
         if argument is not None:
             logger.debug(
@@ -101,5 +113,5 @@ class DataJobSagemakerBase(DataJobBase):
     def create(self):
         logger.debug(
             "sagemaker does not implement the create "
-            "function because it's not necessary/not supported to add these services to the stack."
+            "function because it's not necessary/not supported to add these services to the datajob stack."
         )
