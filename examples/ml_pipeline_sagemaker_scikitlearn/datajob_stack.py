@@ -116,25 +116,7 @@ with DataJobStack(scope=app, id="datajob-ml-pipeline-scikitlearn") as djs:
         model=training_step.sfn_task.get_expected_model(),
     )
 
-    endpoint_config_step = EndpointConfigStep(
-        datajob_stack=djs,
-        name="create-endpoint-config",
-        model_name=model_step.model_name,
-    )
-
-    endpoint_step = EndpointStep(
-        datajob_stack=djs,
-        name="create-endpoint",
-        endpoint_config_name=endpoint_config_step.endpoint_config_name,
-    )
-
     with StepfunctionsWorkflow(djs, "workflow") as sfn_workflow:
-        (
-            processing_step
-            >> training_step
-            >> model_step
-            >> endpoint_config_step
-            >> endpoint_step
-        )
+        (processing_step >> training_step >> model_step)
 
 app.synth()

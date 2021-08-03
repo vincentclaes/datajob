@@ -15,10 +15,7 @@ execute the ml pipeline
 
             [16:57:28] execution input found:
                    {'datajob-ml-pipeline-scikitlearn-processing-job': 'datajob-ml-pipeline-scikitlearn-processing-job-20210801T145727',
-                   'datajob-ml-pipeline-scikitlearn-training-job': 'datajob-ml-pipeline-scikitlearn-training-job-20210801T145727',
-                   'datajob-ml-pipeline-scikitlearn-create-model': 'datajob-ml-pipeline-scikitlearn-create-model-20210801T145727',
-                   'datajob-ml-pipeline-scikitlearn-create-endpoint-config': 'datajob-ml-pipeline-scikitlearn-create-endpoint-20210801T145727',
-                   'datajob-ml-pipeline-scikitlearn-create-endpoint': 'datajob-ml-pipeline-scikitlearn-create-endpoint-20210801T145727'}
+                   'datajob-ml-pipeline-scikitlearn-training-job': 'datajob-ml-pipeline-scikitlearn-training-job-20210801T145727'}
                    executing: datajob-ml-pipeline-scikitlearn-workflow
             [16:57:29] status: RUNNING
                        view the execution on the AWS console:
