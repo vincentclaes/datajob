@@ -1,6 +1,3 @@
-"""https://github.com/aws/amazon-sagemaker-examples/blob/master/step-functions-
-data-science-sdk/machine_learning_workflow_abalone/machine_learning_workflow_ab
-alone.ipynb."""
 import boto3
 import sagemaker
 from aws_cdk import core
