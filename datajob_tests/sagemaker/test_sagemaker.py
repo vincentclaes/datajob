@@ -29,7 +29,7 @@ current_dir = pathlib.Path(__file__).parent.absolute()
 class TestSagemaker(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        cls.role = "arn:aws:iam::111111111111:role/service-role/AmazonSageMaker-ExecutionRole-20200101T000001"
+        cls.role = "arn:aws:iam::111111111111:sagemaker_default_role/service-sagemaker_default_role/AmazonSageMaker-ExecutionRole-20200101T000001"
         cls.sagemaker_session = LocalSession()
         cls.sagemaker_session.config = {"local": {"local_code": True}}
 

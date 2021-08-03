@@ -29,18 +29,19 @@ class DataJobBase(core.Construct):
     def get_default_admin_role(
         datajob_stack: DataJobStack, unique_name: str, service_principal: str
     ) -> iam.Role:
-        """Get the default role for the datajob. We use administrator access as
-        the policy for our default role.
+        """Get the default sagemaker_default_role for the datajob. We use
+        administrator access as the policy for our default
+        sagemaker_default_role.
 
         Args:
-            datajob_stack: stack construct for this role.
-            unique_name: a unique name we can give to our role.
+            datajob_stack: stack construct for this sagemaker_default_role.
+            unique_name: a unique name we can give to our sagemaker_default_role.
             service_principal: what is the service principal for our service.
 
-        Returns: iam role object.
+        Returns: iam sagemaker_default_role object.
         """
-        role_name = unique_name + "-default-role"
-        logger.debug(f"creating role {role_name}")
+        role_name = unique_name + "-default-sagemaker_default_role"
+        logger.debug(f"creating sagemaker_default_role {role_name}")
         return iam.Role(
             datajob_stack,
             role_name,
@@ -57,16 +58,16 @@ class DataJobBase(core.Construct):
         unique_name: str,
         service_principal: str,
     ) -> iam.Role:
-        """If role is None, return a default one.
+        """If sagemaker_default_role is None, return a default one.
 
-        :param unique_name: a unique name we can give to our role.
+        :param unique_name: a unique name we can give to our sagemaker_default_role.
         :param service_principal: what is the service principal for our service.
         for example: glue.amazonaws.com
-        :return: iam role object.
+        :return: iam sagemaker_default_role object.
         """
         if role is None:
             logger.warning(
-                "No role is provided, taking the default role with AdministratorAccess!"
+                "No sagemaker_default_role is provided, taking the default sagemaker_default_role with AdministratorAccess!"
             )
             return DataJobBase.get_default_admin_role(
                 datajob_stack=datajob_stack,
