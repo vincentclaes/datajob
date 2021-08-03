@@ -25,36 +25,34 @@ def data_split(
     data = [l for l in open(FILE_DATA, "r")]
     train_file = open(FILE_TRAIN, "w")
     valid_file = open(FILE_VALIDATION, "w")
-    tests_file = open(FILE_TEST, "w")
+    with open(FILE_TEST, "w") as tests_file:
+        num_of_data = len(data)
+        num_train = int((PERCENT_TRAIN / 100.0) * num_of_data)
+        num_valid = int((PERCENT_VALIDATION / 100.0) * num_of_data)
+        num_tests = int((PERCENT_TEST / 100.0) * num_of_data)
 
-    num_of_data = len(data)
-    num_train = int((PERCENT_TRAIN / 100.0) * num_of_data)
-    num_valid = int((PERCENT_VALIDATION / 100.0) * num_of_data)
-    num_tests = int((PERCENT_TEST / 100.0) * num_of_data)
+        data_fractions = [num_train, num_valid, num_tests]
+        split_data = [[], [], []]
 
-    data_fractions = [num_train, num_valid, num_tests]
-    split_data = [[], [], []]
+        rand_data_ind = 0
 
-    rand_data_ind = 0
+        for split_ind, fraction in enumerate(data_fractions):
+            for _ in range(fraction):
+                rand_data_ind = random.randint(0, len(data) - 1)
+                split_data[split_ind].append(data[rand_data_ind])
+                data.pop(rand_data_ind)
 
-    for split_ind, fraction in enumerate(data_fractions):
-        for i in range(fraction):
-            rand_data_ind = random.randint(0, len(data) - 1)
-            split_data[split_ind].append(data[rand_data_ind])
-            data.pop(rand_data_ind)
+        for l in split_data[0]:
+            train_file.write(l)
 
-    for l in split_data[0]:
-        train_file.write(l)
+        for l in split_data[1]:
+            valid_file.write(l)
 
-    for l in split_data[1]:
-        valid_file.write(l)
+        for l in split_data[2]:
+            tests_file.write(l)
 
-    for l in split_data[2]:
-        tests_file.write(l)
-
-    train_file.close()
-    valid_file.close()
-    tests_file.close()
+        train_file.close()
+        valid_file.close()
 
 
 def write_to_s3(fobj, bucket, key):
