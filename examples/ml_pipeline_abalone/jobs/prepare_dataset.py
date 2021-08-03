@@ -73,14 +73,6 @@ def upload_to_s3(url, filename):
     write_to_s3(fobj, bucket, key)
 
 
-# def upload_to_s3(bucket, channel, filename):
-#     fobj = open(filename, "rb")
-#     key = prefix + "/" + channel
-#     url = "s3://{}/{}/{}".format(bucket, key, filename)
-#     print("Writing to {}".format(url))
-#     write_to_s3(fobj, bucket, key)
-
-
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
@@ -125,7 +117,3 @@ if __name__ == "__main__":
     upload_to_s3(train_path, FILE_TRAIN)
     upload_to_s3(validation_path, FILE_VALIDATION)
     upload_to_s3(test_path, FILE_TEST)
-
-    # train_s3_file = bucket_path + "/" + prefix + "/train"
-    # validation_s3_file = bucket_path + "/" + prefix + "/validation"
-    # test_s3_file = bucket_path + "/" + prefix + "/test"
