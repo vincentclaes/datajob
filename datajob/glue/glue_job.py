@@ -57,6 +57,7 @@ class GlueJob(DataJobBase):
         logger.info(f"creating glue job {name}")
         super().__init__(datajob_stack, name)
         self.role = self.get_role(
+            datajob_stack=datajob_stack,
             role=role,
             unique_name=self.unique_name,
             service_principal="glue.amazonaws.com",

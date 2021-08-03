@@ -25,20 +25,24 @@ class DataJobBase(core.Construct):
     def create(self):
         """create datajob."""
 
-    def _get_default_role(self, unique_name: str, service_principal: str) -> iam.Role:
+    @staticmethod
+    def get_default_admin_role(
+        datajob_stack: DataJobStack, unique_name: str, service_principal: str
+    ) -> iam.Role:
         """Get the default role for the datajob. We use administrator access as
         the policy for our default role.
 
         Args:
+            datajob_stack: stack construct for this role.
             unique_name: a unique name we can give to our role.
             service_principal: what is the service principal for our service.
 
         Returns: iam role object.
         """
-        role_name = unique_name + "-role"
+        role_name = unique_name + "-default-role"
         logger.debug(f"creating role {role_name}")
         return iam.Role(
-            self,
+            datajob_stack,
             role_name,
             assumed_by=iam.ServicePrincipal(service_principal),
             managed_policies=[
@@ -46,8 +50,12 @@ class DataJobBase(core.Construct):
             ],
         )
 
+    @staticmethod
     def get_role(
-        self, role: iam.Role, unique_name: str, service_principal: str
+        datajob_stack: DataJobStack,
+        role: iam.Role,
+        unique_name: str,
+        service_principal: str,
     ) -> iam.Role:
         """If role is None, return a default one.
 
@@ -60,8 +68,10 @@ class DataJobBase(core.Construct):
             logger.warning(
                 "No role is provided, taking the default role with AdministratorAccess!"
             )
-            return self._get_default_role(
-                unique_name=unique_name, service_principal=service_principal
+            return DataJobBase.get_default_admin_role(
+                datajob_stack=datajob_stack,
+                unique_name=unique_name,
+                service_principal=service_principal,
             )
         return role
 
