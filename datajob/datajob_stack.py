@@ -134,8 +134,9 @@ class DataJobStack(core.Stack):
     def create_resources(self) -> None:
         """create each of the resources of this stack."""
         if self.resources:
-            logger.debug("creating resources.")
-            return [resource.create() for resource in self.resources]
+            for resource in self.resources:
+                logger.debug(f"creating resource: {resource.name}")
+                resource.create()
         logger.debug("no resources available to create.")
 
     def get_stage(self, stage: str) -> Union[str, None]:
