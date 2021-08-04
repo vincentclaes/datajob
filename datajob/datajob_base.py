@@ -29,8 +29,8 @@ class DataJobBase(core.Construct):
     def get_default_admin_role(
         datajob_stack: DataJobStack, unique_name: str, service_principal: str
     ) -> iam.Role:
-        """Get the default role for the datajob. We use administrator access as
-        the policy for our default role.
+        """Get the default role with admin rights for the datajob. We use
+        administrator access as the policy for our default role.
 
         Args:
             datajob_stack: stack construct for this role.
