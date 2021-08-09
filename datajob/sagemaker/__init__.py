@@ -1,9 +1,4 @@
-import json
-from typing import Union
-from weakref import WeakValueDictionary
-
 from aws_cdk import aws_iam as iam
-from stepfunctions.inputs import ExecutionInput
 
 from datajob import logger
 from datajob.datajob_base import DataJobBase

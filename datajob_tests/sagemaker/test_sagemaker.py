@@ -4,13 +4,13 @@ import unittest
 from unittest import mock
 
 from aws_cdk import core
+from sagemaker import LocalSession
 from sagemaker.parameter import ContinuousParameter
 from sagemaker.sklearn import SKLearnProcessor
 from sagemaker.sklearn.estimator import SKLearn
 from sagemaker.transformer import Transformer
 from sagemaker.tuner import HyperparameterTuner
 
-from datajob.datajob_execution_input import DataJobExecutionInput
 from datajob.datajob_stack import DataJobStack
 from datajob.sagemaker.sagemaker_job import EndpointConfigStep
 from datajob.sagemaker.sagemaker_job import EndpointStep
@@ -28,7 +28,6 @@ class TestSagemaker(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.role = "arn:aws:iam::111111111111:role/service-role/AmazonSageMaker-ExecutionRole-20200101T000001"
-        from sagemaker import LocalSession
 
         cls.sagemaker_session = LocalSession()
         cls.sagemaker_session.config = {"local": {"local_code": True}}
