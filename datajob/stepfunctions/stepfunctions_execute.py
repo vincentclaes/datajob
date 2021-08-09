@@ -1,5 +1,6 @@
 import json
 import time
+from datetime import datetime
 from typing import Union
 
 import boto3
@@ -8,7 +9,10 @@ from stepfunctions.workflow import Workflow
 
 from datajob import console
 from datajob import logger
-from datajob.sagemaker.sagemaker_job import DataJobSagemakerBase
+from datajob.datajob_execution_input import DataJobExecutionInput
+
+CURRENT_DATE = datetime.utcnow()
+MAX_CHARS = 63
 
 
 def find_state_machine_arn(state_machine: str) -> str:
@@ -61,6 +65,34 @@ def _describe_stacks(stack_name: str) -> dict:
     return boto3.client("cloudformation").describe_stacks(StackName=stack_name)
 
 
+def _generate_unique_name(
+    name: str,
+    max_chars: int = MAX_CHARS,
+    unique_identifier: datetime = CURRENT_DATE,
+    datetime_format: str = "%Y%m%dT%H%M%S",
+):
+    """Generate a unique name by adding a datetime behind the name.
+
+    Args:
+        name: the name we want to make unique
+        max_chars: the maximum number of characters a unique name can have.
+        datetime_format: the format of the datetime that gets appended to the name,
+
+    Returns: the name as the unique name.
+    """
+    current_date_as_string = unique_identifier.strftime(datetime_format)
+    total_length = len(current_date_as_string) + len(name)
+    difference = max_chars - total_length
+    if difference < 0:
+        logger.debug(
+            f"the length of the unique name is {total_length}. Max chars is {max_chars}. Removing last {difference} chars from name"
+        )
+        name = name[: difference - 1]
+    unique_name = f"{name}-{current_date_as_string}"
+    logger.debug(f"generated unique name is {unique_name}")
+    return unique_name
+
+
 def _get_execution_input_from_stack(stack_name: str) -> Union[dict, None]:
     """Look for the execution input in the outputs of this stack. If present
     generate unique names for the ExecutionInput and return the dict. If not
@@ -76,13 +108,14 @@ def _get_execution_input_from_stack(stack_name: str) -> Union[dict, None]:
     outputs = stack.get("Stacks")[0].get("Outputs")
     if outputs:
         for output in outputs:
-            if output.get("OutputKey") == DataJobSagemakerBase.DATAJOB_EXECUTION_INPUT:
+            if (
+                output.get("OutputKey")
+                == DataJobExecutionInput().DATAJOB_EXECUTION_INPUT
+            ):
                 execution_inputs = json.loads(output.get("OutputValue"))
 
                 return_value = {
-                    execution_input: DataJobSagemakerBase.generate_unique_name(
-                        execution_input
-                    )
+                    execution_input: _generate_unique_name(execution_input)
                     for execution_input in execution_inputs
                 }
 

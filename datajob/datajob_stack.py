@@ -6,6 +6,7 @@ from aws_cdk.core import CfnOutput
 
 from datajob import logger
 from datajob.datajob_context import DataJobContext
+from datajob.datajob_execution_input import DataJobExecutionInput
 
 
 class DataJobStack(core.Stack):
@@ -43,6 +44,7 @@ class DataJobStack(core.Stack):
         self.include_folder = include_folder
         self.resources = []
         self.outputs = {}
+        self.execution_input = DataJobExecutionInput()
         self.context = None
 
     def __enter__(self):
@@ -134,8 +136,9 @@ class DataJobStack(core.Stack):
     def create_resources(self) -> None:
         """create each of the resources of this stack."""
         if self.resources:
-            logger.debug("creating resources.")
-            return [resource.create() for resource in self.resources]
+            for resource in self.resources:
+                logger.debug(f"creating resource: {resource.name}")
+                resource.create()
         logger.debug("no resources available to create.")
 
     def get_stage(self, stage: str) -> Union[str, None]:

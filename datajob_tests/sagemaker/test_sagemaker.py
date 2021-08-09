@@ -1,7 +1,6 @@
 import json
 import pathlib
 import unittest
-from datetime import datetime
 from unittest import mock
 
 from aws_cdk import core
@@ -13,7 +12,6 @@ from sagemaker.transformer import Transformer
 from sagemaker.tuner import HyperparameterTuner
 
 from datajob.datajob_stack import DataJobStack
-from datajob.sagemaker import DataJobSagemakerBase
 from datajob.sagemaker.sagemaker_job import EndpointConfigStep
 from datajob.sagemaker.sagemaker_job import EndpointStep
 from datajob.sagemaker.sagemaker_job import ModelStep
@@ -30,6 +28,7 @@ class TestSagemaker(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.role = "arn:aws:iam::111111111111:role/service-role/AmazonSageMaker-ExecutionRole-20200101T000001"
+
         cls.sagemaker_session = LocalSession()
         cls.sagemaker_session.config = {"local": {"local_code": True}}
 
@@ -105,7 +104,7 @@ class TestSagemaker(unittest.TestCase):
 
         # check if we have the expected value for the execution input
         self.assertDictEqual(
-            DataJobSagemakerBase.execution_input_schema,
+            djs.execution_input.execution_input_schema,
             {
                 "some-stack-stg-processing-job": str,
                 "some-stack-stg-training-job": str,
@@ -174,19 +173,6 @@ class TestSagemaker(unittest.TestCase):
 
             with StepfunctionsWorkflow(djs, "sequential") as sfn_workflow:
                 transform_step >> tuner_step
-
-    def test_generate_unique_name_successfully(self):
-        # freeze time
-        DataJobSagemakerBase.current_date = datetime(2021, 1, 1, 12, 0, 1)
-        # test with a long string and check that the result will be max allowed characters
-        unique_name = DataJobSagemakerBase.generate_unique_name(
-            name="a" * DataJobSagemakerBase.MAX_CHARS
-        )
-        self.assertEqual(len(unique_name), DataJobSagemakerBase.MAX_CHARS)
-
-        # test with a short string and check that the datetime will be appended
-        unique_name = DataJobSagemakerBase.generate_unique_name(name="a" * 1)
-        self.assertEqual(unique_name, "a-20210101T120001")
 
 
 if __name__ == "__main__":

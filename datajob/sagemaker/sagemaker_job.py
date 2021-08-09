@@ -38,8 +38,12 @@ class TrainingStep(DataJobSagemakerBase):
 
         self.state_id = self.unique_name if state_id is None else state_id
         self.estimator = estimator
-        self.job_name = self.handle_argument_for_execution_input(
-            datajob_stack=datajob_stack, argument=job_name
+        self.job_name = (
+            datajob_stack.execution_input.handle_argument_for_execution_input(
+                datajob_stack=datajob_stack,
+                argument=job_name,
+                unique_name=self.unique_name,
+            )
         )
         self.data = data
         self.hyperparameters = hyperparameters
@@ -87,8 +91,12 @@ class ProcessingStep(DataJobSagemakerBase):
 
         self.state_id = self.unique_name if state_id is None else state_id
         self.processor = processor
-        self.job_name = self.handle_argument_for_execution_input(
-            datajob_stack=datajob_stack, argument=job_name
+        self.job_name = (
+            datajob_stack.execution_input.handle_argument_for_execution_input(
+                datajob_stack=datajob_stack,
+                argument=job_name,
+                unique_name=self.unique_name,
+            )
         )
         self.inputs = inputs
         self.outputs = outputs
@@ -144,8 +152,12 @@ class TransformStep(DataJobSagemakerBase):
 
         self.state_id = self.unique_name if state_id is None else state_id
         self.transformer = transformer
-        self.job_name = self.handle_argument_for_execution_input(
-            datajob_stack=datajob_stack, argument=job_name
+        self.job_name = (
+            datajob_stack.execution_input.handle_argument_for_execution_input(
+                datajob_stack=datajob_stack,
+                argument=job_name,
+                unique_name=self.unique_name,
+            )
         )
         self.model_name = transformer.model_name if model_name is None else model_name
         self.data = data
@@ -199,8 +211,12 @@ class TuningStep(DataJobSagemakerBase):
         )
         self.state_id = self.unique_name if state_id is None else state_id
         self.tuner = tuner
-        self.job_name = self.handle_argument_for_execution_input(
-            datajob_stack=datajob_stack, argument=job_name
+        self.job_name = (
+            datajob_stack.execution_input.handle_argument_for_execution_input(
+                datajob_stack=datajob_stack,
+                argument=job_name,
+                unique_name=self.unique_name,
+            )
         )
         self.data = data
         self.wait_for_completion = wait_for_completion
@@ -234,8 +250,12 @@ class ModelStep(DataJobSagemakerBase):
         )
         self.state_id = self.unique_name if state_id is None else state_id
         self.model = model
-        self.model_name = self.handle_argument_for_execution_input(
-            datajob_stack=datajob_stack, argument=model_name
+        self.model_name = (
+            datajob_stack.execution_input.handle_argument_for_execution_input(
+                datajob_stack=datajob_stack,
+                argument=model_name,
+                unique_name=self.unique_name,
+            )
         )
         self.instance_type = instance_type
         self.tags = tags
@@ -269,8 +289,12 @@ class EndpointConfigStep(DataJobSagemakerBase):
             self=self, datajob_stack=datajob_stack, name=name, **kwargs
         )
         self.state_id = self.unique_name if state_id is None else state_id
-        self.endpoint_config_name = self.handle_argument_for_execution_input(
-            datajob_stack=datajob_stack, argument=endpoint_config_name
+        self.endpoint_config_name = (
+            datajob_stack.execution_input.handle_argument_for_execution_input(
+                datajob_stack=datajob_stack,
+                argument=endpoint_config_name,
+                unique_name=self.unique_name,
+            )
         )
         self.model_name = model_name
         self.initial_instance_count = initial_instance_count
@@ -308,8 +332,12 @@ class EndpointStep(DataJobSagemakerBase):
             self=self, datajob_stack=datajob_stack, name=name, **kwargs
         )
         self.state_id = self.unique_name if state_id is None else state_id
-        self.endpoint_name = self.handle_argument_for_execution_input(
-            datajob_stack=datajob_stack, argument=endpoint_name
+        self.endpoint_name = (
+            datajob_stack.execution_input.handle_argument_for_execution_input(
+                datajob_stack=datajob_stack,
+                argument=endpoint_name,
+                unique_name=self.unique_name,
+            )
         )
         self.endpoint_config_name = endpoint_config_name
         self.tags = tags
