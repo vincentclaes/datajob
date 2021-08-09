@@ -9,7 +9,7 @@ from stepfunctions.workflow import Workflow
 
 from datajob import console
 from datajob import logger
-from datajob.sagemaker import DataJobSagemakerExecutionInput
+from datajob.datajob_execution_input import DataJobExecutionInput
 
 CURRENT_DATE = datetime.utcnow()
 MAX_CHARS = 63
@@ -110,7 +110,7 @@ def _get_execution_input_from_stack(stack_name: str) -> Union[dict, None]:
         for output in outputs:
             if (
                 output.get("OutputKey")
-                == DataJobSagemakerExecutionInput().DATAJOB_EXECUTION_INPUT
+                == DataJobExecutionInput().DATAJOB_EXECUTION_INPUT
             ):
                 execution_inputs = json.loads(output.get("OutputValue"))
 
