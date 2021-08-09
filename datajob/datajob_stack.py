@@ -62,8 +62,9 @@ class DataJobStack(core.Stack):
         :param traceback:
         :return: None
         """
-        logger.debug("creating resources and synthesizing stack.")
-        self.create_resources()
+        if exc_type is None and exc_value is None and traceback is None:
+            logger.debug("creating resources and synthesizing stack.")
+            self.create_resources()
 
     def add(self, task: str) -> None:
         setattr(self, task.unique_name, task)

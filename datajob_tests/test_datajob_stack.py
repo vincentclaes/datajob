@@ -1,5 +1,6 @@
 import unittest
 
+import mock.mock
 from aws_cdk import core
 
 from datajob.datajob_stack import DataJobStack
@@ -37,3 +38,20 @@ class TestDatajobStack(unittest.TestCase):
         ) as djs:
             pass
         self.assertEqual(djs.stage, stage_value)
+
+    @mock.patch.object(DataJobStack, "create_resources")
+    def test_datajob_stack_creates_resources_on_exit_only_when_no_error_occurs(
+        self, m_create_resources
+    ):
+        exception_ = None
+        try:
+            with DataJobStack(scope=self.app, id="datajob-stack-with-error") as djs:
+                raise Exception("some exception")
+        except Exception as e:
+            exception_ = e
+        self.assertEqual(m_create_resources.call_count, 0)
+        self.assertIsNotNone(exception_)
+
+        with DataJobStack(scope=self.app, id="datajob-stack-without-error") as djs:
+            pass
+        self.assertEqual(m_create_resources.call_count, 1)
