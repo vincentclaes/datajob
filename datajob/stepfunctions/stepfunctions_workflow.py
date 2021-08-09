@@ -135,7 +135,7 @@ class StepfunctionsWorkflow(DataJobBase):
                 self.chain_of_tasks.append(sfn_task)
         return self.chain_of_tasks
 
-    def _build_workflow(self):
+    def build_workflow(self):
         """create a step functions workflow from the chain_of_tasks."""
         self.chain_of_tasks = self._construct_toposorted_chain_of_tasks()
         logger.debug("creating a chain from all the different steps.")
@@ -226,7 +226,6 @@ class StepfunctionsWorkflow(DataJobBase):
 
     def __exit__(self, exc_type, exc_value, traceback) -> None:
         """steps we have to do when exiting the context manager."""
-        self._build_workflow()
         _set_workflow(None)
         logger.info(f"step functions workflow {self.unique_name} created")
 
@@ -258,7 +257,7 @@ def task(self):
 
         Syntactic suggar for >>.
         """
-        _connect(self=self, other=other)
+        connect(self=self, other=other)
         return other
 
     setattr(self, "__rshift__", __rshift__)
@@ -276,6 +275,7 @@ def _get_workflow():
         return None
 
 
-def _connect(self, other: DataJobBase) -> None:
+def connect(self, other: DataJobBase) -> None:
     work_flow = _get_workflow()
     work_flow.directed_graph[other].add(self)
+    work_flow.build_workflow()
