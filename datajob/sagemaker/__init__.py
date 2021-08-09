@@ -1,5 +1,4 @@
 import json
-from datetime import datetime
 from typing import Union
 
 from aws_cdk import aws_iam as iam
@@ -23,42 +22,59 @@ def get_default_sagemaker_role(
     )
 
 
-class DataJobSagemakerBase(DataJobBase):
+class Singleton(type):
+    _instances = {}
+
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
+
+    def flush(cls):
+        """clear all data in the singleton object."""
+        cls._instances = {}
+
+
+class DataJobSagemakerExecutionInput(object, metaclass=Singleton):
+    """singleton class that holds configuration on the execution input."""
+
     DATAJOB_EXECUTION_INPUT = "DatajobExecutionInput"
-    current_date = datetime.utcnow()
-    MAX_CHARS = 63
-    execution_input_schema = {}
-    execution_input = None
 
-    def __init__(self, datajob_stack: DataJobStack, name: str, *args, **kwargs):
-        super().__init__(datajob_stack, name)
+    def __init__(self):
+        self.execution_input_schema = {}
+        self.execution_input = None
 
-    @staticmethod
-    def generate_unique_name(
-        name: str, max_chars: int = MAX_CHARS, datetime_format: str = "%Y%m%dT%H%M%S"
-    ):
-        """Generate a unique name by adding a datetime behind the name.
+    def add_execution_input(self, unique_name: str) -> None:
+        logger.debug(f"adding execution input for {unique_name}")
+        if unique_name in self.execution_input_schema:
+            raise DataJobSagemakerException(
+                f"The entry {unique_name} already exists in the execution input."
+            )
+        self.execution_input_schema[unique_name] = str
+        self.execution_input = ExecutionInput(schema=self.execution_input_schema)
+
+    def update_execution_input_for_stack(self, datajob_stack: DataJobStack) -> None:
+        """Add the keys of the execution input schema as a json string to the
+        output variable `of the datajob stack.
 
         Args:
-            name: the name we want to make unique
-            max_chars: the maximum number of characters a unique name can have.
-            datetime_format: the format of the datetime that gets appended to the name,
+            datajob_stack: DataJob Stack instance
 
-        Returns: the name as the unique name.
+        Returns: None
         """
-        current_date_as_string = DataJobSagemakerBase.current_date.strftime(
-            datetime_format
+        execution_input_schema_keys = json.dumps(
+            list(self.execution_input_schema.keys())
         )
-        total_length = len(current_date_as_string) + len(name)
-        difference = max_chars - total_length
-        if difference < 0:
-            logger.debug(
-                f"the length of the unique name is {total_length}. Max chars is {max_chars}. Removing last {difference} chars from name"
-            )
-            name = name[: difference - 1]
-        unique_name = f"{name}-{current_date_as_string}"
-        logger.debug(f"generated unique name is {unique_name}")
-        return unique_name
+        datajob_stack.update_datajob_stack_outputs(
+            key=self.DATAJOB_EXECUTION_INPUT,
+            value=execution_input_schema_keys,
+        )
+
+
+class DataJobSagemakerBase(DataJobBase):
+    def __init__(self, datajob_stack: DataJobStack, name: str, *args, **kwargs):
+        super().__init__(datajob_stack, name)
+        self.execution_input = DataJobSagemakerExecutionInput()
 
     def handle_argument_for_execution_input(
         self, datajob_stack, argument
@@ -80,35 +96,12 @@ class DataJobSagemakerBase(DataJobBase):
                 f"parameter value {argument} is not None, we are just returning the value."
             )
             return argument
-        logger.debug(f"job name not provided, we will construct an execution input.")
-        if self.unique_name in DataJobSagemakerBase.execution_input_schema:
-            raise DataJobSagemakerException(
-                f"The entry {self.unique_name} already exists in the execution input."
-            )
-        DataJobSagemakerBase.execution_input_schema[self.unique_name] = str
-        DataJobSagemakerBase.execution_input = ExecutionInput(
-            schema=DataJobSagemakerBase.execution_input_schema
+        logger.debug(f"no argument provided, we will construct an execution input.")
+        self.execution_input.add_execution_input(self.unique_name)
+        self.execution_input.update_execution_input_for_stack(
+            datajob_stack=datajob_stack
         )
-        self._update_execution_input_for_stack(datajob_stack=datajob_stack)
-        return DataJobSagemakerBase.execution_input[self.unique_name]
-
-    @staticmethod
-    def _update_execution_input_for_stack(datajob_stack: DataJobStack) -> None:
-        """Add the keys of the execution input schema as a json string to the
-        output variable `of the datajob stack.
-
-        Args:
-            datajob_stack: DataJob Stack instance
-
-        Returns: None
-        """
-        execution_input_schema_keys = json.dumps(
-            list(DataJobSagemakerBase.execution_input_schema.keys())
-        )
-        datajob_stack.update_datajob_stack_outputs(
-            key=DataJobSagemakerBase.DATAJOB_EXECUTION_INPUT,
-            value=execution_input_schema_keys,
-        )
+        return self.execution_input.execution_input[self.unique_name]
 
     def create(self):
         logger.debug(
