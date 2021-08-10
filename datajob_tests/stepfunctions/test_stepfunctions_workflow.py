@@ -21,7 +21,7 @@ class SomeMockedClass(object):
         self.sfn_task = Task(state_id=unique_name)
 
 
-class TestStepfunctions(unittest.TestCase):
+class TestStepfunctionsWorkflow(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         # we need a AWS region else these tests will fail with boto3 stepfunctions.
@@ -157,4 +157,47 @@ class TestStepfunctions(unittest.TestCase):
         # when implementing a notification we expect a Parallel branch
         self.assertEqual(
             sfn_workflow.get("States").get("notification").get("Type"), "Parallel"
+        )
+
+    @mock_stepfunctions
+    def test_update_stepfunctions_continuously(self):
+        """update the workflow continuously instead of waiting all the way in
+        the end.
+
+        test written based on ticket
+        https://github.com/vincentclaes/datajob/issues/116
+        """
+
+        task1 = stepfunctions_workflow.task(SomeMockedClass("task1"))
+        task2 = stepfunctions_workflow.task(SomeMockedClass("task2"))
+        task3 = stepfunctions_workflow.task(SomeMockedClass("task3"))
+
+        djs = DataJobStack(
+            scope=self.app,
+            id="a-unique-name-1",
+            stage="stage",
+            project_root="sampleproject/",
+            region="eu-west-1",
+            account="3098726354",
+        )
+        with StepfunctionsWorkflow(djs, "some-name") as a_step_functions_workflow:
+            self.assertIsNone(a_step_functions_workflow.workflow)
+            self.assertIsNone(a_step_functions_workflow.chain_of_tasks)
+            task1 >> task2
+            self.assertIsNotNone(a_step_functions_workflow.workflow)
+            self.assertEqual(len(a_step_functions_workflow.chain_of_tasks.steps), 2)
+            task2 >> task3
+            self.assertEqual(len(a_step_functions_workflow.chain_of_tasks.steps), 3)
+
+        expected_workflow_definition = {
+            "StartAt": "task1",
+            "States": {
+                "task1": {"Type": "Task", "Next": "task2"},
+                "task2": {"Type": "Task", "Next": "task3"},
+                "task3": {"Type": "Task", "End": True},
+            },
+        }
+        self.assertEqual(
+            a_step_functions_workflow.workflow.definition.to_dict(),
+            expected_workflow_definition,
         )

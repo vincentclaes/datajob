@@ -44,7 +44,7 @@ def deploy(
         project_root = str(Path(config).parent)
         wheel.create_wheel(project_root=project_root, package=package)
     # create stepfunctions if requested
-    # make sure you have quotes around the app arguments
+    # make sure you have quotes around the app argument
     args = ["--app", f""" "python {config}" """, "-c", f"stage={stage}"]
     extra_args = ctx.args
     call_cdk(command="deploy", args=args, extra_args=extra_args)
@@ -108,10 +108,15 @@ def execute(
         ..., help="the full name of the state machine you want to execute."
     )
 ):
-    state_machine_arn = stepfunctions_execute._find_state_machine_arn(state_machine)
+    state_machine_arn = stepfunctions_execute.find_state_machine_arn(state_machine)
+    execution_input = stepfunctions_execute.get_execution_input(
+        sfn_arn=state_machine_arn
+    )
     console.log(f"executing: {state_machine}")
-    execution = stepfunctions_execute._execute(state_machine_arn)
-    status = stepfunctions_execute._get_status(execution)
+    execution = stepfunctions_execute.execute(
+        state_machine_arn, execution_input=execution_input
+    )
+    status = stepfunctions_execute.get_status(execution)
     console.log(f"status: {status}")
     url = create_sfn_execution_url(execution.execution_arn)
     console.log(f"view the execution on the AWS console:")

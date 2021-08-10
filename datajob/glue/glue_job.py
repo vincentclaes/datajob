@@ -55,8 +55,9 @@ class GlueJob(DataJobBase):
         :param kwargs: any extra kwargs for the glue.CfnJob
         """
         logger.info(f"creating glue job {name}")
-        super().__init__(datajob_stack, name, **kwargs)
+        super().__init__(datajob_stack, name)
         self.role = self.get_role(
+            datajob_stack=datajob_stack,
             role=role,
             unique_name=self.unique_name,
             service_principal="glue.amazonaws.com",
@@ -212,13 +213,12 @@ class GlueJob(DataJobBase):
         """Create a glue job with the necessary configuration like, paths to
         wheel and business logic and arguments."""
         logger.debug(f"creating Glue Job {glue_job_name}")
-        default_arguments = None
         if context.s3_url_wheel:
             extra_py_files = {
                 # path to the wheel of this project
                 "--extra-py-files": context.s3_url_wheel
             }
-            default_arguments = {**extra_py_files, **arguments}
+            arguments = {**extra_py_files, **arguments}
         glue.CfnJob(
             self,
             id=glue_job_name,
@@ -231,7 +231,7 @@ class GlueJob(DataJobBase):
             ),
             glue_version=glue_version,
             max_capacity=max_capacity,
-            default_arguments=default_arguments,
+            default_arguments=arguments,
             worker_type=worker_type,
             number_of_workers=number_of_workers,
             *args,

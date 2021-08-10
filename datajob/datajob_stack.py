@@ -2,9 +2,11 @@ import os
 from typing import Union
 
 from aws_cdk import core
+from aws_cdk.core import CfnOutput
 
 from datajob import logger
 from datajob.datajob_context import DataJobContext
+from datajob.datajob_execution_input import DataJobExecutionInput
 
 
 class DataJobStack(core.Stack):
@@ -41,6 +43,8 @@ class DataJobStack(core.Stack):
         self.project_root = project_root
         self.include_folder = include_folder
         self.resources = []
+        self.outputs = {}
+        self.execution_input = DataJobExecutionInput()
         self.context = None
 
     def __enter__(self):
@@ -56,7 +60,8 @@ class DataJobStack(core.Stack):
         """steps we have to do when exiting the context manager.
 
         - we will create the resources we have defined.
-        - we will synthesize our stack so that we have everything to deploy.
+        - we will create cloudformation stack outputs, if present.
+
         :param exc_type:
         :param exc_value:
         :param traceback:
@@ -69,6 +74,25 @@ class DataJobStack(core.Stack):
     def add(self, task: str) -> None:
         setattr(self, task.unique_name, task)
         task.create()
+
+    def update_datajob_stack_outputs(self, key: str, value: str) -> None:
+        """Add a key and value to datajob_stack output variable
+        Returns:  None
+
+        """
+        self.outputs[key] = value
+
+    def update_datajob_stack_resources(self, resource: object) -> None:
+        """add  a DataJob resource to the DataJob stack resources variable.
+
+        Args:
+            resource: A DataJobBase implementation. we cannot reference it here explicitly
+            in the typing, because then we  have a circular dependency conflict.
+
+        Returns: None
+        """
+        logger.info(f"adding job {self} to stack workflow resources")
+        self.resources.append(resource)
 
     @staticmethod
     def _create_unique_stack_name(stack_name: str, stage: Union[str, None]) -> str:
@@ -83,7 +107,7 @@ class DataJobStack(core.Stack):
         return stack_name
 
     @staticmethod
-    def _create_environment_object(account, region) -> core.Environment:
+    def _create_environment_object(account: str, region: str) -> core.Environment:
         """create an aws cdk Environment object.
 
         Args:
@@ -98,14 +122,26 @@ class DataJobStack(core.Stack):
         region = region if region is not None else os.environ.get("AWS_DEFAULT_REGION")
         return core.Environment(account=account, region=region)
 
-    def create_resources(self):
+    def create_cloudformation_outputs(self) -> None:
+        """if the outputs dictionary has key value pairs, create these for the
+        cloudformation stack outputs.
+
+        Returns:  None
+        """
+        if self.outputs:
+            for key, value in self.outputs.items():
+                logger.debug(f"adding key {key} and value {value} to the stack output.")
+                CfnOutput(scope=self, id=key, value=value)
+
+    def create_resources(self) -> None:
         """create each of the resources of this stack."""
         if self.resources:
-            logger.debug("creating resources.")
-            return [resource.create() for resource in self.resources]
+            for resource in self.resources:
+                logger.debug(f"creating resource: {resource.name}")
+                resource.create()
         logger.debug("no resources available to create.")
 
-    def get_stage(self, stage):
+    def get_stage(self, stage: str) -> Union[str, None]:
         """get the stage parameter and return a default if not found."""
         if stage:
             logger.debug(

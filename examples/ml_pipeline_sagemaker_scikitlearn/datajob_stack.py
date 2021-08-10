@@ -10,15 +10,18 @@ from sagemaker.sklearn import SKLearnProcessor
 from sagemaker.sklearn.estimator import SKLearn
 
 from datajob.datajob_stack import DataJobStack
+from datajob.sagemaker import get_default_sagemaker_role
+from datajob.sagemaker.sagemaker_job import ModelStep
 from datajob.sagemaker.sagemaker_job import ProcessingStep
 from datajob.sagemaker.sagemaker_job import TrainingStep
 from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
 
-role = "arn:aws:iam::077590795309:role/service-role/AmazonSageMaker-ExecutionRole-20191008T190827"
 app = core.App()
 
 
 with DataJobStack(scope=app, id="datajob-ml-pipeline-scikitlearn") as djs:
+
+    role = get_default_sagemaker_role(datajob_stack=djs)
 
     sagemaker_session = sagemaker.Session(
         boto_session=boto3.session.Session(region_name=djs.env.region)
@@ -62,7 +65,7 @@ with DataJobStack(scope=app, id="datajob-ml-pipeline-scikitlearn") as djs:
 
     processor = SKLearnProcessor(
         framework_version="0.20.0",
-        role=role,
+        role=role.role_arn,
         instance_type="ml.m5.xlarge",
         instance_count=1,
     )
@@ -89,7 +92,7 @@ with DataJobStack(scope=app, id="datajob-ml-pipeline-scikitlearn") as djs:
     estimator = SKLearn(
         entry_point="resources/train.py",
         train_instance_type="ml.m5.xlarge",
-        role=role,
+        role=role.role_arn,
         image_uri=sklearn_image,
         framework_version="0.20.0",
         py_version="py3",
@@ -107,7 +110,13 @@ with DataJobStack(scope=app, id="datajob-ml-pipeline-scikitlearn") as djs:
         wait_for_completion=True,
     )
 
+    model_step = ModelStep(
+        datajob_stack=djs,
+        name="create-model",
+        model=training_step.sfn_task.get_expected_model(),
+    )
+
     with StepfunctionsWorkflow(djs, "workflow") as sfn_workflow:
-        processing_step >> training_step
+        (processing_step >> training_step >> model_step)
 
 app.synth()
