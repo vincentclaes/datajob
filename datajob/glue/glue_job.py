@@ -37,6 +37,9 @@ class GlueJob(DataJobBase):
         role: iam.Role = None,
         worker_type: str = None,
         number_of_workers: int = None,
+        state_id: str = None,
+        job_name: str = None,
+        wait_for_completion=True,
         *args,
         **kwargs,
     ):
@@ -73,12 +76,15 @@ class GlueJob(DataJobBase):
         self.max_capacity = max_capacity
         self.worker_type = worker_type
         self.number_of_workers = number_of_workers
+        self.state_id = self.unique_name if state_id is None else state_id
+        self.wait_for_completion = wait_for_completion
+        self.job_name = self.unique_name if job_name is None else job_name
         self.args = args
         self.kwargs = kwargs
         self.sfn_task = GlueStartJobRunStep(
-            self.unique_name,
-            wait_for_completion=True,
-            parameters={"JobName": self.unique_name},
+            state_id=self.state_id,
+            wait_for_completion=self.wait_for_completion,
+            parameters={"JobName": self.job_name},
             **kwargs,
         )
         logger.info(f"glue job {name} created.")
