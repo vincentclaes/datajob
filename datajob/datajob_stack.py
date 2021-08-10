@@ -57,7 +57,8 @@ class DataJobStack(core.Stack):
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-        """steps we have to do when exiting the context manager.
+        """steps we have to do when exiting the context manager. We execute the
+        steps when no exception is present.
 
         - we will create the resources we have defined.
         - we will create cloudformation stack outputs, if present.
