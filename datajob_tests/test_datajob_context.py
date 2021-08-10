@@ -6,7 +6,7 @@ from datajob.datajob_stack import DataJobContext
 from datajob.datajob_stack import DataJobStack
 
 
-class TestDatajobContext(unittest.TestCase):
+class TestDataJobContext(unittest.TestCase):
     def test_datajob_context_initiates_without_stage(self):
         exception_ = None
         try:

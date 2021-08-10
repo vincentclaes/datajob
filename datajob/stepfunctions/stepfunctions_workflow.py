@@ -68,19 +68,8 @@ class StepfunctionsWorkflow(DataJobBase):
         self.directed_graph = defaultdict(set)
 
     def add_task(self, some_task: DataJobBase) -> object:
-        """add a task to the workflow we would like to orchestrate.
-
-        Only for Glue we need to instantiate an object. All other types
-        can be returned.
-        """
-        # logger.debug(f"adding task {some_task}")
-        from datajob.glue.glue_job import GlueJob
-
-        if isinstance(some_task, GlueJob):
-            job_name = some_task.unique_name
-            return GlueStartJobRunStep(
-                job_name, wait_for_completion=True, parameters={"JobName": job_name}
-            )
+        """get the stepfunctions  task,  sfn_task, we would like to
+        orchestrate."""
         return some_task.sfn_task
 
     def add_parallel_tasks(self, parallel_tasks: Iterator[DataJobBase]) -> Parallel:
