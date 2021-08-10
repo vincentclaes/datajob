@@ -5,6 +5,7 @@ from aws_cdk import aws_glue as glue
 from aws_cdk import aws_iam as iam
 from aws_cdk import aws_s3_deployment
 from aws_cdk import core
+from stepfunctions.steps import GlueStartJobRunStep
 
 from datajob import logger
 from datajob.datajob_base import DataJobBase
@@ -74,6 +75,12 @@ class GlueJob(DataJobBase):
         self.number_of_workers = number_of_workers
         self.args = args
         self.kwargs = kwargs
+        self.sfn_task = GlueStartJobRunStep(
+            self.unique_name,
+            wait_for_completion=True,
+            parameters={"JobName": self.unique_name},
+            **kwargs,
+        )
         logger.info(f"glue job {name} created.")
 
     def create(self):

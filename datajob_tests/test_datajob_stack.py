@@ -5,7 +5,7 @@ from aws_cdk import core
 from datajob.datajob_stack import DataJobStack
 
 
-class TestDatajobStack(unittest.TestCase):
+class TestDataJobStack(unittest.TestCase):
     def setUp(self) -> None:
         self.app = core.App()
 

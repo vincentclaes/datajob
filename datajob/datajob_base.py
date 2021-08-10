@@ -1,5 +1,6 @@
 from abc import abstractmethod
 
+import stepfunctions.steps
 from aws_cdk import aws_iam as iam
 from aws_cdk import core
 
@@ -20,10 +21,38 @@ class DataJobBase(core.Construct):
         self.unique_name = f"{self.datajob_stack.unique_stack_name}-{self.name}"
         self.context = self.datajob_stack.context
         self.datajob_stack.update_datajob_stack_resources(resource=self)
+        self._sfn_task = None
+
+    @property
+    def sfn_task(self) -> stepfunctions.steps.Task:
+        """This property function returns the stepfunctions Task instance of
+        your service if it's implemented.
+
+        If it's not implemented it throws an error.
+        """
+        if self._sfn_task is None:
+            raise NotImplementedError(
+                f"Implement the sfn_task variable to your class {self} so "
+                "that stepfunctions can orchestrate it."
+            )
+        return self._sfn_task
+
+    @sfn_task.setter
+    def sfn_task(self, task: stepfunctions.steps.Task) -> None:
+        """This setter function sets the sfn_task value to an instance of
+        stepfunctions Task class. Setting self.sfn_task to an instance of Task
+        in the constructor will call this function.
+
+        Args:
+            task: instance of a stepfunctions task
+
+        Returns: None
+        """
+        self._sfn_task = task
 
     @abstractmethod
     def create(self):
-        """create datajob."""
+        """create the resource using IAC techology like AWS CDK."""
 
     @staticmethod
     def get_default_admin_role(
