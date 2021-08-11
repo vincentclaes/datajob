@@ -63,6 +63,7 @@ class StepfunctionsWorkflow(DataJobBase):
             region if region is not None else os.environ.get("AWS_DEFAULT_REGION")
         )
         self.notification = self._setup_notification(notification)
+        self.kwargs = kwargs
         # init directed graph dict where values are a set.
         # we do it like this so that we can use toposort.
         self.directed_graph = defaultdict(set)
@@ -138,6 +139,7 @@ class StepfunctionsWorkflow(DataJobBase):
             definition=self.chain_of_tasks,
             role=self.role.role_arn,
             client=sfn_client,
+            **self.kwargs,
         )
 
     def create(self):
@@ -151,6 +153,7 @@ class StepfunctionsWorkflow(DataJobBase):
             state_machine_name=self.unique_name,
             role_arn=self.role.role_arn,
             definition_string=cfn_template,
+            **self.kwargs,
         )
 
     def _setup_notification(
