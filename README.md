@@ -16,8 +16,9 @@
 - Let us [know](https://github.com/vincentclaes/datajob/discussions) **what you want to see next**.
 
  </br>
+ :new: :rocket:
 
-> Dependencies are [AWS CDK](https://github.com/aws/aws-cdk) and [Step Functions SDK for data science](https://github.com/aws/aws-step-functions-data-science-sdk-python) <br/>
+[Checkout how we build a Machine Learning Pipeline using Glue, Sagemaker and Stepfunctions](./examples/ml_pipeline_abalone)
 
  </br>
 
