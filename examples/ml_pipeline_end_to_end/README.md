@@ -59,6 +59,11 @@ In the end a sagemaker endpoint is created:
 ![sagemaker-endpoint.png](assets/sagemaker-endpoint.png)
 
 In our example the name of the endpoint is `datajob-ml-pipeline-abalone-create-endpoint-20210803T165017`
-Pull down the sagemaker endpoint by executing the following command:
+
+## Destroy
+
+    cdk destroy --app  "python datajob_stack.py"
+
+Don't forget to pull down the sagemaker endpoint:
 
     aws sagemaker delete-endpoint --endpoint-name datajob-ml-pipeline-abalone-create-endpoint-20210803T165017

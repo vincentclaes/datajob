@@ -90,7 +90,7 @@ cd examples/data_pipeline_simple
 cdk deploy --app  "python datajob_stack.py"
 ```
 
-### Run
+### Execute
 
 ```shell script
 datajob execute --state-machine data-pipeline-simple-workflow
