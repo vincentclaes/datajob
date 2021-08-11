@@ -16,9 +16,10 @@
 - Let us [know](https://github.com/vincentclaes/datajob/discussions) **what you want to see next**.
 
  </br>
- :new: :rocket:
 
-[Checkout how we build a Machine Learning Pipeline using Glue, Sagemaker and Stepfunctions](./examples/ml_pipeline_abalone)
+ :new: :rocket: Checkout our new example combining all the AWS services we currently support :new: :rocket:
+
+[End-to-end Machine Learning Pipeline using Glue, Sagemaker and Stepfunctions](./examples/ml_pipeline_abalone)
 
  </br>
 
