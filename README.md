@@ -11,13 +11,25 @@
  </br>
 
 - Create and deploying code to python shell / pyspark **AWS Glue jobs**.
-- Create, orchestrate and trigger **Sagemaker Traning Jobs and Processing Jobs**.
+- Use **AWS Sagemaker** to create ML Models.
 - Orchestrate the above jobs using **AWS Stepfunctions** as simple as `task1 >> task2`
 - Let us [know](https://github.com/vincentclaes/datajob/discussions) **what you want to see next**.
 
  </br>
 
-> Dependencies are [AWS CDK](https://github.com/aws/aws-cdk) and [Step Functions SDK for data science](https://github.com/aws/aws-step-functions-data-science-sdk-python) <br/>
+<div align="center">
+
+ :rocket: :new: :rocket:
+ </br>
+</br>
+[Check our new example of an End-to-end Machine Learning Pipeline with Glue, Sagemaker and Stepfunctions](examples/ml_pipeline_end_to_end)
+</br>
+</br>
+:rocket: :new: :rocket:
+
+</br></br>
+
+</div>
 
  </br>
 
@@ -88,7 +100,7 @@ cd examples/data_pipeline_simple
 cdk deploy --app  "python datajob_stack.py"
 ```
 
-### Run
+### Execute
 
 ```shell script
 datajob execute --state-machine data-pipeline-simple-workflow
@@ -102,6 +114,16 @@ The terminal will show a link to the step functions page to follow up on your pi
 ```shell script
 cdk destroy --app  "python datajob_stack.py"
 ```
+
+# Examples
+
+- [Data pipeline with parallel steps](./examples/data_pipeline_parallel/)
+- [Data pipeline for processing big data using PySpark](./examples/data_pipeline_pyspark/)
+- [Data pipeline where you package and ship your project as a wheel](./examples/data_pipeline_with_packaged_project/)
+- [Machine Learning pipeline where we combine glue jobs with sagemaker](examples/ml_pipeline_end_to_end)
+
+All our examples are in [./examples](./examples)
+
 
 # Functionality
 

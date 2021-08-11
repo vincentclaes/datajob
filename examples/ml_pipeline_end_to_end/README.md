@@ -1,4 +1,4 @@
-# ML Pipeline Scikitlearn
+# End to End Machine Learning Pipeline
 
 > This example is an implementation of datajob of [an official aws sagemaker example.](https://github.com/aws/amazon-sagemaker-examples/blob/master/step-functions-data-science-sdk/machine_learning_workflow_abalone/machine_learning_workflow_abalone.ipynb)
 
@@ -17,7 +17,10 @@ we have 5 steps in our ML pipeline:
 
 ## Deploy
 
-    cd examples/ml_pipeline_abalone
+> !!! Don't forget to pull down the sagemaker endpoint that is created at the end of the  pipeline.
+
+
+    cd examples/ml_pipeline_end_to_end
     export AWS_PROFILE=my-profile
     export AWS_DEFAULT_REGION=eu-west-1
     cdk deploy --app "python datajob_stack.py" --require-approval never
@@ -31,7 +34,7 @@ we have 5 steps in our ML pipeline:
             arn:aws:cloudformation:eu-west-1:077590795309:stack/datajob-ml-pipeline-abalone/e179ec30-f45a-11eb-9731-02575f1b7adf
 
 
-execute the ml pipeline
+## Execute
 
     datajob execute --state-machine datajob-ml-pipeline-abalone-workflow
 
@@ -56,6 +59,11 @@ In the end a sagemaker endpoint is created:
 ![sagemaker-endpoint.png](assets/sagemaker-endpoint.png)
 
 In our example the name of the endpoint is `datajob-ml-pipeline-abalone-create-endpoint-20210803T165017`
-Pull down the sagemaker endpoint by executing the following command:
+
+## Destroy
+
+    cdk destroy --app  "python datajob_stack.py"
+
+Don't forget to pull down the sagemaker endpoint:
 
     aws sagemaker delete-endpoint --endpoint-name datajob-ml-pipeline-abalone-create-endpoint-20210803T165017
