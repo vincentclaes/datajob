@@ -19,9 +19,9 @@
 
 <div align="center">
 
- :new: :rocket: Checkout our new example combining all the AWS services we currently support :new: :rocket:
+ :new: :rocket: :arrow_right: [End-to-end Machine Learning Pipeline using Glue, Sagemaker and Stepfunctions](examples/ml_pipeline_end_to_end) :arrow_left:  :new: :rocket:
  </br></br>
-:arrow_right: [End-to-end Machine Learning Pipeline using Glue, Sagemaker and Stepfunctions](examples/ml_pipeline_end_to_end) :arrow_left:
+
 
 </div>
 
