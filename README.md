@@ -19,7 +19,7 @@
 
  :new: :rocket: Checkout our new example combining all the AWS services we currently support :new: :rocket:
 
-[End-to-end Machine Learning Pipeline using Glue, Sagemaker and Stepfunctions](./examples/ml_pipeline_abalone)
+[End-to-end Machine Learning Pipeline using Glue, Sagemaker and Stepfunctions](examples/ml_pipeline_end_to_end)
 
  </br>
 
@@ -110,7 +110,7 @@ cdk destroy --app  "python datajob_stack.py"
 - [Data pipeline with parallel steps](./examples/data_pipeline_parallel/)
 - [Data pipeline for processing big data using PySpark](./examples/data_pipeline_pyspark/)
 - [Data pipeline where you package and ship your project as a wheel](./examples/data_pipeline_with_packaged_project/)
-- [Machine Learning pipeline where we combine glue jobs with sagemaker](./examples/ml_pipeline_abalone)
+- [Machine Learning pipeline where we combine glue jobs with sagemaker](examples/ml_pipeline_end_to_end)
 
 All our examples are in [./examples](./examples)
 

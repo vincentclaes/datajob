@@ -1,4 +1,4 @@
-# ML Pipeline Scikitlearn
+# End to End Machine Learning Pipeline
 
 > This example is an implementation of datajob of [an official aws sagemaker example.](https://github.com/aws/amazon-sagemaker-examples/blob/master/step-functions-data-science-sdk/machine_learning_workflow_abalone/machine_learning_workflow_abalone.ipynb)
 
@@ -17,7 +17,7 @@ we have 5 steps in our ML pipeline:
 
 ## Deploy
 
-    cd examples/ml_pipeline_abalone
+    cd examples/ml_pipeline_end_to_end
     export AWS_PROFILE=my-profile
     export AWS_DEFAULT_REGION=eu-west-1
     cdk deploy --app "python datajob_stack.py" --require-approval never
