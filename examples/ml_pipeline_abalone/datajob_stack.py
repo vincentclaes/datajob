@@ -18,16 +18,12 @@ app = core.App()
 with DataJobStack(scope=app, id="datajob-ml-pipeline-abalone") as djs:
 
     sagemaker_default_role = get_default_sagemaker_role(datajob_stack=djs)
-    sagemaker_session = sagemaker.Session(
-        boto_session=boto3.session.Session(region_name=djs.env.region)
-    )
-    sagemaker_default_bucket_uri = (
-        f"s3://{sagemaker_session.default_bucket()}/datajob-ml-pipeline-abalone"
-    )
 
-    train_path = f"{sagemaker_default_bucket_uri}/train/abalone.train"
-    validation_path = f"{sagemaker_default_bucket_uri}/validation/abalone.validation"
-    test_path = f"{sagemaker_default_bucket_uri}/test/abalone.test"
+    train_path = f"s3://{djs.context.data_bucket_name}/train/abalone.train"
+    validation_path = (
+        f"s3://{djs.context.data_bucket_name}/validation/abalone.validation"
+    )
+    test_path = f"s3://{djs.context.data_bucket_name}/test/abalone.test"
 
     prepare_dataset_step = GlueJob(
         datajob_stack=djs,
@@ -48,8 +44,7 @@ with DataJobStack(scope=app, id="datajob-ml-pipeline-abalone") as djs:
         train_instance_count=1,
         train_instance_type="ml.m4.4xlarge",
         train_volume_size=5,
-        output_path=f"{sagemaker_default_bucket_uri}/single-xgboost",
-        sagemaker_session=sagemaker_session,
+        output_path=f"s3://{djs.context.data_bucket_name}/single-xgboost",
     )
 
     xgb.set_hyperparameters(
