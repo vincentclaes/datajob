@@ -21,7 +21,9 @@
 
  :rocket: :new: :rocket:
  </br>
+</br>
 [Check our new example of an End-to-end Machine Learning Pipeline with Glue, Sagemaker and Stepfunctions](examples/ml_pipeline_end_to_end)
+</br>
 </br>
 :rocket: :new: :rocket:
 
