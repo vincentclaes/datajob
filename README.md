@@ -19,11 +19,11 @@
 
 <div align="center">
 
- :new: :rocket:
+ :rocket: :new: :rocket:
  </br>
 [Check our new example of an End-to-end Machine Learning Pipeline with Glue, Sagemaker and Stepfunctions](examples/ml_pipeline_end_to_end)
 </br>
-:rocket: :new:
+:rocket: :new: :rocket:
 
 </br></br>
 
