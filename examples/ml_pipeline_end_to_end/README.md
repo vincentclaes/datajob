@@ -17,6 +17,9 @@ we have 5 steps in our ML pipeline:
 
 ## Deploy
 
+> !!! Don't forget to pull down the sagemaker endpoint that is created at the end of the  pipeline.
+
+
     cd examples/ml_pipeline_end_to_end
     export AWS_PROFILE=my-profile
     export AWS_DEFAULT_REGION=eu-west-1
@@ -31,7 +34,7 @@ we have 5 steps in our ML pipeline:
             arn:aws:cloudformation:eu-west-1:077590795309:stack/datajob-ml-pipeline-abalone/e179ec30-f45a-11eb-9731-02575f1b7adf
 
 
-execute the ml pipeline
+## Execute
 
     datajob execute --state-machine datajob-ml-pipeline-abalone-workflow
 
