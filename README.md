@@ -19,9 +19,9 @@
 
 <div align="center">
 
- :new: :rocket: :arrow_right: [End-to-end Machine Learning Pipeline using Glue, Sagemaker and Stepfunctions](examples/ml_pipeline_end_to_end) :arrow_left:  :new: :rocket:
- </br></br>
+ :new: :rocket: [Checkout our new example of an End-to-end Machine Learning Pipeline using Glue, Sagemaker and Stepfunctions](examples/ml_pipeline_end_to_end) :rocket: :new:
 
+</br></br>
 
 </div>
 
