@@ -169,6 +169,7 @@ class TestStepfunctionsWorkflow(unittest.TestCase):
 
         Update:
         this continous update causes duplicate states. removing it for now.
+        https://github.com/vincentclaes/datajob/pull/126
         """
 
         task1 = stepfunctions_workflow.task(SomeMockedClass("task1"))
