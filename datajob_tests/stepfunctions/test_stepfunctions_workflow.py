@@ -166,11 +166,16 @@ class TestStepfunctionsWorkflow(unittest.TestCase):
 
         test written based on ticket
         https://github.com/vincentclaes/datajob/issues/116
+
+        Update:
+        this continous update causes duplicate states. removing it for now.
+        https://github.com/vincentclaes/datajob/pull/126
         """
 
         task1 = stepfunctions_workflow.task(SomeMockedClass("task1"))
         task2 = stepfunctions_workflow.task(SomeMockedClass("task2"))
         task3 = stepfunctions_workflow.task(SomeMockedClass("task3"))
+        task4 = stepfunctions_workflow.task(SomeMockedClass("task4"))
 
         djs = DataJobStack(
             scope=self.app,
@@ -181,13 +186,12 @@ class TestStepfunctionsWorkflow(unittest.TestCase):
             account="3098726354",
         )
         with StepfunctionsWorkflow(djs, "some-name") as a_step_functions_workflow:
+            task1 >> task2
+            task2 >> task3
             self.assertIsNone(a_step_functions_workflow.workflow)
             self.assertIsNone(a_step_functions_workflow.chain_of_tasks)
-            task1 >> task2
-            self.assertIsNotNone(a_step_functions_workflow.workflow)
-            self.assertEqual(len(a_step_functions_workflow.chain_of_tasks.steps), 2)
-            task2 >> task3
-            self.assertEqual(len(a_step_functions_workflow.chain_of_tasks.steps), 3)
+        self.assertIsNotNone(a_step_functions_workflow.workflow)
+        self.assertEqual(len(a_step_functions_workflow.chain_of_tasks.steps), 3)
 
         expected_workflow_definition = {
             "StartAt": "task1",

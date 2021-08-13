@@ -218,6 +218,7 @@ class StepfunctionsWorkflow(DataJobBase):
 
     def __exit__(self, exc_type, exc_value, traceback) -> None:
         """steps we have to do when exiting the context manager."""
+        self.build_workflow()
         _set_workflow(None)
         logger.info(f"step functions workflow {self.unique_name} created")
 
@@ -270,4 +271,3 @@ def _get_workflow():
 def connect(self, other: DataJobBase) -> None:
     work_flow = _get_workflow()
     work_flow.directed_graph[other].add(self)
-    work_flow.build_workflow()
