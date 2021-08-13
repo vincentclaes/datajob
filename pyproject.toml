@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "datajob"
-version = "0.10.0"
+version = "0.10.1"
 description = "Build and deploy a serverless data pipeline with no effort on AWS."
 authors = ["Vincent Claes <vincent.v.claes@gmail.com>"]
 license = "Apache Software License (Apache 2.0)"
