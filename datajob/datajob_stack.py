@@ -140,6 +140,7 @@ class DataJobStack(core.Stack):
             for resource in self.resources:
                 logger.debug(f"creating resource: {resource.name}")
                 resource.create()
+        self.create_cloudformation_outputs()
         logger.debug("no resources available to create.")
 
     def get_stage(self, stage: str) -> Union[str, None]:
