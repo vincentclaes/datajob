@@ -2,7 +2,7 @@
 
 Orchestrate tasks in parallel. For more info look in `datajob_stack.py`
 
-# Deployment
+## Deployment
 
     git clone git@github.com:vincentclaes/datajob.git
     cd datajob
@@ -20,6 +20,12 @@ Orchestrate tasks in parallel. For more info look in `datajob_stack.py`
     cdk deploy --app "python datajob_stack.py" --require-approval never
 
 
-# Run
+## Execute
 
     datajob execute --state-machine data-pipeline-parallel-workflow
+
+If you click the link, you can follow up on the progress
+
+## Destroy
+
+    cdk destroy --app  "python datajob_stack.py"

@@ -23,21 +23,18 @@ we have a [pyspark job](./glue_job/glue_pyspark_example.py) that:
     cdk bootstrap aws://$AWS_ACCOUNT/$AWS_DEFAULT_REGION
 
     python setup.py bdist_wheel
-    cdk deploy --app "python datajob_stack.py" --require-approval never
+    cdk deploy --app "python datajob_stack.py" --context stage=dev --require-approval never
 
 upload the dataset to the data bucket
 
-    aws s3 cp ./dataset/iris_dataset.csv s3://datajob-python-pyspark-my-stage/raw/iris_dataset.csv
+    aws s3 cp ./dataset/iris_dataset.csv s3://datajob-python-pyspark-dev/raw/iris_dataset.csv
 
-## Run
+## Execute
 
-```shell
- datajob execute --state-machine datajob-python-pyspark-my-stage-workflow
-```
+    datajob execute --state-machine datajob-python-pyspark-dev-workflow
+
+If you click the link, you can follow up on the progress
 
 ## Destroy
 
-
-```shell
-cdk destroy --app "python datajob_stack.py"  -c stage=my-stage
-```
+    cdk destroy --app "python datajob_stack.py"  -c stage=dev
