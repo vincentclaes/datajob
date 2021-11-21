@@ -20,9 +20,19 @@ we have 5 steps in our ML pipeline:
 > !!! Don't forget to pull down the sagemaker endpoint that is created at the end of the  pipeline.
 
 
+    git clone git@github.com:vincentclaes/datajob.git
+    cd datajob
+
+    pip install poetry --upgrade
+    poetry shell
+    poetry install
+
     cd examples/ml_pipeline_end_to_end
-    export AWS_PROFILE=my-profile
+    export AWS_PROFILE=default
     export AWS_DEFAULT_REGION=eu-west-1
+    export AWS_ACCOUNT=$(aws sts get-caller-identity --query Account --output text --profile $AWS_PROFILE)
+
+    cdk bootstrap aws://$AWS_ACCOUNT/$AWS_DEFAULT_REGION
     cdk deploy --app "python datajob_stack.py" --require-approval never
 
              ✅  datajob-ml-pipeline-abalone
@@ -31,7 +41,7 @@ we have 5 steps in our ML pipeline:
             datajob-ml-pipeline-abalone.DatajobExecutionInput = ["datajob-ml-pipeline-abalone-train-model", "datajob-ml-pipeline-abalone-create-sagemaker-model", "datajob-ml-pipeline-abalone-create-sagemaker-endpoint-config", "datajob-ml-pipeline-abalone-create-endpoint"]
 
             Stack ARN:
-            arn:aws:cloudformation:eu-west-1:077590795309:stack/datajob-ml-pipeline-abalone/e179ec30-f45a-11eb-9731-02575f1b7adf
+            arn:aws:cloudformation:eu-west-1:-----:stack/datajob-ml-pipeline-abalone/e179ec30-f45a-11eb-9731-02575f1b7adf
 
 
 ## Execute
@@ -48,7 +58,7 @@ we have 5 steps in our ML pipeline:
             [18:50:19] status: RUNNING
                        view the execution on the AWS console:
 
-            https://console.aws.amazon.com/states/home?region=eu-west-1#/executions/details/arn:aws:states:eu-west-1:077590795309:execution:datajob-ml-pipeline-abalone-workflow:631ca72f-33f2-4a4e-8685-432c43fcbf05
+            https://console.aws.amazon.com/states/home?region=eu-west-1#/executions/details/arn:aws:states:eu-west-1:-----:execution:datajob-ml-pipeline-abalone-workflow:631ca72f-33f2-4a4e-8685-432c43fcbf05
 
 If you click the link, you can follow up on the progress
 

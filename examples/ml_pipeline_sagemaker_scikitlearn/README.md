@@ -4,9 +4,19 @@ An ML pipeline that has a preprocessing step, a training step and a step to crea
 
 ## Deploy
 
+    git clone git@github.com:vincentclaes/datajob.git
+    cd datajob
+
+    pip install poetry --upgrade
+    poetry shell
+    poetry install
+
     cd examples/ml_pipeline_sagemaker_scikitlearn
     export AWS_PROFILE=my-profile
     export AWS_DEFAULT_REGION=eu-west-1
+    export AWS_ACCOUNT=$(aws sts get-caller-identity --query Account --output text --profile $AWS_PROFILE)
+
+    cdk bootstrap aws://$AWS_ACCOUNT/$AWS_DEFAULT_REGION
     cdk deploy --app "python datajob_stack.py" --require-approval never
 
 execute the ml pipeline

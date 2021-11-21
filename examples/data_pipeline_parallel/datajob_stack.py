@@ -7,7 +7,7 @@ from datajob.stepfunctions.stepfunctions_workflow import StepfunctionsWorkflow
 app = core.App()
 
 
-with DataJobStack(scope=app, id="data-pipeline-simple") as datajob_stack:
+with DataJobStack(scope=app, id="data-pipeline-parallel") as datajob_stack:
 
     task1 = GlueJob(
         datajob_stack=datajob_stack, name="task1", job_path="glue_jobs/task.py"

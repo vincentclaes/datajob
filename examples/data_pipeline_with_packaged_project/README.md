@@ -17,9 +17,19 @@ Make sure you have configured a `setup.py` in the root of your poject.
 
 ## Deployment
 
-    export AWS_PROFILE=my-profile
-    export AWS_DEFAULT_REGION=eu-west-1
+    git clone git@github.com:vincentclaes/datajob.git
+    cd datajob
+
+    pip install poetry --upgrade
+    poetry shell
+    poetry install
+
     cd examples/data_pipeline_with_packaged_project
+    export AWS_PROFILE=default
+    export AWS_DEFAULT_REGION=eu-west-1
+    export AWS_ACCOUNT=$(aws sts get-caller-identity --query Account --output text --profile $AWS_PROFILE)
+
+    cdk bootstrap aws://$AWS_ACCOUNT/$AWS_DEFAULT_REGION
 
     # if you want to create a wheel from setup.py and create the services
     # and deploy the packaged dependencies
