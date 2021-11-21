@@ -17,26 +17,32 @@ Make sure you have configured a `setup.py` in the root of your poject.
 
 ## Deployment
 
-    export AWS_PROFILE=my-profile
-    export AWS_DEFAULT_REGION=eu-west-1
+    git clone git@github.com:vincentclaes/datajob.git
+    cd datajob
+
+    pip install poetry --upgrade
+    poetry shell
+    poetry install
+
     cd examples/data_pipeline_with_packaged_project
+    export AWS_PROFILE=default
+    export AWS_DEFAULT_REGION=eu-west-1
+    export AWS_ACCOUNT=$(aws sts get-caller-identity --query Account --output text --profile $AWS_PROFILE)
+
+    cdk bootstrap aws://$AWS_ACCOUNT/$AWS_DEFAULT_REGION
 
     # if you want to create a wheel from setup.py and create the services
     # and deploy the packaged dependencies
     python setup.py bdist_wheel
-    cdk deploy --app "python datajob_stack.py"
+    cdk deploy --app "python datajob_stack.py" --require-approval never
+
+## Execute
 
     # to execute the pipeline, pass the name of the step functions statemachine
     # which is the same as the name of the stack in this case.
-    datajob execute data-pipeline-pkg-dev-workflow
+    datajob execute --state-machine data-pipeline-pkg-workflow
 
-## Remarks
 
-You can try with the datajob cli to package before deploying.
-Doing everything with one command.
+## Destroy
 
-    datajob deploy --config datajob_stack.py --package setuppy
-
-You can also use the datajob cli to package using poetry
-
-    datajob deploy --config datajob_stack.py --package poetry
+    cdk destroy --app "python datajob_stack.py"  -c stage=dev

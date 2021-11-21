@@ -85,7 +85,7 @@ Follow the steps [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-con
 export AWS_PROFILE=default
 # use the aws cli to get your account number
 export AWS_ACCOUNT=$(aws sts get-caller-identity --query Account --output text --profile $AWS_PROFILE)
-export AWS_DEFAULT_REGION=us-east-2
+export AWS_DEFAULT_REGION=eu-west-1
 
 # init cdk
 cdk bootstrap aws://$AWS_ACCOUNT/$AWS_DEFAULT_REGION
@@ -97,7 +97,7 @@ Deploy the pipeline using CDK.
 
 ```shell
 cd examples/data_pipeline_simple
-cdk deploy --app  "python datajob_stack.py"
+cdk deploy --app  "python datajob_stack.py" --require-approval never
 ```
 
 ### Execute
