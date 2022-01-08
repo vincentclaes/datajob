@@ -1,7 +1,7 @@
 ![logo](./assets/logo.png)
 
 <div align="center">
- [![Awesome](https://awesome.re/badge.svg)](https://awesome.re) [<img src="https://raw.githubusercontent.com/aws/aws-cdk/master/logo/default-128-dark.png" align="right" alt="CDK">]
+ ![Awesome](https://awesome.re/badge.svg)](https://awesome.re) [<img src="https://raw.githubusercontent.com/aws/aws-cdk/master/logo/default-128-dark.png" align="right" alt="CDK">]
  <b>Build and deploy a serverless data pipeline on AWS with no effort.</b></br>
  <i>Our goal is to let developers think about the business logic, datajob does the rest...</i>
  </br>
