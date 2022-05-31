@@ -11,7 +11,7 @@
 
  </br>
 
-- Create and deploying code to python shell / pyspark **AWS Glue jobs**.
+- Deploy code to python shell / pyspark **AWS Glue jobs**.
 - Use **AWS Sagemaker** to create ML Models.
 - Orchestrate the above jobs using **AWS Stepfunctions** as simple as `task1 >> task2`
 - Let us [know](https://github.com/vincentclaes/datajob/discussions) **what you want to see next**.
