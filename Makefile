@@ -1,17 +1,18 @@
-install:
+setup:
+	pip3 install pip --upgrade
 	pip3 install poetry
 	poetry config virtualenvs.create true
 	poetry install
 
 
-install-dev:
+setup-dev:
 	make install
 	# install pre commit hooks to check the code
 	# before committing.
 	poetry run pre-commit install
 
-tests:
-	poetry run pytest
+test:
+	AWS_DEFAULT_REGION=eu-west-1 poetry run pytest --disable-warnings
 
 run-examples:
 	cd "${CURDIR}/examples/data_pipeline_simple" && poetry run cdk synth --app "python datajob_stack.py"

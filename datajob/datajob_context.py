@@ -4,7 +4,6 @@ from pathlib import Path
 from aws_cdk import aws_s3
 from aws_cdk import aws_s3_deployment
 from aws_cdk import core
-from aws_empty_bucket.empty_s3_bucket import EmptyS3Bucket
 
 from datajob import logger
 
@@ -76,12 +75,13 @@ class DataJobContext(core.Construct):
         data_bucket_name = self._get_unique_bucket_name()
         # todo - can we validate the bucket name?
         logger.debug(f"creating deployment bucket {data_bucket_name}")
-        data_bucket = EmptyS3Bucket(
+        data_bucket = aws_s3.Bucket(
             self,
             data_bucket_name,
             bucket_name=data_bucket_name,
             # todo - we might want to refine the removal policy.
             #  Might not be wise to destroy it after we destroy the stack.
+            auto_delete_objects=True,
             removal_policy=core.RemovalPolicy.DESTROY,
         )
         return data_bucket, data_bucket_name
@@ -100,10 +100,11 @@ class DataJobContext(core.Construct):
         deployment_bucket_name = f"{unique_bucket_name}-deployment-bucket"
         # todo - can we validate the bucket name?
         logger.debug(f"creating deployment bucket {deployment_bucket_name}")
-        deployment_bucket = EmptyS3Bucket(
+        deployment_bucket = aws_s3.Bucket(
             self,
             deployment_bucket_name,
             bucket_name=deployment_bucket_name,
+            auto_delete_objects=True,
             removal_policy=core.RemovalPolicy.DESTROY,
         )
         return deployment_bucket, deployment_bucket_name
