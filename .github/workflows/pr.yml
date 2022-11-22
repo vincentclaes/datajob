@@ -1,22 +1,33 @@
-name: Build-Test-RunExamples
-on: [pull_request]
-
-env:
-  IMAGE_TAG: local
+name: build-python
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  Build-Test-RunExamples:
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: ["3.8"]
+    env:
+      OS: ${{ matrix.os }}
+      PYTHON: ${{ matrix.python-version }}
 
     steps:
-    - name: Checking out
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v3
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
       with:
-        ref: ${{ github.ref }}
+        python-version: ${{ matrix.python-version }}
 
-    - name: Build Container
-      run: |
-         cat .devcontainer/devcontainer.Dockerfile | docker build -t $IMAGE_TAG -
+    - name: Setup project
+      run: make setup
 
-    - name: Run Tests and Examples
-      run: docker run -v $PWD:/workspace/vscode -w /workspace/vscode $IMAGE_TAG make gh-actions
+    - name: Run test suite
+      run: make test

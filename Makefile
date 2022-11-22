@@ -1,16 +1,17 @@
-install:
+setup:
+	pip3 install pip --upgrade
 	pip3 install poetry
 	poetry config virtualenvs.create true
 	poetry install
 
 
-install-dev:
+setup-dev:
 	make install
 	# install pre commit hooks to check the code
 	# before committing.
 	poetry run pre-commit install
 
-tests:
+test:
 	poetry run pytest --disable-warnings
 
 run-examples:
