@@ -11,7 +11,7 @@ install-dev:
 	poetry run pre-commit install
 
 tests:
-	poetry run pytest
+	poetry run pytest --disable-warnings
 
 run-examples:
 	cd "${CURDIR}/examples/data_pipeline_simple" && poetry run cdk synth --app "python datajob_stack.py"
