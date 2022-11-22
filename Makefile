@@ -12,7 +12,7 @@ setup-dev:
 	poetry run pre-commit install
 
 test:
-	poetry run pytest --disable-warnings
+	AWS_DEFAULT_REGION=eu-west-1 poetry run pytest --disable-warnings
 
 run-examples:
 	cd "${CURDIR}/examples/data_pipeline_simple" && poetry run cdk synth --app "python datajob_stack.py"
